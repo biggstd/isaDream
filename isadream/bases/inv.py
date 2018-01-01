@@ -42,23 +42,3 @@ def IDREAM_investigation_base():
 
     # Return the constructed investigation object.
     return inv
-
-
-def jsonify_investigation(investigation):
-    """
-    Converts a given investigation to an ISA json.
-
-    :param investigation:
-        An ISA tools investigation object.
-
-    :returns:
-        A string of json text, formatted for readability.
-    """
-
-    # Create and return the .json object.
-    return json.dumps(
-        obj=investigation,
-        cls=ISAJSONEncoder,
-        sort_keys=True,
-        indent=4,
-        separators=(',', ':'))
