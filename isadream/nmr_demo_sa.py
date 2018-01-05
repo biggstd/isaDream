@@ -53,11 +53,12 @@ from isatools.model import *
 from isatools import isatab
 from isatools.isajson import ISAJSONEncoder
 import json
+import os
 import pandas as pd
 
 # Import all of the custom ontologies defined
 # for the IDREAM project thus far.
-from ontologies import *
+from isadream.ontologies import *
 
 
 def build_nmr_output():
@@ -253,7 +254,7 @@ def build_nmr_output():
         sodium_hydroxide,
     ]
     sipos_2006_talanta_fig_3_NaOH.samples = [
-        KOH_Al_soln,
+        NaOH_Al_soln,
     ]
     sipos_2006_talanta_fig_3_NaOH.units = [ppm, molarity]
     sipos_2006_talanta_fig_3_NaOH.data_files = [
@@ -277,7 +278,7 @@ def build_nmr_output():
         lithium_hydroxide,
     ]
     sipos_2006_talanta_fig_3_LiOH.samples = [
-        KOH_Al_soln,
+        LiOH_Al_soln,
     ]
     sipos_2006_talanta_fig_3_LiOH.units = [ppm, molarity]
     sipos_2006_talanta_fig_3_LiOH.data_files = [
@@ -292,6 +293,7 @@ def build_nmr_output():
     stu1.assays.append(sipos_2006_talanta_fig_3_LiOH)
 
     sipos_2006_RSC_table1 = Assay()
+    sipos_2006_RSC_table1.identifier = 'sipos_2006_RSC_table1'
     sipos_2006_RSC_table1.measurement_type = ppm
     sipos_2006_RSC_table1.technology_type = al_27_nmr
     sipos_2006_RSC_table1.technology_platform = 'Bruker 300MHz'
@@ -308,8 +310,8 @@ def build_nmr_output():
             comments=[
                 # An ad-hoc way to track the column headers and relate
                 # them to their associated Ontology annotations.
-                Comment(name='column_1', value='molarity hydroxide'),
-                Comment(name='column_2', value='ppm aluminum')
+                Comment(name='column_0', value='molarity hydroxide'),
+                Comment(name='column_1', value='ppm aluminum')
             ]
         )
     ]
@@ -377,7 +379,7 @@ def get_assays_by_measurement_type(study, measurement_ontology):
     return matching_assay_list
 
 
-def get_dataFiles_from_assay(assay):
+def get_dataFiles_with_ID_from_assay(assay):
     """
     Searches an ISA *.json document for data files, and their
     column headers.
@@ -395,10 +397,13 @@ def get_dataFiles_from_assay(assay):
     # Pull the list of DataFile objects from the Investigation.
     data_files = assay.data_files
 
+    # Pull the identifier of this assay.
+    # assay_id = assay.identifier
+
     return data_files
 
 
-def build_pandas_dataframe(data_file):
+def build_pandas_dataframe(data_file, prepath=None):
     """
     Reads a custom comment in the dataFile object input.
 
@@ -411,6 +416,10 @@ def build_pandas_dataframe(data_file):
     # Get the data file path.
     data_path = data_file.filename
 
+    # If a prepath entry is found, construct the directory.
+    if prepath is not None:
+        data_path = os.path.join(prepath, data_path)
+
     # TODO: Implement below...
     # Get the pandas csv options from the comment.
     # Create the dataframe with the options loaded.
@@ -418,7 +427,7 @@ def build_pandas_dataframe(data_file):
     # Create the dataframe.
     data_frame = pd.read_csv(
         filepath_or_buffer=data_path,
-        index_col=False
+        # index_col=False
     )
 
     # Get the column headers from the comment.
@@ -431,7 +440,7 @@ def build_pandas_dataframe(data_file):
 
     for i in range(len(data_frame.columns)):
         # Build the comment name that maps to column_i.
-        i_col_name = data_file.get_comment('column_{}'.format(i))
+        i_col_name = data_file.get_comment('column_{}'.format(i)).value
         # Add that comment valuye to the list of new column names.
         new_column_names.append(i_col_name)
 
