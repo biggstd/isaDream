@@ -50,6 +50,7 @@ data into a web browser.
 """
 
 from isatools.model import *
+from isatools import isatab
 from isatools.isajson import ISAJSONEncoder
 import json
 import pandas as pd
@@ -106,28 +107,68 @@ def build_nmr_output():
     molarity_factor.name = "Molarity Study Factor"
     molarity_factor.factor_type = molarity
 
+    aluminate_molarity = StudyFactor()
+    aluminate_molarity.name = 'Aluminate Molarity'
+    aluminate_molarity.factor_type = molarity
+
     celsius = StudyFactor()
     celsius.name = "Degrees Celsius"
     celsius.factor_type = degrees_celsius
 
     # Material Samples --------------------------------------------------------
+    # Attributes: name, characteristics, factor_values, derives_from, comments.
     # Normally these would be unique on a per-study basis. For this demo case
-    # The same instances are used for simplicity.
-    sodium_aluminate_soln = Sample()
-    sodium_aluminate_soln.name = "The sodium solution used in sipos 2006."
-    # Set the derives_from list to include all the source materials used.
-    sodium_aluminate_soln.derives_from = [al_wire, sodium_hydroxide]
-    sodium_aluminate_soln.factor_values = [
-        FactorValue(factor_name=celsius, value=25, unit=degrees_celsius)
-    ]
+    # The same instances are used here for simplicity.
 
-    caesium_al_soln = Sample()
-    caesium_al_soln.name = 'Caesium Aluminate Solution'
-    caesium_al_soln.derives_from = [
+    Cs_Al_soln = Sample()
+    # TODO: Add ionic strength Characteristic or a FactorValue.
+    Cs_Al_soln.name = 'Caesium Aluminate Solution'
+    Cs_Al_soln.derives_from = [
         al_wire,
         caesium_hydroxide,
-        caesium_chloride,
+        caesium_chloride]
+    Cs_Al_soln.characteristics = [
+        Characteristic(category=counter_ion, value=caesium)]
+    Cs_Al_soln.factor_values = [
+        FactorValue(
+            factor_name=aluminate_molarity,
+            value=3.0,
+            unit=molarity,
+        )
     ]
+
+    KOH_Al_soln = Sample()
+    KOH_Al_soln.name = 'sipos_2006_talanta_KOH_Al_soln'
+    KOH_Al_soln.derives_from = [al_wire, potassium_hydroxide]
+    KOH_Al_soln.characteristics = [
+        Characteristic(category=counter_ion, value=potassium)]
+    KOH_Al_soln.factor_values = [
+        FactorValue(
+            factor_name=aluminate_molarity,
+            value=0.005,
+            unit=molarity,)]
+
+    NaOH_Al_soln = Sample()
+    NaOH_Al_soln.name = 'sipos_2006_talanta_NaOH_Al_soln'
+    NaOH_Al_soln.derives_from = [al_wire, sodium_hydroxide]
+    NaOH_Al_soln.characteristics = [
+        Characteristic(category=counter_ion, value=sodium)]
+    NaOH_Al_soln.factor_values = [
+        FactorValue(
+            factor_name=aluminate_molarity,
+            value=0.005,
+            unit=molarity,)]
+
+    LiOH_Al_soln = Sample()
+    LiOH_Al_soln.name = 'sipos_2006_talanta_LiOH_Al_soln'
+    LiOH_Al_soln.derives_from = [al_wire, lithium_hydroxide]
+    LiOH_Al_soln.characteristics = [
+        Characteristic(category=counter_ion, value=lithium)]
+    LiOH_Al_soln.factor_values = [
+        FactorValue(
+            factor_name=aluminate_molarity,
+            value=0.005,
+            unit=molarity,)]
 
     # Study definitions -------------------------------------------------------
     stu1 = Study()
@@ -148,7 +189,7 @@ def build_nmr_output():
         potassium_hydroxide,
         lithium_hydroxide
     ]
-    stu1.samples = [sodium_aluminate_soln]
+    stu1.samples = [NaOH_Al_soln]
     stu1.units = [ppm, molarity, celsius]
     stu1.factors = [molarity_factor, celsius]
     inv.studies.append(stu1)
@@ -178,19 +219,77 @@ def build_nmr_output():
 
     # Assay definitions -------------------------------------------------------
 
-    sipos_2006_talanta_fig_3 = Assay()
-    sipos_2006_talanta_fig_3.measurement_type = ppm
-    sipos_2006_talanta_fig_3.technology_type = al_27_nmr
-    sipos_2006_talanta_fig_3.technology_platform = 'Bruker 300Mhz'
-    sipos_2006_talanta_fig_3.sources = [
+    sipos_2006_talanta_fig_3_KOH = Assay()
+    sipos_2006_talanta_fig_3_KOH.identifier = 'sipos_2006_talanta_fig_3_KOH'
+    sipos_2006_talanta_fig_3_KOH.measurement_type = ppm
+    sipos_2006_talanta_fig_3_KOH.technology_type = al_27_nmr
+    sipos_2006_talanta_fig_3_KOH.technology_platform = 'Bruker 300Mhz'
+    sipos_2006_talanta_fig_3_KOH.sources = [
         al_wire,
         potassium_hydroxide,
+    ]
+    sipos_2006_talanta_fig_3_KOH.samples = [
+        KOH_Al_soln,
+    ]
+    sipos_2006_talanta_fig_3_KOH.units = [ppm, molarity]
+    sipos_2006_talanta_fig_3_KOH.data_files = [
+        DataFile(
+            filename='sipos_2006_talanta_fig_3_KOH.csv',
+            comments=[
+                Comment(name='column_0', value='molarity hydroxide'),
+                Comment(name='column_1', value='ppm aluminum'),
+            ]
+        )
+    ]
+    stu1.assays.append(sipos_2006_talanta_fig_3_KOH)
+
+    sipos_2006_talanta_fig_3_NaOH = Assay()
+    sipos_2006_talanta_fig_3_NaOH.identifier = 'sipos_2006_talanta_fig_3_NaOH'
+    sipos_2006_talanta_fig_3_NaOH.measurement_type = ppm
+    sipos_2006_talanta_fig_3_NaOH.technology_type = al_27_nmr
+    sipos_2006_talanta_fig_3_NaOH.technology_platform = 'Bruker 300Mhz'
+    sipos_2006_talanta_fig_3_NaOH.sources = [
+        al_wire,
         sodium_hydroxide,
+    ]
+    sipos_2006_talanta_fig_3_NaOH.samples = [
+        KOH_Al_soln,
+    ]
+    sipos_2006_talanta_fig_3_NaOH.units = [ppm, molarity]
+    sipos_2006_talanta_fig_3_NaOH.data_files = [
+        DataFile(
+            filename='sipos_2006_talanta_fig_3_NaOH.csv',
+            comments=[
+                Comment(name='column_0', value='molarity hydroxide'),
+                Comment(name='column_1', value='ppm aluminum'),
+            ]
+        )
+    ]
+    stu1.assays.append(sipos_2006_talanta_fig_3_NaOH)
+
+    sipos_2006_talanta_fig_3_LiOH = Assay()
+    sipos_2006_talanta_fig_3_LiOH.identifier = 'sipos_2006_talanta_fig_3_LiOH'
+    sipos_2006_talanta_fig_3_LiOH.measurement_type = ppm
+    sipos_2006_talanta_fig_3_LiOH.technology_type = al_27_nmr
+    sipos_2006_talanta_fig_3_LiOH.technology_platform = 'Bruker 300Mhz'
+    sipos_2006_talanta_fig_3_LiOH.sources = [
+        al_wire,
         lithium_hydroxide,
     ]
-    sipos_2006_talanta_fig_3.samples = [
-        
+    sipos_2006_talanta_fig_3_LiOH.samples = [
+        KOH_Al_soln,
     ]
+    sipos_2006_talanta_fig_3_LiOH.units = [ppm, molarity]
+    sipos_2006_talanta_fig_3_LiOH.data_files = [
+        DataFile(
+            filename='sipos_2006_talanta_fig_3_LiOH.csv',
+            comments=[
+                Comment(name='column_0', value='molarity hydroxide'),
+                Comment(name='column_1', value='ppm aluminum'),
+            ]
+        )
+    ]
+    stu1.assays.append(sipos_2006_talanta_fig_3_LiOH)
 
     sipos_2006_RSC_table1 = Assay()
     sipos_2006_RSC_table1.measurement_type = ppm
@@ -201,15 +300,14 @@ def build_nmr_output():
         caesium_chloride,
         caesium_hydroxide
     ]
-    sipos_2006_RSC_table1.samples = [caesium_al_soln]
-    sipos_2006_RSC_table1.units = [ppm, molarity, celsius]
+    sipos_2006_RSC_table1.samples = [Cs_Al_soln]
+    sipos_2006_RSC_table1.units = [ppm, molarity]
     sipos_2006_RSC_table1.data_files = [
         DataFile(
             filename='sipos2006_RSC_table_1.csv',
             comments=[
                 # An ad-hoc way to track the column headers and relate
                 # them to their associated Ontology annotations.
-                Comment(name='column_0', value='molarity aluminum'),
                 Comment(name='column_1', value='molarity hydroxide'),
                 Comment(name='column_2', value='ppm aluminum')
             ]
@@ -221,7 +319,7 @@ def build_nmr_output():
     # assay.measurement_type = ppm
     # assay.technology_type = al_27_nmr
     # assay.technology_platform = "Bruker DPX 300MHz"
-    # assay.samples = [sodium_aluminate_soln]
+    # assay.samples = [NaOH_Al_soln]
     # assay.units = [ppm, molarity, celsius]
     # assay.data_files = [DataFile(filename='sipos2006-fig2.csv')]
     # assay.sources = [al_wire, sodium_hydroxide]
@@ -353,12 +451,26 @@ def add_ISA_metadata_key_to_pandas_dataframe(data_frame, col, val):
     data set from a given data file can be associated with the
     correct set of metadata.
     """
+    # Create a new pandas column with the name `col` and fill out all
+    # values with the `val`.
     data_frame[col] = val
 
     # TODO: Unclear if I need to return this value... I think the
     # code above should modify the dataframe in place...
 
     return data_frame
+
+
+def get_factor_values_from_study(study):
+    """Returns a list of factors and their corresponding values.
+
+    The list returned is a nested, list of lists.
+    """
+    # Use the ISA study factors property to generate the list of
+    # factor objects within the input study.
+    factor_values = study.factors
+
+    return factor_values
 
 
 def jsonify_investigation(investigation):
@@ -373,15 +485,22 @@ def jsonify_investigation(investigation):
     )
 
 
+def tabify_investigation(investigation):
+    """Converts an ISA object to a tabular format."""
+    return isatab.dumps(investigation)
+
+
 if __name__ == '__main__':
     invest = build_nmr_output()
     print(jsonify_investigation(invest))
-    # Testing some other functions.
-    matching_studies = get_studies_by_design_descriptor(invest, al_27_nmr)
+    # print(tabify_investigation(invest))
+    # # Testing some other functions.
+    # matching_studies = get_studies_by_design_descriptor(invest, al_27_nmr)
 
-    out_assays = list()
+    # print([jsonify_investigation(x) for x in matching_studies])
+    # out_assays = list()
 
-    for study in matching_studies:
-        matching_assays = get_assays_by_measurement_type(study, ppm)
-        out_assays.extend(matching_assays)
-    print(out_assays)
+    # for study in matching_studies:
+    #     matching_assays = get_assays_by_measurement_type(study, ppm)
+    #     out_assays.extend(matching_assays)
+    # print(out_assays)

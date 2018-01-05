@@ -39,8 +39,9 @@ intrinsic_properties = OntologySource(
 
 extrinsic_properties = OntologySource(
     name='Extrinsic Material Property',
-    description='Property of a material that is dependent '
-    'on context and relationships.')
+    description=(
+        'Property of a material that is dependent '
+        'on context and relationships.'))
 
 
 # --------------------ONTOLOGY ANNOTATIONS---------------- #
@@ -65,6 +66,8 @@ percent_material_purity.term = 'Percent by Weight Purity'
 degrees_celsius = OntologyAnnotation(term_source=extrinsic_properties)
 degrees_celsius.term = "Temperature in degrees celsius"
 
+counter_ion = OntologyAnnotation(term='Counter Ion')
+
 # Define ontology annotations for use in drop-downs.
 # These definitions should allow for...
 # TOOD: Can these be more directly linked to samples?
@@ -72,6 +75,8 @@ hydroxide = OntologyAnnotation(term='Hydroxide')
 aluminum = OntologyAnnotation(term='Aluminum')
 sodium = OntologyAnnotation(term='Sodium')
 caesium = OntologyAnnotation(term='Caesium')
+lithium = OntologyAnnotation(term='Lithium')
+potassium = OntologyAnnotation(term='Potassium')
 
 
 # --------------------MATERIAL SOURCES----------------#
