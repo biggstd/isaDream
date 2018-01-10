@@ -317,17 +317,6 @@ def build_nmr_output():
     ]
     stu2.assays.append(sipos_2006_RSC_table1)
 
-    # assay = Assay()
-    # assay.measurement_type = ppm
-    # assay.technology_type = al_27_nmr
-    # assay.technology_platform = "Bruker DPX 300MHz"
-    # assay.samples = [NaOH_Al_soln]
-    # assay.units = [ppm, molarity, celsius]
-    # assay.data_files = [DataFile(filename='sipos2006-fig2.csv')]
-    # assay.sources = [al_wire, sodium_hydroxide]
-
-    # stu1.assays.append(assay)
-
     return inv
 
 
@@ -465,7 +454,7 @@ def add_ISA_metadata_key_to_pandas_dataframe(data_frame, col, val):
     data_frame[col] = val
 
     # TODO: Unclear if I need to return this value... I think the
-    # code above should modify the dataframe in place...
+    # code alayoutbove should modify the dataframe in place...
 
     return data_frame
 
@@ -482,11 +471,11 @@ def get_factor_values_from_study(study):
     return factor_values
 
 
-def jsonify_investigation(investigation):
-    """Converts an ISA Investigation object to a .json string.
+def jsonify_isa_object(isa_object):
+    """Converts an ISA object object to a .json string.
     """
     return json.dumps(
-        investigation,
+        isa_object,
         cls=ISAJSONEncoder,
         sort_keys=True,
         indent=4,
@@ -499,14 +488,75 @@ def tabify_investigation(investigation):
     return isatab.dumps(investigation)
 
 
+def build_data_md_pair(study_list):
+    """
+    Builds a pandas dataframe object from a list of studies, to this dataframe
+    is added:
+        + FactorValues
+        + Study Identifier
+        + Assay Identifier
+    Builds a metadata dictionary of study objects with their identifier.
+    """
+    df_list = list()
+    metadata_dict = dict()
+
+    for study in study_list:
+
+        # For each matching study, get its identifier.
+        study_ID = study.identifier
+
+        # Create the entry for the metadata dictionary.
+        metadata_dict[study_ID] = list(jsonify_isa_object(study))
+
+        # Get each matching assay within the found studies.
+        matching_assays = get_assays_by_measurement_type(study, ppm)
+
+        # For each of these assays, get the associated DataFile and:
+        for assay in matching_assays:
+
+            # Get the Assay identifier.
+            assay_ID = assay.identifier
+
+            # Create the Assay metadata dictionary entry.
+            metadata_dict[assay_ID] = list(jsonify_isa_object(assay))
+
+            # For each data_file object.
+            for data_file in assay.data_files:
+
+                # Build the pandas dataframe:
+                new_df = build_pandas_dataframe(
+                    data_file,
+                    '/home/tylerbiggs/git/isaDream/isadream/demo_data')
+
+                # Add the appropriate tags to the newly minted dataframe.
+                new_df['assay_ID'] = assay_ID
+                new_df['study_ID'] = study_ID
+
+                # For each of the factor values appended to a sample, add the
+                # factor name and value to the dataframe.
+                for sample in assay.samples:
+                    for factor in sample.factor_values:
+                        # Combine the name and unit for now.
+                        new_df[str(factor.factor_name.name)] = factor.value
+
+                # Append the new dataframe to the output list.
+                df_list.append(new_df)
+
+    # Concatenate the dataframes generated.
+    dataframe_out = pd.concat(df_list, ignore_index=True)
+
+    # Return the dataframe and the metadata dictionary.
+    return dataframe_out, metadata_dict
+
+
 if __name__ == '__main__':
     invest = build_nmr_output()
-    print(jsonify_investigation(invest))
+    print(jsonify_isa_object(invest))
     # print(tabify_investigation(invest))
     # # Testing some other functions.
     # matching_studies = get_studies_by_design_descriptor(invest, al_27_nmr)
 
-    # print([jsonify_investigation(x) for x in matching_studies])
+    # print([jsonify_isa_object(x) for x in matching_studies])
     # out_assays = list()
 
     # for study in matching_studies:

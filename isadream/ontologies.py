@@ -90,3 +90,7 @@ potassium_hydroxide = Source(name='Potassium Hydroxide')
 lithium_hydroxide = Source(name='Lithium Hydroxide')
 caesium_hydroxide = Source(name='Caesium Hydroxide')
 caesium_chloride = Source(name='Caesium Chloride')
+
+# PROTOCOLS -------------------------------------------------------------------
+# Define experimental protocols.
+# TODO: Define protocols.
