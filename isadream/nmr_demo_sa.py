@@ -506,7 +506,7 @@ def build_data_md_pair(study_list):
         study_ID = study.identifier
 
         # Create the entry for the metadata dictionary.
-        metadata_dict[study_ID] = list(jsonify_isa_object(study))
+        metadata_dict[study_ID] = jsonify_isa_object(study)
 
         # Get each matching assay within the found studies.
         matching_assays = get_assays_by_measurement_type(study, ppm)
@@ -518,7 +518,7 @@ def build_data_md_pair(study_list):
             assay_ID = assay.identifier
 
             # Create the Assay metadata dictionary entry.
-            metadata_dict[assay_ID] = list(jsonify_isa_object(assay))
+            metadata_dict[assay_ID] = jsonify_isa_object(assay)
 
             # For each data_file object.
             for data_file in assay.data_files:
