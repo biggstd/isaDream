@@ -1,5 +1,8 @@
 # ISADREAM
 
+**isaDream** is a set of tools that extends [isaTools](https://github.com/ISA-tools/isa-api)
+for use in the IDREAM EFRC.
+
 _This package is under active development._
 
 ISADream is a python package that handles:
@@ -19,8 +22,15 @@ data point.
 
 ## TODO
 
-- [ ] 
-- [ ]  Implement MongoDB.
+- [x] Create hard coded demo dataset.
+- [x] Develop Ontologies for NMR demo.
+- [x] Create a Comment format that allows for column labeling of `.csv` files.
+	  This should allow for defined ontologies to be linked to specific columns
+	  in a data file.
+- [x] Query ISA objects by design descriptor.
+- [x] Query ISA objects by measurement type.
+- [ ] Add a process to the NMR demo.
+- [ ] Implement MongoDB.
 
 
 ## Installation Instructions
