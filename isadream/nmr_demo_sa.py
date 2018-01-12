@@ -50,7 +50,7 @@ data into a web browser.
 """
 
 from isatools.model import *
-from isatools import isatab
+from isatools import isajson
 from isatools.isajson import ISAJSONEncoder
 import json
 import os
@@ -116,6 +116,10 @@ def build_nmr_output():
     celsius.name = "Degrees Celsius"
     celsius.factor_type = degrees_celsius
 
+    counter_ion_factor = StudyFactor()
+    counter_ion_factor.name = "Counter Ion"
+    counter_ion_factor.factor_type = counter_ion
+
     # Material Samples --------------------------------------------------------
     # Attributes: name, characteristics, factor_values, derives_from, comments.
     # Normally these would be unique on a per-study basis. For this demo case
@@ -135,7 +139,12 @@ def build_nmr_output():
             factor_name=aluminate_molarity,
             value=3.0,
             unit=molarity,
-        )
+        ),
+        FactorValue(
+            factor_name=counter_ion_factor,
+            value='Cs+',
+            unit=counter_ion,
+        ),
     ]
 
     KOH_Al_soln = Sample()
@@ -147,7 +156,13 @@ def build_nmr_output():
         FactorValue(
             factor_name=aluminate_molarity,
             value=0.005,
-            unit=molarity,)]
+            unit=molarity,),
+        FactorValue(
+            factor_name=counter_ion_factor,
+            value='K+',
+            unit=counter_ion,
+        ),
+    ]
 
     NaOH_Al_soln = Sample()
     NaOH_Al_soln.name = 'sipos_2006_talanta_NaOH_Al_soln'
@@ -158,7 +173,13 @@ def build_nmr_output():
         FactorValue(
             factor_name=aluminate_molarity,
             value=0.005,
-            unit=molarity,)]
+            unit=molarity,),
+        FactorValue(
+            factor_name=counter_ion_factor,
+            value='Na+',
+            unit=counter_ion,
+        ),
+    ]
 
     LiOH_Al_soln = Sample()
     LiOH_Al_soln.name = 'sipos_2006_talanta_LiOH_Al_soln'
@@ -169,7 +190,13 @@ def build_nmr_output():
         FactorValue(
             factor_name=aluminate_molarity,
             value=0.005,
-            unit=molarity,)]
+            unit=molarity,),
+        FactorValue(
+            factor_name=counter_ion_factor,
+            value='Li+',
+            unit=counter_ion,
+        ),
+    ]
 
     # Study definitions -------------------------------------------------------
     stu1 = Study()
@@ -506,7 +533,7 @@ def build_data_md_pair(study_list):
         study_ID = study.identifier
 
         # Create the entry for the metadata dictionary.
-        metadata_dict[study_ID] = jsonify_isa_object(study)
+        metadata_dict[study_ID] = study
 
         # Get each matching assay within the found studies.
         matching_assays = get_assays_by_measurement_type(study, ppm)
@@ -518,7 +545,7 @@ def build_data_md_pair(study_list):
             assay_ID = assay.identifier
 
             # Create the Assay metadata dictionary entry.
-            metadata_dict[assay_ID] = jsonify_isa_object(assay)
+            metadata_dict[assay_ID] = assay
 
             # For each data_file object.
             for data_file in assay.data_files:
