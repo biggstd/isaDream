@@ -197,6 +197,38 @@ def build_nmr_output():
             unit=counter_ion,
         ),
     ]
+    # DataFile Definitions ----------------------------------------------------
+    df_sipos_2006_talanta_fig_3_KOH = DataFile(
+        filename='sipos_2006_talanta_fig_3_KOH.csv',
+        comments=[
+            Comment(name='column_0', value='molarity hydroxide'),
+            Comment(name='column_1', value='ppm aluminum'),
+        ]
+    )
+
+    df_sipos_2006_talanta_fig_3_NaOH = DataFile(
+        filename='sipos_2006_talanta_fig_3_NaOH.csv',
+        comments=[
+            Comment(name='column_0', value='molarity hydroxide'),
+            Comment(name='column_1', value='ppm aluminum'),
+        ]
+    )
+
+    df_sipos_2006_talanta_fig_3_LiOH = DataFile(
+        filename='sipos_2006_talanta_fig_3_LiOH.csv',
+        comments=[
+            Comment(name='column_0', value='molarity hydroxide'),
+            Comment(name='column_1', value='ppm aluminum'),
+        ]
+    )
+
+    df_sipos_2006_RSC_table1 = DataFile(
+        filename='sipos2006_RSC_table_1.csv',
+        comments=[
+            Comment(name='column_0', value='molarity hydroxide'),
+            Comment(name='column_1', value='ppm aluminum')
+        ]
+    )
 
     # Study definitions -------------------------------------------------------
     stu1 = Study()
@@ -261,14 +293,54 @@ def build_nmr_output():
     ]
     sipos_2006_talanta_fig_3_KOH.units = [ppm, molarity]
     sipos_2006_talanta_fig_3_KOH.data_files = [
-        DataFile(
-            filename='sipos_2006_talanta_fig_3_KOH.csv',
-            comments=[
-                Comment(name='column_0', value='molarity hydroxide'),
-                Comment(name='column_1', value='ppm aluminum'),
-            ]
+        df_sipos_2006_talanta_fig_3_KOH
+    ]
+    sipos_2006_talanta_fig_3_KOH.process_sequence = [
+        Process(
+            name='sipos2006_nmr_process',
+            executes_protocol=nmr_aquisition_protocol,
+            parameter_values=[
+                ParameterValue(
+                    category=param_temperature,
+                    value=25,
+                    unit=degrees_celsius,
+                ),
+                ParameterValue(
+                    category=param_magnet_strength,
+                    value=300,
+                    unit=mega_hertz,
+                ),
+                ParameterValue(
+                    category=param_reference_compound,
+                    value=alum_ref_cmpd,
+                    unit=nmr_ref_cmpd
+                ),
+                ParameterValue(
+                    category=param_aquisition_time,
+                    value=0.5,
+                    unit=seconds
+                ),
+                ParameterValue(
+                    category=param_pulse_width,
+                    value=0.000005,
+                    unit=seconds
+                ),
+                ParameterValue(
+                    category=param_scans,
+                    value=120,
+                    unit=nmr_number_of_scans
+                ),
+                ParameterValue(
+                    category=param_pulse_angle,
+                    value=90,
+                    unit=nmr_pulse_angle
+                ),
+            ],
+            inputs=[NaOH_Al_soln],
+            outputs=[df_sipos_2006_talanta_fig_3_KOH],
         )
     ]
+
     stu1.assays.append(sipos_2006_talanta_fig_3_KOH)
 
     sipos_2006_talanta_fig_3_NaOH = Assay()
@@ -285,13 +357,7 @@ def build_nmr_output():
     ]
     sipos_2006_talanta_fig_3_NaOH.units = [ppm, molarity]
     sipos_2006_talanta_fig_3_NaOH.data_files = [
-        DataFile(
-            filename='sipos_2006_talanta_fig_3_NaOH.csv',
-            comments=[
-                Comment(name='column_0', value='molarity hydroxide'),
-                Comment(name='column_1', value='ppm aluminum'),
-            ]
-        )
+        df_sipos_2006_talanta_fig_3_NaOH
     ]
     stu1.assays.append(sipos_2006_talanta_fig_3_NaOH)
 
@@ -309,13 +375,7 @@ def build_nmr_output():
     ]
     sipos_2006_talanta_fig_3_LiOH.units = [ppm, molarity]
     sipos_2006_talanta_fig_3_LiOH.data_files = [
-        DataFile(
-            filename='sipos_2006_talanta_fig_3_LiOH.csv',
-            comments=[
-                Comment(name='column_0', value='molarity hydroxide'),
-                Comment(name='column_1', value='ppm aluminum'),
-            ]
-        )
+        df_sipos_2006_talanta_fig_3_LiOH
     ]
     stu1.assays.append(sipos_2006_talanta_fig_3_LiOH)
 
@@ -332,15 +392,7 @@ def build_nmr_output():
     sipos_2006_RSC_table1.samples = [Cs_Al_soln]
     sipos_2006_RSC_table1.units = [ppm, molarity]
     sipos_2006_RSC_table1.data_files = [
-        DataFile(
-            filename='sipos2006_RSC_table_1.csv',
-            comments=[
-                # An ad-hoc way to track the column headers and relate
-                # them to their associated Ontology annotations.
-                Comment(name='column_0', value='molarity hydroxide'),
-                Comment(name='column_1', value='ppm aluminum')
-            ]
-        )
+        df_sipos_2006_RSC_table1
     ]
     stu2.assays.append(sipos_2006_RSC_table1)
 

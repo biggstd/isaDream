@@ -43,6 +43,9 @@ extrinsic_properties = OntologySource(
         'Property of a material that is dependent '
         'on context and relationships.'))
 
+time = OntologySource(
+    name="Measurements on the passage of time."
+)
 
 # --------------------ONTOLOGY ANNOTATIONS---------------- #
 # These are the 'mid-level' definitions.
@@ -63,10 +66,58 @@ percent_material_purity = OntologyAnnotation(
     term_source=extrinsic_properties)
 percent_material_purity.term = 'Percent by Weight Purity'
 
+temperature = OntologyAnnotation(
+    term_source=extrinsic_properties,
+    term='Temperature')
+
 degrees_celsius = OntologyAnnotation(term_source=extrinsic_properties)
 degrees_celsius.term = "Temperature in degrees celsius"
 
 counter_ion = OntologyAnnotation(term='Counter Ion')
+
+nmr_aquisition = OntologyAnnotation(
+    term='NMR Spectra Aquisition',
+    term_source=nmr)
+
+nmr_mag_str = OntologyAnnotation(
+    term='NMR MAgnet Strength',
+    term_source=nmr)
+
+nmr_ref_cmpd = OntologyAnnotation(
+    term='NMR Reference Compound',
+    term_source=nmr)
+
+nmr_aquisition_time = OntologyAnnotation(
+    term="NMR Aquisition Time",
+    term_source=nmr)
+
+nmr_pulse_width = OntologyAnnotation(
+    term="NMR Pulse Width",
+    term_source=nmr)
+
+nmr_number_of_scans = OntologyAnnotation(
+    term="NMR Number of Scans",
+    term_source=nmr)
+
+nmr_pulse_angle = OntologyAnnotation(
+    term="NMR Pulse Angle",
+    term_source=nmr)
+
+mega_hertz = OntologyAnnotation(
+    term="MHz",
+    term_source=nmr
+)
+
+alum_ref_cmpd = OntologyAnnotation(
+    term='KAl(SO4)2 5%, w/v',
+    term_source=nmr
+)
+
+seconds = OntologyAnnotation(
+    term='Seconds',
+    term_source=time
+)
+
 
 # Define ontology annotations for use in drop-downs.
 # These definitions should allow for...
@@ -91,6 +142,29 @@ lithium_hydroxide = Source(name='Lithium Hydroxide')
 caesium_hydroxide = Source(name='Caesium Hydroxide')
 caesium_chloride = Source(name='Caesium Chloride')
 
+# PROTOCOL PARAMETERS ---------------------------------------------------------
+# These are fields that are supplied to protocols.
+param_temperature = ProtocolParameter(parameter_name=degrees_celsius)
+param_magnet_strength = ProtocolParameter(parameter_name=nmr_mag_str)
+param_reference_compound = ProtocolParameter(parameter_name=nmr_ref_cmpd)
+param_aquisition_time = ProtocolParameter(parameter_name=nmr_aquisition_time)
+param_pulse_width = ProtocolParameter(parameter_name=nmr_pulse_width)
+param_scans = ProtocolParameter(parameter_name=nmr_number_of_scans)
+param_pulse_angle = ProtocolParameter(parameter_name=nmr_pulse_angle)
+
 # PROTOCOLS -------------------------------------------------------------------
 # Define experimental protocols.
-# TODO: Define protocols.
+nmr_aquisition_protocol = Protocol(
+    name="sample collection",
+    protocol_type=nmr_aquisition,
+    description="NMR Aquisition Protocol.",
+    parameters=[
+        param_temperature,
+        param_magnet_strength,
+        param_reference_compound,
+        param_aquisition_time,
+        param_pulse_width,
+        param_scans,
+        param_pulse_angle,
+    ],
+)
