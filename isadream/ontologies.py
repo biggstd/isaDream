@@ -155,7 +155,7 @@ param_pulse_angle = ProtocolParameter(parameter_name=nmr_pulse_angle)
 # PROTOCOLS -------------------------------------------------------------------
 # Define experimental protocols.
 nmr_aquisition_protocol = Protocol(
-    name="sample collection",
+    name="NMR Data Aquisition",
     protocol_type=nmr_aquisition,
     description="NMR Aquisition Protocol.",
     parameters=[

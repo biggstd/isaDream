@@ -164,16 +164,29 @@ def build_nmr_output():
         ),
     ]
 
-    NaOH_Al_soln = Sample()
-    NaOH_Al_soln.name = 'sipos_2006_talanta_NaOH_Al_soln'
-    NaOH_Al_soln.derives_from = [al_wire, sodium_hydroxide]
-    NaOH_Al_soln.characteristics = [
+    NaOH_Al_soln_a = Sample()
+    NaOH_Al_soln_a.name = 'sipos_2006_talanta_NaOH_Al_soln_a'
+    NaOH_Al_soln_a.derives_from = [al_wire, sodium_hydroxide]
+    NaOH_Al_soln_a.characteristics = [
         Characteristic(category=counter_ion, value=sodium)]
-    NaOH_Al_soln.factor_values = [
+    NaOH_Al_soln_a.factor_values = [
         FactorValue(
             factor_name=aluminate_molarity,
             value=0.005,
             unit=molarity,),
+        FactorValue(
+            factor_name=counter_ion_factor,
+            value='Na+',
+            unit=counter_ion,
+        ),
+    ]
+
+    NaOH_Al_soln_b = Sample()
+    NaOH_Al_soln_b.name = 'sipos_2006_talanta_NaOH_Al_soln_b'
+    NaOH_Al_soln_b.derives_from = [al_wire, sodium_hydroxide]
+    NaOH_Al_soln_b.characteristics = [
+        Characteristic(category=counter_ion, value=sodium)]
+    NaOH_Al_soln_b.factor_values = [
         FactorValue(
             factor_name=counter_ion_factor,
             value='Na+',
@@ -230,6 +243,16 @@ def build_nmr_output():
         ]
     )
 
+    df_sipos_2006_talanta_fig_2 = DataFile(
+        filename='sipos_2006_talanta_fig_2.csv',
+        comments=[
+            Comment(name='column_0', value='Aluminate Molarity'),
+            Comment(name='column_1', value='molarity hydroxide'),
+            Comment(name='column_2', value='ppm aluminum'),
+
+        ]
+    )
+
     # Study definitions -------------------------------------------------------
     stu1 = Study()
     stu1.identifier = "sipos2006_talanta"
@@ -249,7 +272,7 @@ def build_nmr_output():
         potassium_hydroxide,
         lithium_hydroxide
     ]
-    stu1.samples = [NaOH_Al_soln]
+    stu1.samples = [NaOH_Al_soln_a]
     stu1.units = [ppm, molarity, celsius]
     stu1.factors = [molarity_factor, celsius]
     inv.studies.append(stu1)
@@ -278,6 +301,63 @@ def build_nmr_output():
     inv.studies.append(stu2)
 
     # Assay definitions -------------------------------------------------------
+    sipos_2006_talanta_fig_2 = Assay()
+    sipos_2006_talanta_fig_2.identifier = 'sipos_2006_talanta_fig_2'
+    sipos_2006_talanta_fig_2.measurement_type = ppm
+    sipos_2006_talanta_fig_2.technology_type = al_27_nmr
+    sipos_2006_talanta_fig_2.technology_platform = 'Bruker 300Mhz'
+    sipos_2006_talanta_fig_2.sources = [al_wire, sodium_hydroxide]
+    sipos_2006_talanta_fig_2.samples = [NaOH_Al_soln_b]
+    sipos_2006_talanta_fig_2.units = [ppm, molarity]
+    sipos_2006_talanta_fig_2.data_files = [df_sipos_2006_talanta_fig_2]
+    sipos_2006_talanta_fig_2.process_sequence = [
+        Process(
+            name='sipos2006_nmr_process',
+            executes_protocol=nmr_aquisition_protocol,
+            parameter_values=[
+                ParameterValue(
+                    category=param_temperature,
+                    value=25,
+                    unit=degrees_celsius,
+                ),
+                ParameterValue(
+                    category=param_magnet_strength,
+                    value=300,
+                    unit=mega_hertz,
+                ),
+                ParameterValue(
+                    category=param_reference_compound,
+                    value=alum_ref_cmpd,
+                    unit=nmr_ref_cmpd
+                ),
+                ParameterValue(
+                    category=param_aquisition_time,
+                    value=0.5,
+                    unit=seconds
+                ),
+                ParameterValue(
+                    category=param_pulse_width,
+                    value=0.000005,
+                    unit=seconds
+                ),
+                ParameterValue(
+                    category=param_scans,
+                    value=120,
+                    unit=nmr_number_of_scans
+                ),
+                ParameterValue(
+                    category=param_pulse_angle,
+                    value=90,
+                    unit=nmr_pulse_angle
+                ),
+            ],
+            inputs=[NaOH_Al_soln_b],
+            outputs=[df_sipos_2006_talanta_fig_2],
+        )
+    ]
+    stu1.assays.append(sipos_2006_talanta_fig_2)
+
+    # -------------------------------------------------------------------------
 
     sipos_2006_talanta_fig_3_KOH = Assay()
     sipos_2006_talanta_fig_3_KOH.identifier = 'sipos_2006_talanta_fig_3_KOH'
@@ -336,12 +416,13 @@ def build_nmr_output():
                     unit=nmr_pulse_angle
                 ),
             ],
-            inputs=[NaOH_Al_soln],
+            inputs=[KOH_Al_soln],
             outputs=[df_sipos_2006_talanta_fig_3_KOH],
         )
     ]
-
     stu1.assays.append(sipos_2006_talanta_fig_3_KOH)
+
+    # -------------------------------------------------------------------------
 
     sipos_2006_talanta_fig_3_NaOH = Assay()
     sipos_2006_talanta_fig_3_NaOH.identifier = 'sipos_2006_talanta_fig_3_NaOH'
@@ -353,11 +434,56 @@ def build_nmr_output():
         sodium_hydroxide,
     ]
     sipos_2006_talanta_fig_3_NaOH.samples = [
-        NaOH_Al_soln,
+        NaOH_Al_soln_a,
     ]
     sipos_2006_talanta_fig_3_NaOH.units = [ppm, molarity]
     sipos_2006_talanta_fig_3_NaOH.data_files = [
         df_sipos_2006_talanta_fig_3_NaOH
+    ]
+    sipos_2006_talanta_fig_3_NaOH.process_sequence = [
+        Process(
+            name='sipos2006_nmr_process',
+            executes_protocol=nmr_aquisition_protocol,
+            parameter_values=[
+                ParameterValue(
+                    category=param_temperature,
+                    value=25,
+                    unit=degrees_celsius,
+                ),
+                ParameterValue(
+                    category=param_magnet_strength,
+                    value=300,
+                    unit=mega_hertz,
+                ),
+                ParameterValue(
+                    category=param_reference_compound,
+                    value=alum_ref_cmpd,
+                    unit=nmr_ref_cmpd
+                ),
+                ParameterValue(
+                    category=param_aquisition_time,
+                    value=0.5,
+                    unit=seconds
+                ),
+                ParameterValue(
+                    category=param_pulse_width,
+                    value=0.000005,
+                    unit=seconds
+                ),
+                ParameterValue(
+                    category=param_scans,
+                    value=120,
+                    unit=nmr_number_of_scans
+                ),
+                ParameterValue(
+                    category=param_pulse_angle,
+                    value=90,
+                    unit=nmr_pulse_angle
+                ),
+            ],
+            inputs=[NaOH_Al_soln_a],
+            outputs=[df_sipos_2006_talanta_fig_3_NaOH],
+        )
     ]
     stu1.assays.append(sipos_2006_talanta_fig_3_NaOH)
 
@@ -377,6 +503,51 @@ def build_nmr_output():
     sipos_2006_talanta_fig_3_LiOH.data_files = [
         df_sipos_2006_talanta_fig_3_LiOH
     ]
+    sipos_2006_talanta_fig_3_LiOH.process_sequence = [
+        Process(
+            name='sipos2006_nmr_process',
+            executes_protocol=nmr_aquisition_protocol,
+            parameter_values=[
+                ParameterValue(
+                    category=param_temperature,
+                    value=25,
+                    unit=degrees_celsius,
+                ),
+                ParameterValue(
+                    category=param_magnet_strength,
+                    value=300,
+                    unit=mega_hertz,
+                ),
+                ParameterValue(
+                    category=param_reference_compound,
+                    value=alum_ref_cmpd,
+                    unit=nmr_ref_cmpd
+                ),
+                ParameterValue(
+                    category=param_aquisition_time,
+                    value=0.5,
+                    unit=seconds
+                ),
+                ParameterValue(
+                    category=param_pulse_width,
+                    value=0.000005,
+                    unit=seconds
+                ),
+                ParameterValue(
+                    category=param_scans,
+                    value=120,
+                    unit=nmr_number_of_scans
+                ),
+                ParameterValue(
+                    category=param_pulse_angle,
+                    value=90,
+                    unit=nmr_pulse_angle
+                ),
+            ],
+            inputs=[LiOH_Al_soln],
+            outputs=[df_sipos_2006_talanta_fig_3_LiOH],
+        )
+    ]
     stu1.assays.append(sipos_2006_talanta_fig_3_LiOH)
 
     sipos_2006_RSC_table1 = Assay()
@@ -393,6 +564,51 @@ def build_nmr_output():
     sipos_2006_RSC_table1.units = [ppm, molarity]
     sipos_2006_RSC_table1.data_files = [
         df_sipos_2006_RSC_table1
+    ]
+    sipos_2006_RSC_table1.process_sequence = [
+        Process(
+            name='sipos2006_nmr_process',
+            executes_protocol=nmr_aquisition_protocol,
+            parameter_values=[
+                ParameterValue(
+                    category=param_temperature,
+                    value=25,
+                    unit=degrees_celsius,
+                ),
+                ParameterValue(
+                    category=param_magnet_strength,
+                    value=300,
+                    unit=mega_hertz,
+                ),
+                ParameterValue(
+                    category=param_reference_compound,
+                    value=alum_ref_cmpd,
+                    unit=nmr_ref_cmpd
+                ),
+                ParameterValue(
+                    category=param_aquisition_time,
+                    value=0.5,
+                    unit=seconds
+                ),
+                ParameterValue(
+                    category=param_pulse_width,
+                    value=0.000005,
+                    unit=seconds
+                ),
+                ParameterValue(
+                    category=param_scans,
+                    value=120,
+                    unit=nmr_number_of_scans
+                ),
+                ParameterValue(
+                    category=param_pulse_angle,
+                    value=90,
+                    unit=nmr_pulse_angle
+                ),
+            ],
+            inputs=[Cs_Al_soln],
+            outputs=[df_sipos_2006_RSC_table1],
+        )
     ]
     stu2.assays.append(sipos_2006_RSC_table1)
 
