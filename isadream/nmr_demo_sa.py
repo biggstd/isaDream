@@ -212,7 +212,7 @@ def build_nmr_output():
     ]
     # DataFile Definitions ----------------------------------------------------
     df_sipos_2006_talanta_fig_3_KOH = DataFile(
-        filename='sipos_2006_talanta_fig_3_KOH.csv',
+        filename='demo_data/sipos_2006_talanta_fig_3_KOH.csv',
         comments=[
             Comment(name='column_0', value='molarity hydroxide'),
             Comment(name='column_1', value='ppm aluminum'),
@@ -220,7 +220,7 @@ def build_nmr_output():
     )
 
     df_sipos_2006_talanta_fig_3_NaOH = DataFile(
-        filename='sipos_2006_talanta_fig_3_NaOH.csv',
+        filename='demo_data/sipos_2006_talanta_fig_3_NaOH.csv',
         comments=[
             Comment(name='column_0', value='molarity hydroxide'),
             Comment(name='column_1', value='ppm aluminum'),
@@ -228,7 +228,7 @@ def build_nmr_output():
     )
 
     df_sipos_2006_talanta_fig_3_LiOH = DataFile(
-        filename='sipos_2006_talanta_fig_3_LiOH.csv',
+        filename='demo_data/sipos_2006_talanta_fig_3_LiOH.csv',
         comments=[
             Comment(name='column_0', value='molarity hydroxide'),
             Comment(name='column_1', value='ppm aluminum'),
@@ -236,7 +236,7 @@ def build_nmr_output():
     )
 
     df_sipos_2006_RSC_table1 = DataFile(
-        filename='sipos2006_RSC_table_1.csv',
+        filename='demo_data/sipos2006_RSC_table_1.csv',
         comments=[
             Comment(name='column_0', value='molarity hydroxide'),
             Comment(name='column_1', value='ppm aluminum')
@@ -244,7 +244,7 @@ def build_nmr_output():
     )
 
     df_sipos_2006_talanta_fig_2 = DataFile(
-        filename='sipos_2006_talanta_fig_2.csv',
+        filename='demo_data/sipos_2006_talanta_fig_2.csv',
         comments=[
             Comment(name='column_0', value='Aluminate Molarity'),
             Comment(name='column_1', value='molarity hydroxide'),
@@ -702,7 +702,7 @@ def build_pandas_dataframe(data_file):
 
     # Load the file from pkc_resources. This is a demo-specific
     # function.
-    data_path = pkg_resources.resource_string(__name__, data_filename)
+    data_path = pkg_resources.resource_filename(__name__, data_filename)
 
     # TODO: Implement below...
     # Get the pandas csv options from the comment.
