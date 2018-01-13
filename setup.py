@@ -1,12 +1,13 @@
 from setuptools import setup, find_packages
 
 setup(
-    name='isadream',
+    name='isaDream',
     author='Tyler Biggs',
     author_email='biggstd@gmail.com',
     version='0.1',
     packages=find_packages(),
-    py_modules=['isadream'],
+    include_package_data=True,
+    py_modules=['isaDream'],
     install_requires=[
         'isatools',
         'pandas',

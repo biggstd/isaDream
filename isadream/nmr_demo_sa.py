@@ -48,10 +48,10 @@ As these are defined mock up a GUI for inputing this
 data into a web browser.
 
 """
-
 from isatools.model import *
 from isatools import isajson
 from isatools.isajson import ISAJSONEncoder
+import pkg_resources
 import json
 import os
 import pandas as pd
@@ -687,7 +687,7 @@ def get_dataFiles_with_ID_from_assay(assay):
     return data_files
 
 
-def build_pandas_dataframe(data_file, prepath=None):
+def build_pandas_dataframe(data_file):
     """
     Reads a custom comment in the dataFile object input.
 
@@ -698,11 +698,11 @@ def build_pandas_dataframe(data_file, prepath=None):
     """
 
     # Get the data file path.
-    data_path = data_file.filename
+    data_filename = data_file.filename
 
-    # If a prepath entry is found, construct the directory.
-    if prepath is not None:
-        data_path = os.path.join(prepath, data_path)
+    # Load the file from pkc_resources. This is a demo-specific
+    # function.
+    data_path = pkg_resources.resource_string(__name__, data_filename)
 
     # TODO: Implement below...
     # Get the pandas csv options from the comment.
@@ -819,9 +819,7 @@ def build_data_md_pair(study_list):
             for data_file in assay.data_files:
 
                 # Build the pandas dataframe:
-                new_df = build_pandas_dataframe(
-                    data_file,
-                    '/home/tylerbiggs/git/isaDream/isadream/demo_data')
+                new_df = build_pandas_dataframe(data_file)
 
                 # Add the appropriate tags to the newly minted dataframe.
                 new_df['assay_ID'] = assay_ID
