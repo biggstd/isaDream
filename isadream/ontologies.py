@@ -64,7 +64,7 @@ material_purity.term = "Material Purity"
 
 percent_material_purity = OntologyAnnotation(
     term_source=extrinsic_properties)
-percent_material_purity.term = 'Percent by Weight Purity'
+percent_material_purity.term = 'Purity Percent by Weight'
 
 temperature = OntologyAnnotation(
     term_source=extrinsic_properties,
@@ -130,11 +130,18 @@ lithium = OntologyAnnotation(term='Lithium')
 potassium = OntologyAnnotation(term='Potassium')
 
 
-# --------------------MATERIAL SOURCES----------------#
+# MATERIAL SOURCES ------------------------------------------------------------
 # These are the 'top-level' definitions of materials.
 
 al_wire = Source()
 al_wire.name = 'Aluminum Wire'
+al_wire.characteristics = [
+    Characteristic(
+        category=material_purity,
+        value=0.99,
+        unit=percent_material_purity,
+    )
+]
 
 sodium_hydroxide = Source(name='Sodium Hydroxide')
 potassium_hydroxide = Source(name='Potassium Hydroxide')

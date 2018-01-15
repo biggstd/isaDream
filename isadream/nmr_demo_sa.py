@@ -127,7 +127,7 @@ def build_nmr_output():
 
     Cs_Al_soln = Sample()
     # TODO: Add ionic strength Characteristic or a FactorValue.
-    Cs_Al_soln.name = 'Caesium Aluminate Solution'
+    Cs_Al_soln.name = 'Caesium hydroxide aluminate solution'
     Cs_Al_soln.derives_from = [
         al_wire,
         caesium_hydroxide,
@@ -148,7 +148,7 @@ def build_nmr_output():
     ]
 
     KOH_Al_soln = Sample()
-    KOH_Al_soln.name = 'sipos_2006_talanta_KOH_Al_soln'
+    KOH_Al_soln.name = 'Potassium hydroxide aluminate solution'
     KOH_Al_soln.derives_from = [al_wire, potassium_hydroxide]
     KOH_Al_soln.characteristics = [
         Characteristic(category=counter_ion, value=potassium)]
@@ -165,7 +165,7 @@ def build_nmr_output():
     ]
 
     NaOH_Al_soln_a = Sample()
-    NaOH_Al_soln_a.name = 'sipos_2006_talanta_NaOH_Al_soln_a'
+    NaOH_Al_soln_a.name = '0.005 M Sodium hydroxide aluminate solution'
     NaOH_Al_soln_a.derives_from = [al_wire, sodium_hydroxide]
     NaOH_Al_soln_a.characteristics = [
         Characteristic(category=counter_ion, value=sodium)]
@@ -182,7 +182,7 @@ def build_nmr_output():
     ]
 
     NaOH_Al_soln_b = Sample()
-    NaOH_Al_soln_b.name = 'sipos_2006_talanta_NaOH_Al_soln_b'
+    NaOH_Al_soln_b.name = 'Sodium Hydroxide aluminate solution'
     NaOH_Al_soln_b.derives_from = [al_wire, sodium_hydroxide]
     NaOH_Al_soln_b.characteristics = [
         Characteristic(category=counter_ion, value=sodium)]
@@ -195,7 +195,7 @@ def build_nmr_output():
     ]
 
     LiOH_Al_soln = Sample()
-    LiOH_Al_soln.name = 'sipos_2006_talanta_LiOH_Al_soln'
+    LiOH_Al_soln.name = 'Lithium hydroxide aluminate solution'
     LiOH_Al_soln.derives_from = [al_wire, lithium_hydroxide]
     LiOH_Al_soln.characteristics = [
         Characteristic(category=counter_ion, value=lithium)]

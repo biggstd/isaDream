@@ -98,7 +98,7 @@ def create_figure():
 
     fig = figure(
         name='primary_figure',
-        width=800,
+        width=600,
     )
 
     sizes = 7
@@ -161,7 +161,7 @@ def format_assay_text(study, assay):
 
 def format_publication_html(study, assay):
 
-    out_html = "<strong>Publications</strong>: <br />"
+    out_html = "<h4>Publications:</h4>"
 
     for pub in study.publications:
         out_html += (
@@ -178,21 +178,28 @@ def format_publication_html(study, assay):
 
 def format_protocol_html(study, assay):
 
-    out_html = "<br /><strong>Experiment Protocol</strong>: <br />"
+    out_html = "<h4>Experiment Protocol(s):</h4>"
 
     for proc in assay.process_sequence:
         out_html += (
-            '<strong>Protocol</strong>: {0}<br />'
+            '<strong>Protocol Name</strong>: {0}<br />'
             .format(
                 proc.executes_protocol.name,
             )
         )
         for param in proc.parameter_values:
+            # Check to see if the value is an OntologyAnnotation
+            # with a term string that we should print.
+            if hasattr(param.value, 'term'):
+                param_val = param.value.term
+            else:
+                param_val = param.value
+
             out_html += (
                 '<strong>{0}</strong>: {1} {2}<br />'
                 .format(
                     param.category.parameter_name.term,
-                    param.value,
+                    param_val,
                     param.unit.term
                 )
             )
@@ -201,23 +208,24 @@ def format_protocol_html(study, assay):
 
 def format_material_html(study, assay):
 
-    out_html = "<br /><strong>Sample Information</strong>: <br />"
+    out_html = "<h4>Sample Information:</h4>"
 
     for sam in assay.samples:
         out_html += (
-            '<strong>Protocol</strong>: {0}<br />'
+            '<strong>Sample Name: </strong>{0}<br />'
             '<strong>Derives From</strong>:<br />'
             .format(
                 sam.name,
             )
         )
         for sor in sam.derives_from:
-            out_html += (
-                '<strong>{0}</strong>:<br />'
-                .format(
-                    sor.name,
+            out_html += '<em>{0}</em><br />'.format(sor.name)
+
+            for char in sor.characteristics:
+                out_html += '{0}{1}: {2}<br />'.format(
+                    chr(8226), char.value, char.unit.term
                 )
-            )
+
     return out_html
 
 
@@ -227,14 +235,14 @@ def build_metadata_paragraph(study_key=None, assay_key=None):
     if all(v is None for v in [study_key, assay_key]):
         return Div(
             text="No data point selected.",
-            width=500,
+            width=300,
         )
     else:
         active_study = metadata_dict[study_key]
         active_assay = metadata_dict[assay_key]
         new_paragarph = Div(
             text=format_assay_text(active_study, active_assay),
-            width=500,
+            width=300,
         )
         return new_paragarph
 
