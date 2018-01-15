@@ -125,6 +125,18 @@ def build_nmr_output():
     # Normally these would be unique on a per-study basis. For this demo case
     # The same instances are used here for simplicity.
 
+    high_purity_water = Source(name="water (H2O)")
+    high_purity_water.characteristics = [
+        Characteristic(
+            category=source_preparation,
+            value=(
+                'All solutions were prepared from high purity water (Millipore '
+                'Milli-Q system), which was boiled and purged with nitrogen to '
+                'minimize carbon dioxide content.'
+            )
+        )
+    ]
+
     Cs_Al_soln = Sample()
     # TODO: Add ionic strength Characteristic or a FactorValue.
     Cs_Al_soln.name = 'Caesium hydroxide aluminate solution'
@@ -149,7 +161,7 @@ def build_nmr_output():
 
     KOH_Al_soln = Sample()
     KOH_Al_soln.name = 'Potassium hydroxide aluminate solution'
-    KOH_Al_soln.derives_from = [al_wire, potassium_hydroxide]
+    KOH_Al_soln.derives_from = [al_wire, potassium_hydroxide, high_purity_water]
     KOH_Al_soln.characteristics = [
         Characteristic(category=counter_ion, value=potassium)]
     KOH_Al_soln.factor_values = [
@@ -166,7 +178,7 @@ def build_nmr_output():
 
     NaOH_Al_soln_a = Sample()
     NaOH_Al_soln_a.name = '0.005 M Sodium hydroxide aluminate solution'
-    NaOH_Al_soln_a.derives_from = [al_wire, sodium_hydroxide]
+    NaOH_Al_soln_a.derives_from = [al_wire, sodium_hydroxide, high_purity_water]
     NaOH_Al_soln_a.characteristics = [
         Characteristic(category=counter_ion, value=sodium)]
     NaOH_Al_soln_a.factor_values = [
@@ -183,7 +195,7 @@ def build_nmr_output():
 
     NaOH_Al_soln_b = Sample()
     NaOH_Al_soln_b.name = 'Sodium Hydroxide aluminate solution'
-    NaOH_Al_soln_b.derives_from = [al_wire, sodium_hydroxide]
+    NaOH_Al_soln_b.derives_from = [al_wire, sodium_hydroxide, high_purity_water]
     NaOH_Al_soln_b.characteristics = [
         Characteristic(category=counter_ion, value=sodium)]
     NaOH_Al_soln_b.factor_values = [
@@ -196,7 +208,7 @@ def build_nmr_output():
 
     LiOH_Al_soln = Sample()
     LiOH_Al_soln.name = 'Lithium hydroxide aluminate solution'
-    LiOH_Al_soln.derives_from = [al_wire, lithium_hydroxide]
+    LiOH_Al_soln.derives_from = [al_wire, lithium_hydroxide, high_purity_water]
     LiOH_Al_soln.characteristics = [
         Characteristic(category=counter_ion, value=lithium)]
     LiOH_Al_soln.factor_values = [

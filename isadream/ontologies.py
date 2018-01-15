@@ -118,6 +118,10 @@ seconds = OntologyAnnotation(
     term_source=time
 )
 
+source_preparation = OntologyAnnotation(
+    term='Material Source preparation'
+)
+
 
 # Define ontology annotations for use in drop-downs.
 # These definitions should allow for...
@@ -133,6 +137,7 @@ potassium = OntologyAnnotation(term='Potassium')
 # MATERIAL SOURCES ------------------------------------------------------------
 # These are the 'top-level' definitions of materials.
 
+# Consider moving this to the NMR Demo file...
 al_wire = Source()
 al_wire.name = 'Aluminum Wire'
 al_wire.characteristics = [

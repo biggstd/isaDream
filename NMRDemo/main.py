@@ -84,7 +84,9 @@ def build_hover_tool():
     hover = HoverTool(
         tooltips=[
             ('X, Y', '($x, $y)'),
-            ('ppm Al', '@{ppm aluminum}')
+            ('ppm Al', '@{ppm aluminum}'),
+            ('[OH-]', '@{molarity hydroxide}'),
+            ('[Al] total', '@{Aluminate Molarity}')
         ]
     )
     return hover
@@ -222,9 +224,15 @@ def format_material_html(study, assay):
             out_html += '<em>{0}</em><br />'.format(sor.name)
 
             for char in sor.characteristics:
-                out_html += '{0}{1}: {2}<br />'.format(
-                    chr(8226), char.value, char.unit.term
-                )
+
+                if hasattr(char.unit, 'term'):
+                    out_html += '{0} {1}: {2}<br />'.format(
+                        chr(8226), char.value, char.unit.term
+                    )
+                else:
+                    out_html += '{0} {1}<br />'.format(
+                        chr(8226), char.value
+                    )
 
     return out_html
 
