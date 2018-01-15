@@ -153,7 +153,8 @@ def format_assay_text(study, assay):
     format."""
     out_str = (
         format_publication_html(study, assay) +
-        format_protocol_html(study, assay)
+        format_protocol_html(study, assay) +
+        format_material_html(study, assay)
     )
     return out_str
 
@@ -199,7 +200,25 @@ def format_protocol_html(study, assay):
 
 
 def format_material_html(study, assay):
-    pass
+
+    out_html = "<br /><strong>Sample Information</strong>: <br />"
+
+    for sam in assay.samples:
+        out_html += (
+            '<strong>Protocol</strong>: {0}<br />'
+            '<strong>Derives From</strong>:<br />'
+            .format(
+                sam.name,
+            )
+        )
+        for sor in sam.derives_from:
+            out_html += (
+                '<strong>{0}</strong>:<br />'
+                .format(
+                    sor.name,
+                )
+            )
+    return out_html
 
 
 def build_metadata_paragraph(study_key=None, assay_key=None):
