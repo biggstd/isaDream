@@ -854,6 +854,16 @@ def build_data_md_pair(study_list):
     return dataframe_out, metadata_dict
 
 
+def create_ratio_column(dataframe, col1, col2):
+    """Creates a new column that has the values of col1 / col2. The name
+    is generated from the columns given.
+    """
+    new_col_name = ' / '.join([col1, col2])
+    dataframe[new_col_name] = dataframe[col1] / dataframe[col2]
+
+    return dataframe
+
+
 if __name__ == '__main__':
     invest = build_nmr_output()
     print(jsonify_isa_object(invest))

@@ -15,7 +15,7 @@ import pandas as pd
 from bokeh.layouts import layout, widgetbox
 from bokeh.models import ColumnDataSource, Select, HoverTool, TapTool, LinearInterpolator
 from bokeh.plotting import figure, curdoc
-from bokeh.models.widgets import Div
+from bokeh.models.widgets import Div, Tabs, Panel
 from bokeh.palettes import Category10
 from bokeh.transform import factor_cmap
 
@@ -35,6 +35,10 @@ matching_studies = get_studies_by_design_descriptor(invest, al_27_nmr)
 # Convert the returned list of studies to pandas dataframes and python
 # dictionaries for use in Bokeh's columnDataSource.
 data_frame, metadata_dict = build_data_md_pair(matching_studies)
+
+# Create some sample derivative columns.
+data_frame = create_ratio_column(data_frame, 'molarity hydroxide', 'Aluminate Molarity')
+data_frame = create_ratio_column(data_frame, 'Aluminate Molarity', 'molarity hydroxide')
 
 # Get the column names for use in the selectors.
 columns = sorted(data_frame.columns)
@@ -98,48 +102,60 @@ def create_figure():
     """
     update_data()
 
-    fig = figure(
-        name='primary_figure',
-        width=600,
-    )
+    panels = []
 
-    sizes = 7
-    if size.value != 'None':
-        size_scale = LinearInterpolator(
-            x=[min(source.data[size.value]), max(source.data[size.value])],
-            y=[2, 15]
+    for axis_type in ["linear", "log"]:
+
+        fig = figure(
+            name='primary_figure',
+            width=600,
+            x_axis_type=axis_type
         )
-        sizes = dict(field=size.value, transform=size_scale)
 
-    if color.value != 'None':
-        colors = factor_cmap(
-            field_name=color.value,
-            # palette=Category10[len(source.data[color.value].unique())],
-            palette=Category10[10],
-            factors=sorted(source.data[color.value].unique())
+        sizes = 7
+        if size.value != 'None':
+            size_scale = LinearInterpolator(
+                x=[min(source.data[size.value]), max(source.data[size.value])],
+                y=[2, 15]
+            )
+            sizes = dict(field=size.value, transform=size_scale)
+
+        if color.value != 'None':
+            colors = factor_cmap(
+                field_name=color.value,
+                # palette=Category10[len(source.data[color.value].unique())],
+                palette=Category10[10],
+                factors=sorted(source.data[color.value].unique())
+            )
+        else:
+            colors = "#31AADE"
+
+        fig.circle(
+            source=source,
+            x='x',
+            y='y',
+            color=colors,
+            size=sizes,
+            legend=color.value,
         )
-    else:
-        colors = "#31AADE"
 
-    fig.circle(
-        source=source,
-        x='x',
-        y='y',
-        color=colors,
-        size=sizes,
-        legend=color.value,
-    )
+        fig.legend.location = "bottom_left"
 
-    x_title = x_selector.value
-    y_title = y_selector.value
+        x_title = x_selector.value
+        y_title = y_selector.value
 
-    fig.xaxis.axis_label = x_title
-    fig.yaxis.axis_label = y_title
+        fig.xaxis.axis_label = x_title
+        fig.yaxis.axis_label = y_title
 
-    fig.add_tools(build_hover_tool())
-    fig.add_tools(TapTool())
+        fig.add_tools(build_hover_tool())
+        fig.add_tools(TapTool())
 
-    return fig
+        panel = Panel(child=fig, title=axis_type)
+        panels.append(panel)
+
+    tabs = Tabs(tabs=panels, width=620)
+
+    return tabs
 
 
 def update_plot(attr, old, new):
