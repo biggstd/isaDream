@@ -57,16 +57,16 @@ pip install .
 ```
 
 ## Run in Docker
-# To build the image
+### To build the image
 - docker build -t isadream .
 
-# To run the container
+### To run the container
 - docker run -p 127.0.0.1:8001:5006 -t -d --name isadream isadream
 - Test that it is running by visiting http://localhost:8001 in your browser
 
-# Open a bash shell into the container
+### Open a bash shell into the container
 - docker exec -it isadream bash
 
-# Stop and delete the container
+### Stop and delete the container
 - docker stop isadream && docker rm isadream
 
