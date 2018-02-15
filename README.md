@@ -7,6 +7,7 @@ Python packages needed to run this demo:
 + pandas
 + isatools
 
+`pip install bokeh pandas isatools`
 
 
 **isaDream** is a set of tools that extends [isaTools](https://github.com/ISA-tools/isa-api)
