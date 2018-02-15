@@ -80,7 +80,7 @@ nmr_aquisition = OntologyAnnotation(
     term_source=nmr)
 
 nmr_mag_str = OntologyAnnotation(
-    term='NMR MAgnet Strength',
+    term='NMR Magnet Strength',
     term_source=nmr)
 
 nmr_ref_cmpd = OntologyAnnotation(

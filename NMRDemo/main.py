@@ -10,6 +10,7 @@ simply loads a set of demo metadata files.
 
 # General Imports
 import pandas as pd
+import sys
 
 # Bokeh imports
 from bokeh.layouts import layout, widgetbox
@@ -20,7 +21,11 @@ from bokeh.palettes import Category10
 from bokeh.transform import factor_cmap
 
 # isaDream imports.
+import sys
+import os
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from isadream.nmr_demo_sa import *
+
 
 COLORS = Category10
 SIZES = list(range(6, 22, 3))

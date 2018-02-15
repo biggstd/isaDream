@@ -1,5 +1,14 @@
 # ISADREAM
 
+
+Python packages needed to run this demo:
+
++ bokeh
++ pandas
++ isatools
+
+
+
 **isaDream** is a set of tools that extends [isaTools](https://github.com/ISA-tools/isa-api)
 for use in the IDREAM EFRC.
 
