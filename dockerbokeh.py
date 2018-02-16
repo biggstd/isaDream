@@ -15,7 +15,7 @@ def main():
     # Declare the dictionary of applications to launch.
     apps = {
         '/bokehDemo': Application(DirectoryHandler(filename=bokeh_demo)),
-        '/test_vis': Application(DirectoryHandler(filename=test_vis)),
+        '/testvis': Application(DirectoryHandler(filename=test_vis)),
     }
 
     # Instantiate the Bokeh server.
