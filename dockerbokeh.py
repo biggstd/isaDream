@@ -26,7 +26,7 @@ def main():
         # single Application to put at the root URL.
         applications=apps,
         # A list of hosts that can connect to the websocket.
-        # allow_websocket_origin=["127.0.0.1:5000"],
+        allow_websocket_origin=["localhost:8001"],
         # The address the server should listen on for HTTP requests.
         # (default: None)
         # address=None,
