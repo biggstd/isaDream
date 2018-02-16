@@ -1,3 +1,7 @@
+branches:
+    only:
+        - master
+
 sudo: required
 
 language: python
@@ -6,4 +10,6 @@ services:
     - docker
 
 script:
+    - docker build -t tylerbiggs/idreamvis:TRAVIS_BUILD_NUMBER .
     - docker login -u "$DOCKER_USERNAME" -p "$DOCKER_PASSWORD"
+    - docker push tylerbiggs/idreamvis:$TRAVIS_BUILD_NUMBER
