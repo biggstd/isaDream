@@ -1,6 +1,8 @@
 # ISADREAM
 
 
+[![Build Status](https://travis-ci.org/biggstd/isadream.svg?branch=master)](https://travis-ci.org/biggstd/isadream)
+
 Python packages needed to run this demo:
 
 + bokeh
@@ -69,4 +71,3 @@ pip install .
 
 ### Stop and delete the container
 - docker stop isadream && docker rm isadream
-
