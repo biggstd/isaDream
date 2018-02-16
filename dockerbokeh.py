@@ -1,0 +1,43 @@
+from bokeh.server.server import Server
+from bokeh.application import Application
+from bokeh.application.handlers import DirectoryHandler
+
+
+def main():
+    """
+    Create and start a bokeh server with a series of
+    applications.
+    """
+    # Declare the absolute path to the demo application.
+    bokeh_demo = "./NMRDemo"
+    test_vis = "./testvis"
+
+    # Declare the dictionary of applications to launch.
+    apps = {
+        '/bokehDemo': Application(DirectoryHandler(filename=bokeh_demo)),
+        '/test_vis': Application(DirectoryHandler(filename=test_vis)),
+    }
+
+    # Instantiate the Bokeh server.
+    # See more about this at the documentation:
+    # https://bokeh.pydata.org/en/latest/docs/reference/server/server.html
+    server = Server(
+        # A mapping from URL paths to Application instances, or a
+        # single Application to put at the root URL.
+        applications=apps,
+        # A list of hosts that can connect to the websocket.
+        # allow_websocket_origin=["127.0.0.1:5000"],
+        # The address the server should listen on for HTTP requests.
+        # (default: None)
+        # address=None,
+        # The port number the server should listen on for HTTP requests.
+        # (default: 5006)
+        # port=5006,
+        # prefix='',
+        # Any remaining keyword arguments will be passed as-is to BokehTornado.
+    )
+    server.start()
+    server.io_loop.start()
+
+if __name__ == "__main__":
+    main()

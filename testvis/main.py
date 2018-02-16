@@ -1,16 +1,9 @@
-"""
-################################
-Literature NMR Data - Bokeh Demo
-################################
-
-This application is divorced from any database. Rather, it
-simply loads a set of demo metadata files.
-
-"""
-
 # General Imports
 import pandas as pd
+import os
 import sys
+import glob
+import json
 
 # Bokeh imports
 from bokeh.layouts import layout, widgetbox
@@ -20,35 +13,102 @@ from bokeh.models.widgets import Div, Tabs, Panel
 from bokeh.palettes import Category10
 from bokeh.transform import factor_cmap
 
-# isaDream imports.
-import sys
-import os
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
-from isadream.nmr_demo_sa import *
+metadata_dict = dict()
+
+
+try:
+    # Get the HTML session context in order to find the appropriate json filepath.
+    args = curdoc().session_context.request.arguments
+
+    # TODO: Create a utility module / function to handle this, as every
+    # visualization is likely to require this feature.
+
+    # Get the filename where a series of json files to be visualized
+    # can be found.
+    filepath = args.get('J')[0].decode("utf-8")
+    # print('#'*80)
+    # print(type(filepath))
+    filepath = os.path.join('data', filepath)
+
+    # print('#'*80)
+    # print(filepath)
+
+    # Change the filepath.
+    # TODO: This may have unintended consequences.
+    # os.chdir(filepath)
+
+    # Create a list to hold the json files.
+    json_files = list()
+
+    for jfile in glob.glob(f"{filepath}/*.json"):
+        with open(jfile, 'r') as curr_file:
+            json_files.append(json.load(curr_file))
+
+    # Create the lists to hold the dataframes and metadata dictionaries.
+    df_list = list()
+
+    # Iterate through the .json files.
+    for md_dict in json_files:
+
+        # print(md_dict)
+
+        # Get the ID of this json file.
+        curr_ID = md_dict.get("ID")
+
+        # Create an entry in the metadata_dict for this file.
+        metadata_dict[curr_ID] = md_dict
+
+        # Get the associated data file.
+        curr_datafile = md_dict.get("data_file")
+
+        # Build the pandas dataframe for each data file.
+        new_df = pd.read_csv(curr_datafile)
+
+        # Build a key column that links this data to its meta data.
+        new_df['metadata_key'] = curr_ID
+
+        # Add any study factors found as their own column.
+        study_factors = md_dict.get("study_factors")
+
+        # Iterate through these factors, and add each one to its
+        # own column in the newly minted dataframe.
+        for factor_name in study_factors:
+            # print(factor_name)
+            value = md_dict["study_factors"][factor_name]
+            new_df[factor_name] = value
+
+        # Append the dataframe to the df_list.
+        df_list.append(new_df)
+
+    # Concatentate the dataframes generated.
+    data_frame = pd.concat(df_list, ignore_index=True)
+
+    # print(data_frame)
+    # print(metadata_dict)
+
+except Exception as inst:
+    print('HTML SESSION READ FAILED')
+    print(f'got {inst} as an error.')
+    data_frame = pd.read_csv('data/sipos_2006_talanta_fig_3_KOH.csv')
+    data_frame['metadata_key'] = 'failure'
+    metadata_dict['failure'] = "This is a failure."
+
+# print(data_frame)
+# print(metadata_dict)
 
 COLORS = Category10
 SIZES = list(range(6, 22, 3))
 
-# Simulate the return from a database query.
-# Build the investigation object.
-invest = build_nmr_output()
-
-# Run the search simulation.
-matching_studies = get_studies_by_design_descriptor(invest, al_27_nmr)
-
-# Convert the returned list of studies to pandas dataframes and python
-# dictionaries for use in Bokeh's columnDataSource.
-data_frame, metadata_dict = build_data_md_pair(matching_studies)
-
-# Create some sample derivative columns.
-data_frame = create_ratio_column(data_frame, 'molarity hydroxide', 'Aluminate Molarity')
-data_frame = create_ratio_column(data_frame, 'Aluminate Molarity', 'molarity hydroxide')
 
 # Get the column names for use in the selectors.
 columns = sorted(data_frame.columns)
 discrete = [x for x in columns if data_frame[x].dtype == object]
 continuous = [x for x in columns if x not in discrete]
 quantileable = [x for x in continuous if len(data_frame[x].unique()) > 20]
+
+print(discrete)
+print(continuous)
+print(quantileable)
 
 # Assign the columnDataSources.
 source = ColumnDataSource()
@@ -79,11 +139,9 @@ def tap_select_callback(attr, old, new):
     select a single data point.
     """
     new_index = new['1d']['indices'][0]
-    study_key = source.data['study_ID'][new_index]
-    assay_key = source.data['assay_ID'][new_index]
-    # print(study_key, assay_key)
-    layout.children[1].children[2] = build_metadata_paragraph(
-        study_key, assay_key)
+    md_key = source.data['metadata_key'][new_index]
+    print(f'md key: {md_key}')
+    layout.children[1].children[2] = build_metadata_paragraph(md_key)
 
 
 def build_hover_tool():
@@ -92,9 +150,9 @@ def build_hover_tool():
     hover = HoverTool(
         tooltips=[
             ('X, Y', '($x, $y)'),
-            ('ppm Al', '@{ppm aluminum}'),
-            ('[OH-]', '@{molarity hydroxide}'),
-            ('[Al] total', '@{Aluminate Molarity}')
+            # ('ppm Al', '@{ppm aluminum}'),
+            # ('[OH-]', '@{molarity hydroxide}'),
+            # ('[Al] total', '@{Aluminate Molarity}')
         ]
     )
     return hover
@@ -167,109 +225,20 @@ def update_plot(attr, old, new):
     Define the function to be run upon an update call.
     """
     layout.children[1].children[1] = create_figure()
-    pass
 
 
-def format_assay_text(study, assay):
-    """Prepares the ISA assay object for easy reading in an HTML
-    format."""
-    out_str = (
-        format_publication_html(study, assay) +
-        format_protocol_html(study, assay) +
-        format_material_html(study, assay)
-    )
-    return out_str
 
-
-def format_publication_html(study, assay):
-
-    out_html = "<h4>Publications:</h4>"
-
-    for pub in study.publications:
-        out_html += (
-            '<strong>Title</strong>: {0}<br />'
-            '<strong>DOI</strong>: '
-            '<a href="https://doi.org/{1}">{1}</a><br />'
-            .format(
-                pub.title,
-                pub.doi
-            )
-        )
-    return out_html
-
-
-def format_protocol_html(study, assay):
-
-    out_html = "<h4>Experiment Protocol(s):</h4>"
-
-    for proc in assay.process_sequence:
-        out_html += (
-            '<strong>Protocol Name</strong>: {0}<br />'
-            .format(
-                proc.executes_protocol.name,
-            )
-        )
-        for param in proc.parameter_values:
-            # Check to see if the value is an OntologyAnnotation
-            # with a term string that we should print.
-            if hasattr(param.value, 'term'):
-                param_val = param.value.term
-            else:
-                param_val = param.value
-
-            out_html += (
-                '<strong>{0}</strong>: {1} {2}<br />'
-                .format(
-                    param.category.parameter_name.term,
-                    param_val,
-                    param.unit.term
-                )
-            )
-    return out_html
-
-
-def format_material_html(study, assay):
-
-    out_html = "<h4>Sample Information:</h4>"
-
-    for sam in assay.samples:
-        out_html += (
-            '<strong>Sample Name: </strong>{0}<br />'
-            '<strong>Derives From</strong>:<br />'
-            .format(
-                sam.name,
-            )
-        )
-        for sor in sam.derives_from:
-            out_html += '<em>{0}</em><br />'.format(sor.name)
-
-            for char in sor.characteristics:
-
-                if hasattr(char.unit, 'term'):
-                    out_html += '{0} {1}: {2}<br />'.format(
-                        chr(8226), char.value, char.unit.term
-                    )
-                else:
-                    out_html += '{0} {1}<br />'.format(
-                        chr(8226), char.value
-                    )
-
-    return out_html
-
-
-def build_metadata_paragraph(study_key=None, assay_key=None):
+def build_metadata_paragraph(md_key=None):
     """Constructs an HTML paragraph based on a given key."""
     # if key is None:
-    if all(v is None for v in [study_key, assay_key]):
+    if md_key is None:
         return Div(
             text="No data point selected.",
             width=300,
         )
     else:
-        active_study = metadata_dict[study_key]
-        active_assay = metadata_dict[assay_key]
         new_paragarph = Div(
-            text=format_assay_text(active_study, active_assay),
+            text=str(metadata_dict[md_key]),
             width=300,
         )
         return new_paragarph
@@ -304,4 +273,4 @@ layout = layout(
 )
 
 curdoc().add_root(layout)
-curdoc().title = "27 Al NMR Crossfilter"
+curdoc().title = "test vis"
