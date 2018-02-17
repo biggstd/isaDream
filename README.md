@@ -59,11 +59,11 @@ pip install .
 ```
 
 ## Run in Docker
-### To build the image
+### To build the image locally
 - docker build -t isadream .
 
-### To run the container
-- docker run -p 127.0.0.1:8001:5006 -t -d --name isadream isadream
+### To run the container off of docker hub
+- docker run -p 127.0.0.1:8001:5006 -v /data/dir/on/host:/opt/isadream/data -t -d --name isadream tylerbiggs/isadreamvis:VERSION
 - Test that it is running by visiting http://localhost:8001 in your browser
 
 ### Open a bash shell into the container

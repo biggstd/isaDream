@@ -23,5 +23,4 @@ WORKDIR /opt/isadream
 
 EXPOSE 5006
 
-CMD ["python", "dockerbokeh.py"]
-# CMD ["bokeh", "serve", "NMRDemo/", "--allow-websocket-origin=localhost:8001"]
+CMD ["python3.6", "dockerbokeh.py"]
