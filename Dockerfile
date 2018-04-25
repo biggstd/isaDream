@@ -19,6 +19,9 @@ RUN mkdir /opt/isadream
 
 COPY . /opt/isadream/
 
+# Replace URL in bokeh service
+RUN sed -i -e 's/localhost/idreamvisualization\.pnl\.gov/g' /opt/isadream/dockerbokeh.py
+
 WORKDIR /opt/isadream
 
 EXPOSE 5006
