@@ -8,3 +8,4 @@ __pycache__
 env.sh
 *.egg-info/*
 data/
+.ropeproject/config.py

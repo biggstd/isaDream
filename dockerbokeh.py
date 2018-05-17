@@ -4,9 +4,7 @@ from bokeh.application.handlers import DirectoryHandler
 
 
 def main():
-    """
-    Create and start a bokeh server with a series of
-    applications.
+    """Create and start a bokeh server with a series of applications.
     """
     # Declare the absolute path to the demo application.
     bokeh_demo = "./NMRDemo"
@@ -38,6 +36,7 @@ def main():
     )
     server.start()
     server.io_loop.start()
+
 
 if __name__ == "__main__":
     main()

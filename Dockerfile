@@ -23,4 +23,7 @@ WORKDIR /opt/isadream
 
 EXPOSE 5006
 
+# Set the bokeh server log level.
+ENV BOKEH_PY_LOG_LEVELL=debug
+
 CMD ["python3.6", "dockerbokeh.py"]
