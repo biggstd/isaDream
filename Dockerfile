@@ -7,7 +7,7 @@ RUN apt-get install -y software-properties-common vim
 RUN add-apt-repository ppa:jonathonf/python-3.6
 RUN apt-get update
 
-RUN apt-get install -y build-essential python3.6 python3.6-dev python3-pip python3.6-venv
+RUN apt-get install -y build-essential python3.6 python3.6-dev python3-pip python3.6-venv python3.6-distutils
 RUN apt-get install -y git
 
 # update pip
@@ -18,6 +18,9 @@ RUN python3.6 -m pip install bokeh pandas isatools
 RUN mkdir /opt/isadream
 
 COPY . /opt/isadream/
+
+# Replace URL in bokeh service
+RUN sed -i -e 's/localhost:8001/idreamvisualization\.pnl\.gov/g' /opt/isadream/dockerbokeh.py
 
 WORKDIR /opt/isadream
 
