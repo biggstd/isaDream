@@ -9,11 +9,14 @@ def main():
     # Declare the absolute path to the demo application.
     bokeh_demo = "./NMRDemo"
     test_vis = "./testvis"
+    bokehtest = './bokehtest'
 
     # Declare the dictionary of applications to launch.
     apps = {
         '/bokehDemo': Application(DirectoryHandler(filename=bokeh_demo)),
-        '/testvis': Application(DirectoryHandler(filename=test_vis)),
+        # '/testvis': Application(DirectoryHandler(filename=test_vis)),
+        '/bokehtest': Application(DirectoryHandler(filename=bokehtest)),
+
     }
 
     # Instantiate the Bokeh server.

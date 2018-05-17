@@ -7,7 +7,16 @@ RUN apt-get install -y software-properties-common vim
 RUN add-apt-repository ppa:jonathonf/python-3.6
 RUN apt-get update
 
-RUN apt-get install -y build-essential python3.6 python3.6-dev python3-pip python3.6-venv python3.6-distutils
+# Prepare a Python 3.6 installation.
+RUN apt-get install -y\
+  build-essential\
+  python3.6\
+  python3.6-dev\
+  python3-pip\
+  python3.6-venv
+  # python3.6-distutils
+
+# Install git.
 RUN apt-get install -y git
 
 # update pip
