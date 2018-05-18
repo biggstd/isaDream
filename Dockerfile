@@ -35,7 +35,8 @@ COPY ./bokehtest /bokehtest
 COPY ./NMRDemo /NMRDemo
 COPY ./testvis /testvis
 
-ENTRYPOINT ["./entrypoint.sh"]
+
+ENTRYPOINT ["/entrypoint.sh"]
 
 
 

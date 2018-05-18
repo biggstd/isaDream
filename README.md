@@ -57,7 +57,5 @@ docker build -t isadream .
 
 
 ```bash
-docker run -p 127.0.0.1:8001:5006 \
-	-v /home/akop194/public_html/idream/sites/default/files/vizdata:/opt/isadream/data \
-	-t -d --name isadream tylerbiggs/idreamvis:latest
+docker run -p 127.0.0.1:8001:5006 -v /home/bigg006/public_html/idreamdrupal/sites/default/files/vizdata:/opt/isadream/data -t -d --name isadream tylerbiggs/idreamvis:18
 ```
