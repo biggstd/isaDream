@@ -23,7 +23,7 @@ from bokeh.transform import factor_cmap
 # isaDream imports.
 import sys
 import os
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+# sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from isadream.nmr_demo_sa import *
 
 COLORS = Category10

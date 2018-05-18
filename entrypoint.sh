@@ -4,5 +4,4 @@ bokeh serve --port ${PORT}\
   --allow-websocket-origin ${ORIGIN}\
   --log-level ${LOG_LEVEL}\
   /bokehtest\
-  /NMRDemo\
   /testvis\

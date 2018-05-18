@@ -16,11 +16,19 @@ RUN pip install --upgrade pip \
     && rm -rf ~/.cache/pip
 
 
+RUN mkdir /opt/isadream
+COPY . /opt/isadream/
+WORKDIR /opt/isadream/
+RUN python setup.py install
+
 # Add entrypoint (this allows variable expansion)
 COPY entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
 
-ENV ORIGIN="idreamvisualization.pnl.gov:8123" PORT="5006" LOG_LEVEL="info" BOKEH_RESOURCES="inline"
+ENV ORIGIN="idreamvisualization.pnl.gov:8123" \
+    PORT="5006" \
+    LOG_LEVEL="info" \
+    BOKEH_RESOURCES="inline"
 
 
 COPY ./bokehtest /bokehtest
