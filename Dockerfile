@@ -20,7 +20,7 @@ RUN pip install --upgrade pip \
 COPY entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
 
-ENV ORIGIN="127.0.0.1:8001" PORT="5006" LOG_LEVEL="info" BOKEH_RESOURCES="inline"
+ENV ORIGIN="idreamvisualization.pnl.gov:8123" PORT="5006" LOG_LEVEL="info" BOKEH_RESOURCES="inline"
 
 
 COPY ./bokehtest /bokehtest
