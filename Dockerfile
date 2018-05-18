@@ -35,8 +35,6 @@ COPY ./bokehtest /bokehtest
 COPY ./NMRDemo /NMRDemo
 COPY ./testvis /testvis
 
-WORKDIR /opt/
-
 ENTRYPOINT ["./entrypoint.sh"]
 
 
