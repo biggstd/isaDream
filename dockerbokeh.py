@@ -1,3 +1,5 @@
+import os
+
 from bokeh.server.server import Server
 from bokeh.application import Application
 from bokeh.application.handlers import DirectoryHandler
@@ -11,10 +13,16 @@ def main():
     test_vis = "./testvis"
     bokehtest = './bokehtest'
 
+    # Get the hosting path environment variable.
+    BOKEH_ALLOWED_WEBSOCKET = os.environ.get('BOKEH_ALLOWED_WEBSOCKET',
+                                             'localhost')
+
+    BOKEH_PORT = int(os.environ.get('BOKEH_PORT', 5006))
+
     # Declare the dictionary of applications to launch.
     apps = {
         '/bokehDemo': Application(DirectoryHandler(filename=bokeh_demo)),
-        # '/testvis': Application(DirectoryHandler(filename=test_vis)),
+        '/testvis': Application(DirectoryHandler(filename=test_vis)),
         '/bokehtest': Application(DirectoryHandler(filename=bokehtest)),
 
     }
@@ -27,7 +35,8 @@ def main():
         # single Application to put at the root URL.
         applications=apps,
         # A list of hosts that can connect to the websocket.
-        allow_websocket_origin=["localhost:8001"],
+        allow_websocket_origin=[BOKEH_ALLOWED_WEBSOCKET, 'localhost'],
+        port=BOKEH_PORT,
         # The address the server should listen on for HTTP requests.
         # (default: None)
         # address=None,

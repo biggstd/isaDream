@@ -1,10 +1,12 @@
-from bokeh.io import show, output_file
+# from bokeh.io import show, output_file
 from bokeh.models import ColumnDataSource
 from bokeh.palettes import Spectral6
 from bokeh.plotting import figure
 from bokeh.transform import factor_cmap
+from bokeh.io import curdoc
+# from bokeh.layouts import layout
 
-output_file("bar_colormapped.html")
+# output_file("bar_colormapped.html")
 
 fruits = ['Apples', 'Pears', 'Nectarines', 'Plums', 'Grapes', 'Strawberries']
 counts = [5, 3, 4, 2, 4, 6]
@@ -21,4 +23,5 @@ p.y_range.end = 9
 p.legend.orientation = "horizontal"
 p.legend.location = "top_center"
 
-show(p)
+curdoc().add_root(p)
+curdoc().title = "Bokeh Test"
