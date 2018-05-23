@@ -23,7 +23,7 @@ RUN python setup.py install
 
 
 
-ENV ORIGIN="idreamvisualization.pnl.gov:8123" \
+ENV ORIGIN="lampdev02.pnl.gov" \
     PORT="5006" \
     LOG_LEVEL="info" \
     BOKEH_RESOURCES="inline"
