@@ -22,6 +22,9 @@ WORKDIR /opt/isadream/
 RUN python setup.py install
 
 
+ENV BOKEH_RESOURCES=cdn
+
+
 COPY ./bokehtest /bokehtest
 COPY ./NMRDemo /NMRDemo
 COPY ./testvis /testvis
