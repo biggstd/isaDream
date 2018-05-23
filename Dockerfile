@@ -21,9 +21,7 @@ COPY . /opt/isadream/
 WORKDIR /opt/isadream/
 RUN python setup.py install
 
-# Add entrypoint (this allows variable expansion)
-COPY entrypoint.sh /entrypoint.sh
-RUN chmod +x /entrypoint.sh
+
 
 ENV ORIGIN="idreamvisualization.pnl.gov:8123" \
     PORT="5006" \
@@ -35,6 +33,9 @@ COPY ./bokehtest /bokehtest
 COPY ./NMRDemo /NMRDemo
 COPY ./testvis /testvis
 
+# Add entrypoint (this allows variable expansion)
+COPY entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
 
 ENTRYPOINT ["/entrypoint.sh"]
 
