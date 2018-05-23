@@ -21,10 +21,11 @@ COPY . /opt/isadream/
 WORKDIR /opt/isadream/
 RUN python setup.py install
 
+# To add to ORIGIN
+# idreamvisualization.pnl.gov
+# localhost
 
-
-ENV ORIGIN="lampdev02.pnl.gov" \
-    PORT="5006" \
+ENV PORT="5006" \
     LOG_LEVEL="info" \
     BOKEH_RESOURCES="inline"
 
