@@ -5,7 +5,7 @@ bokeh serve\
   --address 0.0.0.0\
   --allow-websocket-origin 0.0.0.0\
   --allow-websocket-origin localhost:8123\
-  --allow-websocket-origin idreamvisualization.pnl.gov:443\
+  --allow-websocket-origin idreamvisualization.pnl.gov\
   --log-level debug\
   /bokehtest\
   /testvis\
