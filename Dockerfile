@@ -24,6 +24,8 @@ RUN python setup.py install
 
 ENV BOKEH_RESOURCES=cdn
 
+# Demo data.
+COPY ./isadream/demo_data /data
 
 COPY ./bokehtest /bokehtest
 COPY ./NMRDemo /NMRDemo
