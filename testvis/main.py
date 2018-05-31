@@ -89,7 +89,7 @@ try:
 except Exception as inst:
     print('HTML SESSION READ FAILED')
     print(f'got {inst} as an error.')
-    data_frame = pd.read_csv('data/sipos_2006_talanta_fig_3_KOH.csv')
+    data_frame = pd.read_csv('/data/sipos_2006_talanta_fig_3_KOH.csv')
     data_frame['metadata_key'] = 'failure'
     metadata_dict['failure'] = "This is a failure."
 

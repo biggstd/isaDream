@@ -49,13 +49,20 @@ docker build -t isadream .
 - docker run -p 127.0.0.1:8001:5006 -v /data/dir/on/host:/opt/isadream/data -t -d --name isadream tylerbiggs/idreamvis:VERSION
 - Test that it is running by visiting http://localhost:8001 in your browser
 
+
 ### Open a bash shell into the container
-- docker exec -it isadream bash
-
-### Stop and delete the container
-- docker stop isadream && docker rm isadream
-
 
 ```bash
-docker run -p 127.0.0.1:8001:5006 -v /home/bigg006/public_html/idreamdrupal/sites/default/files/vizdata:/opt/isadream/data -t -d --name isadream tylerbiggs/idreamvis:18
+docker exec -it isadream bash
+```
+
+
+### Stop and delete the container
+
+```bash
+docker stop isadream && docker rm isadream
+```
+
+```bash
+docker run -p 127.0.0.1:8123:5006 -v /home/bigg006/public_html/idreamdrupal/sites/default/files/vizdata:/opt/isadream/data -t -d --name isadream tylerbiggs/idreamvis:37
 ```
