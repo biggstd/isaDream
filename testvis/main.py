@@ -89,7 +89,18 @@ try:
 except Exception as inst:
     print('HTML SESSION READ FAILED')
     print(f'got {inst} as an error.')
-    data_frame = pd.read_csv('/data/sipos_2006_talanta_fig_3_KOH.csv')
+    data_frame = pd.DataFrame(
+        data=[
+            [0.89, 79.96],
+            [2.93, 79.90],
+            [4.92, 79.84],
+            [6.85, 79.72],
+            [9.13, 79.66],
+            [10.71, 79.66]],
+        columns=['OH_concentration', 'Al_ppm']
+    )
+
+    # data_frame = pd.read_csv('/data/sipos_2006_talanta_fig_3_KOH.csv')
     data_frame['metadata_key'] = 'failure'
     metadata_dict['failure'] = "This is a failure."
 
