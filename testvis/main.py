@@ -15,7 +15,7 @@ from bokeh.transform import factor_cmap
 
 metadata_dict = dict()
 
-
+'''
 try:
     # Get the HTML session context in order to find the appropriate json filepath.
     args = curdoc().session_context.request.arguments
@@ -89,9 +89,36 @@ try:
 except Exception as inst:
     print('HTML SESSION READ FAILED')
     print(f'got {inst} as an error.')
-    data_frame = pd.read_csv('/data/sipos_2006_talanta_fig_3_KOH.csv')
+    data_frame = pd.DataFrame(
+        data=[
+            [0.89, 79.96],
+            [2.93, 79.90],
+            [4.92, 79.84],
+            [6.85, 79.72],
+            [9.13, 79.66],
+            [10.71, 79.66]],
+        columns=['OH_concentration', 'Al_ppm']
+    )
+
+    # data_frame = pd.read_csv('/data/sipos_2006_talanta_fig_3_KOH.csv')
     data_frame['metadata_key'] = 'failure'
     metadata_dict['failure'] = "This is a failure."
+'''
+
+data_frame = pd.DataFrame(
+    data=[
+        [0.89, 79.96],
+        [2.93, 79.90],
+        [4.92, 79.84],
+        [6.85, 79.72],
+        [9.13, 79.66],
+        [10.71, 79.66]],
+    columns=['OH_concentration', 'Al_ppm']
+)
+
+# data_frame = pd.read_csv('/data/sipos_2006_talanta_fig_3_KOH.csv')
+data_frame['metadata_key'] = 'failure'
+metadata_dict['failure'] = "This is a failure."
 
 # print(data_frame)
 # print(metadata_dict)
@@ -106,9 +133,9 @@ discrete = [x for x in columns if data_frame[x].dtype == object]
 continuous = [x for x in columns if x not in discrete]
 quantileable = [x for x in continuous if len(data_frame[x].unique()) > 20]
 
-print(discrete)
-print(continuous)
-print(quantileable)
+# print(discrete)
+# print(continuous)
+# print(quantileable)
 
 # Assign the columnDataSources.
 source = ColumnDataSource()
