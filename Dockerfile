@@ -22,7 +22,7 @@ WORKDIR /opt/isadream/
 RUN python setup.py install
 
 # Setup bokeh variables.
-ENV BOKEH_RESOURCES=cdn
+ENV BOKEH_RESOURCES=inline
 
 COPY ./bokehtest /bokehtest
 COPY ./NMRDemo /NMRDemo
