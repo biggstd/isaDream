@@ -1,0 +1,32 @@
+{
+  "$schema": "http://json-schema.org/schema#",
+  "title": "Sample Schema",
+  "description": "JSON-schema for a Sample.",
+  "type": "object",
+  "properties": {
+    "@id": { "type": "string", "format": "uri" },
+    "name": { "type": "string" },
+    "description": { "type": "string" },
+    "qualitative_factors": {
+      "type": "array",
+      "items": { "$ref": "qualitative_factor.json#" }
+    },
+    "quantitative_factors": {
+      "type": "array",
+      "items": { "$ref": "quantitative_factor.json#"}
+    },
+    "treatments": {
+      "type": "array",
+      "items": { "$ref": "process_schema.json#" }
+    },
+    "species": {
+      "type": "array",
+      "items": { "$ref": "species.json#" }
+    },
+    "sources": {
+      "type": "array",
+      "items": { "$ref": "source.json#" }
+    },
+  },
+  "additionalProperties": false
+}

@@ -1,0 +1,15 @@
+{
+  "$schema": "http://json-schema.org/schema#",
+  "title" : "Drupal Term Schema",
+  "description" : "JSON-schema representing an comment.",
+  "type" : "object",
+  "properties" : {
+    "@id": { "type": "string", "format": "uri" },
+    "name": { "type": "string" },
+    "value" : {
+      "type" : "string",
+      "description" : "Body of the comment."
+    }
+  },
+  "additionalProperties": false
+}

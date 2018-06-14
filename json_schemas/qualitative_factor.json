@@ -1,0 +1,12 @@
+{
+  "$schema": "http://json-schema.org/schema#",
+  "title": "Qualitative Factor Schema",
+  "description": "JSON-schema describing a qualitative factor.",
+  "type": "object",
+  "properties": {
+    "@id": { "type": "string", "format": "uri" },
+    "qual_vocabulary": { "type": "string" },
+    "qual_term": { "type": "string" }
+  },
+  "additionalProperties": false
+}

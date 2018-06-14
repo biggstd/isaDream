@@ -1,0 +1,48 @@
+{
+  "$schema": "http://json-schema.org/schema#",
+  "title": "Treatment Schema",
+  "description": "JSON-schema for a Treatment.",
+  "type": "object",
+  "properties": {
+    "@id": { "type": "string", "format": "uri" },
+    "name": { "type": "string" },
+    "description": { "type": "string" },
+    "treatment_node": { "type": "string", "format": "uri" },
+    "qualitative_factors": {
+      "type": "array",
+      "items": { "$ref": "qualitative_factor.json#" } },
+    "quantitative_factors": {
+      "type": "array",
+      "items": { "$ref": "quantitative_factor.json#"} },
+    "performer": { "type": "string" },
+    "date": { "type": "string", "format": "date-time" },
+    "previous_treatment": { "$ref": "process_schema.json#" },
+    "next_treatment": { "$ref": "process_schema.json#" },
+    "inputs" : {
+      "type": "array",
+      "items": {
+        "anyOf": [
+          { "$ref": "source_schema.json#" },
+          { "$ref": "sample_schema.json#" },
+          { "$ref": "data_file_schema.json#" },
+          { "$ref": "sample_schema.json#" }
+        ]
+      }
+    },
+    "outputs" : {
+      "type": "array",
+      "items": {
+        "anyOf": [
+          { "$ref": "sample_schema.json#" },
+          { "$ref": "data_schema.json#" },
+          { "$ref": "material_schema.json#" }
+        ]
+      }
+    },
+    "comments" : {
+      "type": "array",
+      "items": { "$ref": "comment_schema.json#" }
+    }
+  },
+  "additionalProperties": false
+}

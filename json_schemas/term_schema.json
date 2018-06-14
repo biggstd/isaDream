@@ -1,0 +1,15 @@
+{
+  "$schema": "http://json-schema.org/schema#",
+  "title" : "Drupal Term Schema",
+  "description" : "JSON-schema representing an Drupal Term.",
+  "type" : "object",
+  "properties" : {
+    "@id": { "type": "string", "format": "uri" },
+    "term": { "type": "string" },
+    "vocabulary_source" : {
+      "type" : "string",
+      "description" : "Parent vodabulary of the term."
+    }
+  },
+  "additionalProperties": false
+}

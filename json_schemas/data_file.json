@@ -1,0 +1,25 @@
+{
+  "$schema": "http://json-schema.org/schema#",
+  "title": "Data File schema",
+  "description": "JSON-schema describing the file.",
+  "type": "object",
+  "properties": {
+    "@id": { "type": "string", "format": "uri" },
+    "filename": { "type": "string" },
+    "file_type": {
+      "type": "string",
+      "enum": [
+        "Raw Data File",
+        "Derived Data File",
+        "Image File"
+      ]
+    },
+    "columns": {
+      "type": "array",
+      "items": {
+        "$ref": "data_file_column.json#"
+      }
+    }
+  },
+  "additionalProperties": false
+}
