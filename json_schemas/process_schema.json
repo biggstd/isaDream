@@ -1,7 +1,7 @@
 {
   "$schema": "http://json-schema.org/schema#",
-  "title": "Treatment Schema",
-  "description": "JSON-schema for a Treatment.",
+  "title": "Process Schema",
+  "description": "JSON-schema for a Process.",
   "type": "object",
   "properties": {
     "@id": { "type": "string", "format": "uri" },

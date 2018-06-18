@@ -15,10 +15,6 @@
       "type": "array",
       "items": { "$ref": "quantitative_factor.json#"}
     },
-    "treatments": {
-      "type": "array",
-      "items": { "$ref": "process_schema.json#" }
-    },
     "species": {
       "type": "array",
       "items": { "$ref": "species.json#" }
