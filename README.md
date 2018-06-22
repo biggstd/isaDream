@@ -46,7 +46,7 @@ docker build -t isadream .
 
 
 ### To run the container off of docker hub
-- docker run -p 127.0.0.1:8001:5006 -v /data/dir/on/host:/opt/isadream/data -t -d --name isadream tylerbiggs/idreamvis:VERSION
+- docker run -p 0.0.0.1:8001:5006 -v /data/dir/on/host:/opt/isadream/data -t -d --name isadream tylerbiggs/idreamvis:VERSION
 - Test that it is running by visiting http://localhost:8001 in your browser
 
 
@@ -64,5 +64,5 @@ docker stop isadream && docker rm isadream
 ```
 
 ```bash
-docker run -p 127.0.0.1:8123:5006 -v /home/bigg006/public_html/idreamdrupal/sites/default/files/vizdata:/opt/isadream/data -t -d --name isadream tylerbiggs/idreamvis:37
+docker run -p 0.0.0.1:8123:5006 -v /home/bigg006/public_html/idreamdrupal/sites/default/files/vizdata:/opt/isadream/data -t -d --name isadream tylerbiggs/idreamvis:45
 ```
