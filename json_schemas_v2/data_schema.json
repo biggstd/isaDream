@@ -1,0 +1,32 @@
+{
+  "$id": "data_schema.json",
+  "type": "object",
+  "definitions": {},
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "properties": {
+    "name": {
+      "$id": "/properties/name",
+      "type": "string",
+      "title": "Data filename schema.",
+      "examples": [
+        "some_file_name.csv"
+      ]
+    },
+    "type": {
+      "$id": "/properties/type",
+      "type": "string",
+      "title": "The datafile type.",
+      "enum": [
+        "Raw data file",
+        "Derived data file",
+        "Image file"
+      ],
+      "default": "Derived data file"
+    },
+    "comments" : {
+      "$id": "/properties/comments",
+      "type" : "array",
+      "items": { "$ref": "comment_schema.json"}
+    }
+  }
+}

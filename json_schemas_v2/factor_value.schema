@@ -1,0 +1,23 @@
+{
+  "$id": "factor_value.json",
+  "type": "object",
+  "definitions": {},
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "properties": {
+    "factorName": {
+      "$id": "/properties/factorName",
+      "type": "string",
+      "title": "Factor Name Schema."
+    },
+    "factorType": {
+      "$id": "/properties/factorType",
+      "type": "string",
+      "title": "The Factor Type Schema."
+    },
+    "comments" : {
+      "$id": "/properties/comments",
+      "type" : "array",
+      "items": { "$ref": "comment_schema.json"}
+    }
+  }
+}
