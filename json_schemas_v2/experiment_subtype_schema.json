@@ -6,43 +6,41 @@
   "properties": {
     "$id": { "type": "string", "format": "uri" },
     "filename": {
-      "$id": "/properties/filename",
       "type": "string",
       "description": "The json filename created by Drupal."
     },
     "ExperimentType": {
-      "$id": "/properties/ExperimentType",
       "type": "string",
       "title": "The datafile type.",
+      "description": "Experiment subtype. These should determine what visualizations are available.",
       "enum": [
         "NMR",
         "UV-Vis",
-        "Simulation",
-        "Literature",
+        "MAS-NMR",
         "Raman"
-      ],
-      "default": "Derived data file"
+      ]
     },
     "Title": {
-      "$id": "/properties/Title",
-      "type": "string"
+      "type": "string",
+      "description": "The user defined title of their experiment."
     },
     "DataFile": {
-      "$id": "/properties/DataFile",
-      "type":  { "$ref": "material_attribute_value_schema.json"}
+      "description": "The schema for the attached datafile.",
+      "type":  { "$ref": "data_schema.json"}
     },
     "TechnologyType": {
-      "$id": "/properties/TechnologyType",
       "format": "uri",
-      "type": "string"
+      "type": "string",
+      "enum": [
+        "Experimental",
+        "Simulation"
+      ]
     },
     "Samples": {
-      "$id": "/properties/Samples",
       "type" : "array",
       "items": { "$ref": "sample_schema.json" }
     },
     "comments" : {
-      "$id": "/properties/comments",
       "type" : "array",
       "items": { "$ref": "comment_schema.json" }
     }

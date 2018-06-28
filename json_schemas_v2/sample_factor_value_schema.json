@@ -5,14 +5,12 @@
   "$schema": "http://json-schema.org/draft-07/schema#",
   "properties": {
     "category": {
-      "$id": "/properties/category",
       "type": "string",
       "format": "uri",
       "title": "Category Name Schema."
     },
     "value": {
-      "$id": "/properties/value",
-      "title": "The Factor Type Schema.",
+      "title": "The given value.",
       "anyOf" : [
                 { "type": "string", "format": "uri" },
                 { "type": "string"},
@@ -20,7 +18,6 @@
               ]
     },
     "unit" : {
-      "$id": "/properties/unit",
       "type" : "string",
       "format": "uri"
     }

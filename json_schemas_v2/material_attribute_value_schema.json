@@ -5,18 +5,15 @@
   "$schema": "http://json-schema.org/draft-07/schema#",
   "properties": {
     "category": {
-      "$id": "/properties/category",
       "type": "string",
       "items": { "$ref": "material_attribute_value.json"}
     },
     "unit": {
-      "$id": "/properties/unit",
       "format": "uri",
       "type": "string",
     },
     "value": {
-      "$id": "/properties/value",
-      "title": "The Factor Type Schema.",
+      "title": "The Factor Type Value.",
       "anyOf" : [
                 { "type": "string", "format": "uri" },
                 { "type": "string"},

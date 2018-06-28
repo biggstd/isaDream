@@ -1,22 +1,23 @@
 {
-  "$id": "factor_schema.json",
+  "$id": "study_factor_schema.json",
   "type": "object",
   "definitions": {},
   "$schema": "http://json-schema.org/draft-07/schema#",
   "properties": {
     "factorName": {
-      "$id": "/properties/factorName",
       "type": "string",
-      "title": "Factor Name Schema."
+      "description": "A reference to a drupal Term."
     },
     "factorType": {
-      "$id": "/properties/factorType",
       "type": "string",
       "format": "uri",
-      "title": "The Factor Type Schema."
+      "description": "A reference to a drupal Vocabulary."
+    },
+    "factorValue": {
+      "type": "string",
+      "items": { "$ref": "study_factor_value_schema.json"}
     },
     "comments" : {
-      "$id": "/properties/comments",
       "type" : "array",
       "items": { "$ref": "comment_schema.json"}
     }

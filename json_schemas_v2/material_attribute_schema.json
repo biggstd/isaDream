@@ -4,11 +4,22 @@
   "definitions": {},
   "$schema": "http://json-schema.org/draft-07/schema#",
   "properties": {
-    "category": {
-      "$id": "/properties/category",
+    "factorName": {
+      "type": "string",
+      "description": "A reference to a drupal Term."
+    },
+    "factorType": {
+      "type": "string",
       "format": "uri",
-      "type": "string"
+      "description": "A reference to a drupal Vocabulary."
+    },
+    "factorValue": {
+      "type": "string",
+      "items": { "$ref": "study_factor_value_schema.json"}
+    },
+    "comments" : {
+      "type" : "array",
+      "items": { "$ref": "comment_schema.json"}
     }
   }
 }
-

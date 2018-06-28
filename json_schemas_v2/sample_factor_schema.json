@@ -5,23 +5,19 @@
   "$schema": "http://json-schema.org/draft-07/schema#",
   "properties": {
     "factorName": {
-      "$id": "/properties/factorName",
       "type": "string",
       "title": "Factor Name Schema."
     },
     "factorType": {
-      "$id": "/properties/factorType",
       "type": "string",
       "format": "uri",
       "title": "The Factor Type Schema."
     },
     "FactorValue": {
-      "$id": "/properties/factorType",
-      "type": { "$ref": "sample_factor_value.json"},
+      "type": { "$ref": "sample_factor_value_schema.json"},
       "title": "The Factor Type Schema."
     },
     "comments" : {
-      "$id": "/properties/comments",
       "type" : "array",
       "items": { "$ref": "comment_schema.json"}
     }

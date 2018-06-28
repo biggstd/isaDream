@@ -25,7 +25,7 @@
     },
     "samples_set": {
       "type": "array",
-      "items": { "$ref": "material_schema.json"},
+      "items": { "$ref": "sample_schema.json"},
       "description": "A set of the samples used in this study."
     },
     "study_factor_set": {
@@ -34,16 +34,16 @@
       "description": "A set of the factors used in this study."
     },
     "unit_set": {
-      "type" : "string",
+      "type" : "array",
+      "items": { "type": "string", "format": "uri" },
       "description": "A set of the units used in this study."
     },
     "comments" : {
-      "$id": "/properties/comments",
       "type" : "array",
       "items": { "$ref": "comment_schema.json"}
     },
     "experiment": {
-      "$id": "/properties/experiment",
+      "description": "A experiment subtype of this study.",
       "type" : { "$ref": "experiment_subtype_schema.json"},
     }
   }

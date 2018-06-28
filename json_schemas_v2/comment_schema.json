@@ -5,22 +5,12 @@
   "$schema": "http://json-schema.org/draft-07/schema#",
   "properties": {
     "name": {
-      "$id": "/properties/name",
       "type": "string",
-      "title": "Comment Name Schema",
-      "default": "",
-      "examples": [
-        "Comment Name"
-      ]
+      "title": "Comment Name"
     },
     "value": {
-      "$id": "/properties/value",
       "type": "string",
-      "title": "Comment Value Schema",
-      "default": "",
-      "examples": [
-        "Comment Body"
-      ]
+      "title": "Comment Value"
     }
   }
 }
