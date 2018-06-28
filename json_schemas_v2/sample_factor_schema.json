@@ -17,6 +17,11 @@
       "type": { "$ref": "sample_factor_value_schema.json"},
       "title": "The Factor Type Schema."
     },
+    "csvColumn": {
+      "type":  "integer",
+      "title": "Column 0 Index.",
+      "description": "Optional index value referencing this factors column position in the datafile."
+    },
     "comments" : {
       "type" : "array",
       "items": { "$ref": "comment_schema.json"}

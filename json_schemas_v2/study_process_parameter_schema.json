@@ -17,6 +17,11 @@
       "type": "string",
       "items": { "$ref": "study_factor_value_schema.json"}
     },
+    "csvColumn": {
+      "type":  "integer",
+      "title": "Column 0 Index.",
+      "description": "Optional index value referencing this factors column position in the datafile."
+    },
     "comments" : {
       "type" : "array",
       "items": { "$ref": "comment_schema.json"}
