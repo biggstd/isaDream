@@ -16,10 +16,10 @@ RUN pip install --upgrade pip \
     && rm -rf ~/.cache/pip
 
 
-RUN mkdir /opt/isadream
-COPY . /opt/isadream/
-WORKDIR /opt/isadream/
-RUN python setup.py install
+# RUN mkdir /opt/isadream
+# COPY . /opt/isadream/
+# WORKDIR /opt/isadream/
+# RUN python setup.py install
 
 # Setup bokeh variables.
 ENV BOKEH_RESOURCES=inline
