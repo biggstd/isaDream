@@ -12,6 +12,7 @@
     "factorType": {
       "$id": "/properties/factorType",
       "type": "string",
+      "format": "uri",
       "title": "The Factor Type Schema."
     },
     "comments" : {

@@ -1,5 +1,5 @@
 {
-  "$id": "material_attribute_value_schema.json",
+  "$id": "sample_factor_value.json",
   "type": "object",
   "definitions": {},
   "$schema": "http://json-schema.org/draft-07/schema#",
@@ -7,12 +7,8 @@
     "category": {
       "$id": "/properties/category",
       "type": "string",
-      "items": { "$ref": "material_attribute_value.json"}
-    },
-    "unit": {
-      "$id": "/properties/unit",
       "format": "uri",
-      "type": "string",
+      "title": "Category Name Schema."
     },
     "value": {
       "$id": "/properties/value",
@@ -21,7 +17,12 @@
                 { "type": "string", "format": "uri" },
                 { "type": "string"},
                 { "type": "number"}
-                ]
+              ]
+    },
+    "unit" : {
+      "$id": "/properties/unit",
+      "type" : "string",
+      "format": "uri"
     }
   }
 }

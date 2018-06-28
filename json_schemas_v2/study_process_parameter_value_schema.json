@@ -1,5 +1,5 @@
 {
-  "$id": "material_attribute_value_schema.json",
+  "$id": "study_process_parameter_value_schema.json",
   "type": "object",
   "definitions": {},
   "$schema": "http://json-schema.org/draft-07/schema#",

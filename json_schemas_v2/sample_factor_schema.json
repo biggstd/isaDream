@@ -1,5 +1,5 @@
 {
-  "$id": "factor_value.json",
+  "$id": "sample_factor_schema.json",
   "type": "object",
   "definitions": {},
   "$schema": "http://json-schema.org/draft-07/schema#",
@@ -12,6 +12,12 @@
     "factorType": {
       "$id": "/properties/factorType",
       "type": "string",
+      "format": "uri",
+      "title": "The Factor Type Schema."
+    },
+    "FactorValue": {
+      "$id": "/properties/factorType",
+      "type": { "$ref": "sample_factor_value.json"},
       "title": "The Factor Type Schema."
     },
     "comments" : {

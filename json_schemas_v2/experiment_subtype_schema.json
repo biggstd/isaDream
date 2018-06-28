@@ -1,0 +1,50 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "title": "Study Node Subtype (Assay) Schema",
+  "description": "The schema for a Drupal 8 node experiment subtype.",
+  "properties": {
+    "$id": { "type": "string", "format": "uri" },
+    "filename": {
+      "$id": "/properties/filename",
+      "type": "string",
+      "description": "The json filename created by Drupal."
+    },
+    "ExperimentType": {
+      "$id": "/properties/ExperimentType",
+      "type": "string",
+      "title": "The datafile type.",
+      "enum": [
+        "NMR",
+        "UV-Vis",
+        "Simulation",
+        "Literature",
+        "Raman"
+      ],
+      "default": "Derived data file"
+    },
+    "Title": {
+      "$id": "/properties/Title",
+      "type": "string"
+    },
+    "DataFile": {
+      "$id": "/properties/DataFile",
+      "type":  { "$ref": "material_attribute_value_schema.json"}
+    },
+    "TechnologyType": {
+      "$id": "/properties/TechnologyType",
+      "format": "uri",
+      "type": "string"
+    },
+    "Samples": {
+      "$id": "/properties/Samples",
+      "type" : "array",
+      "items": { "$ref": "sample_schema.json" }
+    },
+    "comments" : {
+      "$id": "/properties/comments",
+      "type" : "array",
+      "items": { "$ref": "comment_schema.json" }
+    }
+  }
+}

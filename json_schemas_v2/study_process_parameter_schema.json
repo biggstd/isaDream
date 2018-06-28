@@ -1,11 +1,11 @@
 {
-  "$id": "material_attribute_schema.json",
+  "$id": "study_process_parameter_schema.json",
   "type": "object",
   "definitions": {},
   "$schema": "http://json-schema.org/draft-07/schema#",
   "properties": {
-    "category": {
-      "$id": "/properties/category",
+    "parameterType": {
+      "$id": "/properties/parameterType",
       "format": "uri",
       "type": "string"
     }

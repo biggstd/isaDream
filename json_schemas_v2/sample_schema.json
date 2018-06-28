@@ -1,0 +1,29 @@
+{
+  "$id": "sample_schema.json",
+  "type": "object",
+  "definitions": {},
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "properties": {
+    "name": {
+      "$id": "/properties/name",
+      "type": "string"
+    },
+    "type": {
+      "$id": "/properties/type",
+      "title": "The Material Source Type Schema.",
+      "enum" : [
+                "Physical Material",
+                "Simulated Material",
+              ]
+    },
+    "characteristics" : {
+      "$id": "/properties/characteristics",
+      "type" : "array",
+      "items":  { "$ref": "sample_factor_schema.json"}
+    },
+    "derivesFrom": {
+      "type": "array",
+      "items": { "$ref": "material_schema.json"}
+    }
+  }
+}
