@@ -13,6 +13,21 @@
     "description" : { "type" : "string"},
     "submissionDate" : { "type" : "string", "format" : "date-time"},
     "publicReleaseDate" : { "type" : "string", "format" : "date-time"},
+    "experimentSubType": {
+      "type": { "$ref": "experiment_subtype_schema.json" },
+      "description": "Experiment subtype.",
+    },
+    "experimentType": {
+      "type": "string",
+      "title": "The datafile type.",
+      "description": "Experiment subtype. These should determine what visualizations are available.",
+      "enum": [
+        "NMR",
+        "UV-Vis",
+        "MAS-NMR",
+        "Raman"
+      ]
+    },
     "study_parameter_set": {
       "type": "array",
       "items": { "$ref": "study_process_parameter_schema.json"},

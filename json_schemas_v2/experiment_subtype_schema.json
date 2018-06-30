@@ -9,26 +9,15 @@
       "type": "string",
       "description": "The json filename created by Drupal."
     },
-    "ExperimentType": {
-      "type": "string",
-      "title": "The datafile type.",
-      "description": "Experiment subtype. These should determine what visualizations are available.",
-      "enum": [
-        "NMR",
-        "UV-Vis",
-        "MAS-NMR",
-        "Raman"
-      ]
-    },
-    "Title": {
+    "title": {
       "type": "string",
       "description": "The user defined title of their experiment."
     },
-    "DataFile": {
+    "dataFile": {
       "description": "The schema for the attached datafile.",
       "type":  { "$ref": "data_schema.json"}
     },
-    "TechnologyType": {
+    "technologyType": {
       "format": "uri",
       "type": "string",
       "enum": [
@@ -36,7 +25,7 @@
         "Simulation"
       ]
     },
-    "Samples": {
+    "samples": {
       "type" : "array",
       "items": { "$ref": "sample_schema.json" }
     },
