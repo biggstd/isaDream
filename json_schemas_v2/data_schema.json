@@ -11,7 +11,7 @@
         "some_file_name.csv"
       ]
     },
-    "type": {
+    "dataType": {
       "type": "string",
       "title": "The datafile type.",
       "enum": [

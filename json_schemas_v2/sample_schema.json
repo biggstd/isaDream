@@ -7,13 +7,6 @@
     "name": {
       "type": "string"
     },
-    "type": {
-      "title": "The Material Source Type Schema.",
-      "enum" : [
-                "Physical Material",
-                "Simulated Material",
-              ]
-    },
     "characteristics" : {
       "type" : "array",
       "items":  { "$ref": "sample_factor_schema.json"}

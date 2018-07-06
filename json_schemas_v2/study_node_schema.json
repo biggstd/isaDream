@@ -28,27 +28,27 @@
         "Raman"
       ]
     },
-    "study_parameter_set": {
+    "studyParameterSet": {
       "type": "array",
       "items": { "$ref": "study_process_parameter_schema.json"},
       "description": "A set of the study parameters used in this study."
     },
-    "materials_set": {
+    "materialSet": {
       "type": "array",
       "items": { "$ref": "material_schema.json"},
       "description": "A set of the materials used in this study."
     },
-    "samples_set": {
+    "sampleSet": {
       "type": "array",
       "items": { "$ref": "sample_schema.json"},
       "description": "A set of the samples used in this study."
     },
-    "study_factor_set": {
+    "studyFactorSet": {
       "type": "array",
       "items": { "$ref": "factor_schema.json"},
       "description": "A set of the factors used in this study."
     },
-    "unit_set": {
+    "unitSet": {
       "type" : "array",
       "items": { "type": "string", "format": "uri" },
       "description": "A set of the units used in this study."
@@ -56,10 +56,6 @@
     "comments" : {
       "type" : "array",
       "items": { "$ref": "comment_schema.json"}
-    },
-    "experiment": {
-      "description": "A experiment subtype of this study.",
-      "type" : { "$ref": "experiment_subtype_schema.json"},
     }
   }
 }
