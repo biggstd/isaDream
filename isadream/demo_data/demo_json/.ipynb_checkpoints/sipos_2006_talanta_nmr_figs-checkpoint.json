@@ -11,13 +11,13 @@
   "studyFactors": [
     {
       "factorType": "Measurement Condition",
-      "decimalValue": 25.0,
+      "decimalValue": 25,
       "unitRef": "Celsius"
     },
     {
       "factorType": "Measurement",
       "unitRef": "ppm",
-      "csvColumnIndex": 1.0
+      "csvColumnIndex": 1
     },
     {
       "factorType": "Measurement Condition",
@@ -52,7 +52,7 @@
           "materialCharacteristic": [
             {
               "factorType": "Material Property",
-              "decimalValue": 0.98,
+              "decimalValue": 0.005,
               "unitRef": "Percent",
               "RefValue": "Purity by Weight"
             }
@@ -77,7 +77,7 @@
             {
               "factorType": "Measurement Condition",
               "unitRef": "Molar",
-              "csvColumnIndex": 0.0
+              "csvColumnIndex": 0
             }
           ],
           "species": [
@@ -108,7 +108,7 @@
             {
               "factorType": "Measurement Condition",
               "unitRef": "Molar",
-              "csvColumnIndex": 0.0
+              "csvColumnIndex": 0
             }
           ],
           "species": [
@@ -133,7 +133,7 @@
             {
               "factorType": "Measurement Condition",
               "unitRef": "Molar",
-              "csvColumnIndex": 0.0
+              "csvColumnIndex": 0
             }
           ],
           "species": [

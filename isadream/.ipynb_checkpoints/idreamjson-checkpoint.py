@@ -1,0 +1,187 @@
+'''
+Provides the needed utilities to convert an json file to a pandas dataframe for
+use in a Bokeh visualization application.
+'''
+
+import os
+import abc
+import json
+import itertools
+
+import numpy as np
+import pandas as pd
+
+
+'''
+ENVIRONMENT VARIABLES
+---------------------
+
+# TODO: Move to a config file?
+
+The base path is set as an environment variable. It defaults do a
+demo data folder within the repository with some basic data.
+'''
+
+
+demo_base = '../isadream/demo_data/'
+BASE_PATH = os.environ.get('IDREAM_JSON_BASE_PATH', demo_base)
+
+
+'''
+UTILITY FUNCTIONS
+-----------------
+
+Functions having nothing to do with the MVC class scope.
+'''
+
+
+def load_csv(path, base_path=BASE_PATH):
+    '''Implementation for handling user .csv files.'''
+    csv_path = os.path.join(base_path, path)
+    return pd.read_csv(csv_path, skiprows=1, header=None)
+
+
+
+def normalize(x, left_join=False):
+    '''Takes a json file and normlizes it into a list of dictionaries.
+
+    From: https://stackoverflow.com/a/43173998/8715297
+    '''
+    if isinstance(x, dict):
+        keys = x.keys()
+        values = (normalize(i) for i in x.values())
+        for i in itertools.product(*values):
+            yield dict(zip(keys, i))
+    elif isinstance(x, list):
+        if not x and left_join:
+            yield None
+        for i in x:
+            yield from normalize(i)
+    else:
+        yield x
+
+        
+def normalize_to_dataframe(node_dict, key):
+    '''Reads a nested dictionary and returns a normalized pandas
+    dataframe.'''
+    normalized_dict = normalize(node_dict.get(key))
+    return json.io.json_normalize(normalized_dict)
+
+        
+class Model:
+    '''The combined Assay and Study model generated for a single
+    drupal node.
+    
+    '''
+    
+    def __init__(self, node_json_path):
+        
+        self.json_path = os.path.join(BASE_PATH, node_json_path)
+        
+        # Load the json file into memory.
+        with open(self.json_path) as json_file:
+            self.json_dict = json.load(json_file)
+            
+        # Extract the component dataframes.
+        # General node information.
+        self.node_info = normalize_to_dataframe(
+            self.json_dict, 'nodeInformation')
+        # Factors that apply to all points in this study.
+        self.node_study_factors = normalize_to_dataframe(
+            self.json_dict, 'studyFactors')
+        self.node_study_samples = normalize_to_dataframe(
+            self.json_dict, 'studySamples')
+        # Comments that apply to all points in this study.
+        self.node_comments = normalize_to_dataframe(
+            self.json_dict, 'comments')
+        
+        # Study information dataframes. These have a more complicated,
+        # nested structure. Even after the dictionary flattening.
+        self.assays = normalize_to_dataframe(
+            self.json_dict, 'assays')
+            
+    
+    def __find_csv_keys(self):
+        '''The users .csv files are tagged in the metadata with an index.
+        Find the rows that have these indicies.'''
+        # TODO: Modify function to use the multi indexes.
+        study_level_csv_indexes = self.assays[self.assays['csvColumnIndex'].notnull()]
+        assay_level_csv_indexes = self.assays[
+            self.assays['samples.AssaySampleFactors.csvColumnIndex'].notnull()]
+        return study_level_csv_indexes, assay_level_csv_indexes
+    
+
+    def __prepare_dataframes(self):
+        '''Prepare the dataframes.
+        
+        These are species based. The length depends on the individual
+        assay, it should be the number of species * number of assay 
+        csv files. The width depends on number of species found.
+        '''
+        # The assay needs to be re-indexed and converted to a multi-label.
+        self.assays = self.assays.set_index(
+            ['dataFile', 'samples.species.speciesReference'])
+        self.assays.columns = pd.MultiIndex.from_tuples(
+            [tuple(x.split('.')) for x in self.assays.columns])
+        
+        # Samples.
+        self.node_study_samples = self.node_study_samples.set_index(['name'])
+        self.node_study_samples.columns = pd.MultiIndex.from_tuples(
+            [tuple(x.split('.')) for x in self.node_study_samples.columns])
+        
+    
+    @property
+    def data(self):
+        '''Returns a list of dataframes, one per assay found in this study.
+        
+        This function is called when a call to Model.data is made.
+        '''
+        data_files = self.assays['dataFile']
+        data = (load_csv(file) for file in data_files)
+        # TODO: Add species labels.
+        return data
+    
+    
+    @property
+    def metadata(self):
+        '''Builds the metadata dictionary.
+        
+        
+        
+        Conversions based on stoichiometry are done.
+        
+        Further transforms should be defined in a viewer instance.
+        '''
+        pass
+
+
+class View(abc.ABC):
+    '''A base class for viewing data. 
+
+    A view will be generated by information by a controller, will have
+    data passed to it in the form of one or more Model classes.
+    '''
+    def __init__(self):
+        pass
+
+
+class Controller:
+    '''A partial controler that reads requests from the drupal site,
+    and creates a configuration for a bokeh visualization.
+    
+    These will be key-value pairs used to construct the requested View
+    class.
+    '''
+    pass
+
+
+class NMR(View):
+    '''NMR Viewer class. To be moved.'''
+    def __init__(self, model):
+        pass
+
+    
+class ConcentrationRatio(View):
+    '''Ratio Viewer class. To be moved.'''
+    def __init__(self, model):
+        pass
