@@ -1,13 +1,21 @@
-'''
-Provides the needed utilities to convert an json file to a pandas dataframe for
-use in a Bokeh visualization application.
+'''A data model class for IDREAM Drupal Content Nodes.
+
+This module provides the needed utilities to convert an json file to a pandas 
+dataframe for use in a Bokeh visualization application.
+
+Attributes:
+    BASE_PATH (str): The base-path that will be prepended to the filenames
+        specified in the .json metadata.
+
 '''
 
+# Generic Python imports.
 import os
 import abc
 import json
 import itertools
 
+# Data science imports.
 import numpy as np
 import pandas as pd
 
@@ -30,24 +38,35 @@ BASE_PATH = os.environ.get('IDREAM_JSON_BASE_PATH', DEMO_BASE)
 SIPOS_DEMO = os.path.join(BASE_PATH, 'demo_json/sipos_2006_talanta_nmr_figs.json')
 
 
-'''
-UTILITY FUNCTIONS
------------------
 
-Functions having nothing to do with the MVC class scope.
-'''
+def load_csv(path, base_path=BASE_PATH, **read_csv_kwargs):
+    '''Implementation for handling user .csv files.
 
+    Args:
+        path (str): The user defined name or path to a .csv datafile.
+        base_path (str): The path to be prepended to the path argument.
+        **read_csv_kwargs: Arbitrary keyword arguments.
 
-def load_csv(path, base_path=BASE_PATH):
-    '''Implementation for handling user .csv files.'''
+    Returns:
+        DataFrame: A pandas dataframe.
+    
+    '''
     csv_path = os.path.join(base_path, path)
-    return pd.read_csv(csv_path, skiprows=1, header=None)
+    return pd.read_csv(csv_path, skiprows=1, header=None, **read_csv_kwargs)
 
 
 def normalize(x, left_join=False):
     '''Takes a json file and normlizes it into a list of dictionaries.
 
     From: https://stackoverflow.com/a/43173998/8715297
+    
+    Args:
+        x (list or dict): The object to be flattened.
+        left_join (bool): Controls left-join like behavior.
+        
+    Yields:
+        A flattened dictionary.
+
     '''
     if isinstance(x, dict):
         keys = x.keys()
@@ -92,7 +111,8 @@ def apply_multiindex(working_df):
 
 class Model:
     '''The combined Assay and Study model generated for a single
-    drupal node.
+    Drupal Content Node.
+    
     '''
 
     def __init__(self, node_json_path):
@@ -153,10 +173,10 @@ class Model:
 
     @property
     def metadata_frame(self):
-        '''The metadata dataframe property.
+        '''The highest-level metadata dataframe.
 
-        Returns the combined metadata, re-indexed and combined with the study
-        dataframe.
+        Returns the combined metadata. All the metadata for this study is contained
+        within the single row of this dataframe.
         '''
         secondary_metadata = [self.__node_info_df,
                               self.__study_factor_df,
@@ -169,51 +189,52 @@ class Model:
 
     @property
     def assay_metadata(self):
-        '''
+        '''The expanded, lowest-level metadata dataframe.
+        
+        Returns the metadata of this node contained within a multiindex
+        referencing (filename, speciesReference).
         '''
         md_frame = apply_reindex(self.metadata_frame, self.assay_df)
         working_df = pd.concat([self.assay_df, md_frame], axis=1)
         working_df = working_df.set_index(
             ['dataFile', 'samples.species.speciesReference'])
         working_df = apply_multiindex(working_df)
-        return working_df
+        # Return the dataframe, infer_objects() should recognize the correct
+        # data types stored within.
+        return working_df.infer_objects()
 
 
     @property
-    def csv_data(self):
+    def labeled_csv_data(self):
+        '''The same as csv_metadata, except with the csv column data as a new
+        column.
         '''
+        working_df = self.csv_metadata.copy()
+
+        for data_file_df in working_df:
+            csv_idx_array = data_file_df.loc(axis=1)[:,:,'csvColumnIndex'].values
+            md_idx_array = data_file_df.index.values
+            # Create the mapping dictionary.
+            data_map = {md_idx: load_csv(md_idx[0], usecols=[int(csv_idx)]).T.values.flatten()
+                        for md_idx, csv_idx in zip(md_idx_array, csv_idx_array)}    
+            data_file_df['data'] = md_idx_array
+            data_file_df['data'] = data_file_df['data'].map(data_map)
+            
+        return working_df
+    
+    @property
+    def csv_metadata(self):
+        '''A list of metadata dataframes for each csv column.
+        
+        Based on the same multiindex as in the `assay_metadata` property,
+        (filename, speciesReference). This returns a list wherein each dataframe
+        has information concerning each csv column index.
         '''
-        return [load_csv(file) for file in self.assay_metadata.index.levels[0]]
+        working_df = self.assay_metadata
+        columns = self.assay_metadata.loc(axis=1)[:, : ,'csvColumnIndex'].columns.values
+        columns = tuple(c[:-1] for c in columns)
+        return [working_df.loc(axis=1)[col[0], :, :] for col in columns]
 
 
 
-class View(abc.ABC):
-    '''A base class for viewing data.
 
-    A view will be generated by information by a controller, will have
-    data passed to it in the form of one or more Model classes.
-    '''
-    def __init__(self):
-        pass
-
-
-class Controller:
-    '''A partial controler that reads requests from the drupal site,
-    and creates a configuration for a bokeh visualization.
-
-    These will be key-value pairs used to construct the requested View
-    class.
-    '''
-    pass
-
-
-class NMR(View):
-    '''NMR Viewer class. To be moved.'''
-    def __init__(self, model):
-        pass
-
-
-class ConcentrationRatio(View):
-    '''Ratio Viewer class. To be moved.'''
-    def __init__(self, model):
-        pass
