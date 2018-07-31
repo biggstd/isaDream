@@ -32,7 +32,7 @@
   ],
   "studySamples": [
     {
-      "name": "Aluminate Solution",
+      "sampleName": "Aluminate Solution",
       "studySampleFactors": [
         {
           "factorType": "Measurement Condition",
@@ -48,7 +48,7 @@
       ],
       "sources": [
         {
-          "name": "Aluminum Wire",
+          "sourceName": "Aluminum Wire",
           "materialCharacteristic": [
             {
               "factorType": "Material Property",
@@ -60,6 +60,46 @@
           "species": [
             {
               "speciesReference": "Al(III)",
+              "stoichiometry": 1.0
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "sampleName": "Demo second Solution",
+      "studySampleFactors": [
+        {
+          "factorType": "Measurement Condition",
+          "decimalValue": 0.006,
+          "unitRef": "Molar"
+        }
+      ],
+      "species": [
+        {
+          "speciesReference": "Fake",
+          "stoichiometry": 2.0
+        }
+      ],
+      "sources": [
+        {
+          "sourceName": "Demo second source.",
+          "materialCharacteristic": [
+            {
+              "factorType": "Material Property",
+              "decimalValue": 1.05,
+              "unitRef": "g/cm^3",
+              "RefValue": "Density"
+            },
+            {
+              "factorType": "Material Property",
+              "unitRef": "Quality",
+              "RefValue": "Poor"
+            }
+          ],
+          "species": [
+            {
+              "speciesReference": "Fake",
               "stoichiometry": 1.0
             }
           ]
@@ -152,7 +192,7 @@
   ],
   "comments": [
     {
-      "name": "Comment on Sipos 2006.",
+      "name": "Study level comment on Sipos 2006.",
       "body": "I manually pulled this points out with a web tool."
     }
   ]
