@@ -10,7 +10,7 @@ import itertools
 import pandas as pd
 
 # DEMO_BASE = '/Users/karinharrington/github/isadream/isadream/demo_data/'
-DEMO_BASE = '/home/tylerbiggs/git/isadream/isadream/demo_data/'
+DEMO_BASE = '/home/tyler/git/isadream/isadream/demo_data/'
 BASE_PATH = os.environ.get('IDREAM_JSON_BASE_PATH', DEMO_BASE)
 
 # Demo and test json files.
