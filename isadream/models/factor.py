@@ -26,6 +26,23 @@ class Factor:
         self.__decimalValue = factor_dict.get('decimalValue')
         self.__stringValue = factor_dict.get('stringValue')
 
+    @classmethod
+    def from_dataframe(cls, dataframe):
+        '''Extract and build Factors from a pandas dataframe.
+
+        '''
+        factor_labels = '''
+            studyFactors
+            studySampleFactors
+            materialCharacteristic
+            studySampleFactors
+            AssaySampleFactors
+        '''.split()
+
+
+
+        return
+
     @property
     def unit(self):
         '''

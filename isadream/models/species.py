@@ -15,17 +15,17 @@ class Species:
                 the parent DrupalNode instance.
         '''
 
-        self.species_reference = species_dict.get('speciesReference')
-        self.stoichiometry = species_dict.get('stoichiometry')
+        self._species_reference = species_dict.get('speciesReference')
+        self._stoichiometry = species_dict.get('stoichiometry')
 
     @property
     def reference(self):
         '''
         '''
-        return self.species_reference
+        return self._species_reference
 
     @property
     def stoichiometry(self):
         '''
         '''
-        return self.stoichiometry
+        return self._stoichiometry

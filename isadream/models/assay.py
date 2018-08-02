@@ -3,6 +3,12 @@
 
 '''
 
+# Data science imports.
+import pandas as pd
+
+
+from . import utils
+
 from .factor import Factor
 from .sample import Sample
 
@@ -25,12 +31,25 @@ class Assay:
         '''initialization for an Assay instance.
 
         '''
-        self.__assay_data = assay_data
+        self._assay_data = assay_data
         self._parent_samples = samples
         self._parent_factors = factors  # Not in the demo json!
         self._parent_comments = comments
 
-        self.data_file = self.__assay_data.get('dataFile')
+        self.data_file = self._assay_data.get('dataFile')
+
+    @property
+    def sample_groups(self):
+        '''
+        '''
+        _sample_groups = self._assay_data.copy()
+        _sample_groups = _sample_groups.set_index('samples.name').T
+        _sample_groups = utils.split_index(_sample_groups, 'index').T
+        _sample_groups.columns = pd.MultiIndex.from_tuples(_sample_groups.columns)
+        _sample_groups = _sample_groups.groupby(level=0)
+        _sample_groups = [data for _, data in _sample_groups]
+
+        return _sample_groups
 
     @property
     def factors(self):
@@ -40,12 +59,10 @@ class Assay:
 
     @property
     def samples(self):
-        assay_samples = self.__assay_data
-        # assay_samples = [Sample(data) for data in assay_samples]
-        # samples = self._parent_samples + assay_samples
-        # return samples
+        assay_samples = [data for _, data in self.sample_groups]
+        assay_samples = [Sample(data) for data in assay_samples]
+        assay_samples += self._parent_samples
         return assay_samples
-        
 
     def __str__(self):
         return str(self.data_file)
