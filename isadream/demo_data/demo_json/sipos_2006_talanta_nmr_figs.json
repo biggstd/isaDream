@@ -110,6 +110,13 @@
   "assays": [
     {
       "dataFile": "sipos_2006_talanta_fig_3_KOH.csv",
+      "assayParameters": [
+        {
+          "factorType": "Measurement Condition",
+          "decimalValue": 1.05,
+          "unitRef": "Test"
+        }
+      ],
       "samples": [
         {
           "name": "Potassium Hydroxide",

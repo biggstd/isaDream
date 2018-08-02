@@ -3,6 +3,9 @@
 
 '''
 
+from .factor import Factor
+from .sample import Sample
+
 
 class Assay:
     '''Model for an individual assay contained within a DrupalNode.
@@ -15,49 +18,34 @@ class Assay:
     defined outside the assay-level metadata. ie. a common measurement can be
     specified once, while sample measurements must be more granuarly defined.
 
-    + View classes are based on the data contained within a set of Assays.
-
-    In addition to the assays own set of metadata, there are four other basic
-    sets of data that need to be incorporated.
 
     '''
 
-    def __init__(self, assay_df, metadata):
+    def __init__(self, assay_data, samples, factors, comments):
         '''initialization for an Assay instance.
 
-        Args:
-            assay_df: A pd.DataFrame with the data unique to this instance.
-            metadata: A list of four pd.Dataframe objects. This is metadata
-                from the parent object.
-
         '''
-        self.__assay_df = assay_df
-        self.__drupal_node_metadata_frame = metadata
+        self.__assay_data = assay_data
+        self._parent_samples = samples
+        self._parent_factors = factors  # Not in the demo json!
+        self._parent_comments = comments
+
+        self.data_file = self.__assay_data.get('dataFile')
 
     @property
     def factors(self):
-        '''All the factors, including parental, of this node.
+        sample_factors = [s.factors for s in self.samples]
+        factors = self._parent_factors + sample_factors
+        return factors
 
-        Each factor is made up of five possible fields:
-            1. unitRef
-            2. factorType
-            3. decimalValue
-            4. csvColumnIndex
-            5. stringValue
+    @property
+    def samples(self):
+        assay_samples = self.__assay_data
+        # assay_samples = [Sample(data) for data in assay_samples]
+        # samples = self._parent_samples + assay_samples
+        # return samples
+        return assay_samples
+        
 
-        The `csvColumnIndex` factor is a special type. All others are one-
-        dimensional values.
-
-        The `csvColumnIndex` factor indicates that the factor described has
-        its values within the .csv file associated with this Assay (or its
-        parent DrupalNode object.)
-        '''
-        pass
-
-    # @property
-    # def metadata(self):
-    #     '''Contains the merged Assay and Drupal metadata information, as well
-    #     as the data loaded from the associated `.csv` file.
-    #
-    #     '''
-    #     pass
+    def __str__(self):
+        return str(self.data_file)

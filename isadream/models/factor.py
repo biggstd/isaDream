@@ -21,6 +21,7 @@ class Factor:
         # Try to get the five possible values.
         self.__unitRef = factor_dict.get('unitRef')
         self.__factorType = factor_dict.get('factorType')
+        self.__refValue = factor_dict.get('RefValue')
         self.__csvColumnIndex = factor_dict.get('csvColumnIndex')
         self.__decimalValue = factor_dict.get('decimalValue')
         self.__stringValue = factor_dict.get('stringValue')
@@ -41,10 +42,17 @@ class Factor:
     def value(self):
         '''
         '''
-        return self.__decimalValue, self.__stringValue
+        if self.__decimalValue:
+            return self.__decimalValue
+        return self.__stringValue
 
     @property
     def factor_type(self):
         '''
         '''
-        return self.__csvColumnIndex
+        return self.__factorType
+
+    def __str__(self):
+        '''Display something usefull when a print() call is used.
+        '''
+        return f'{self.factor_type}:\n{self.value}: {self.unit}'

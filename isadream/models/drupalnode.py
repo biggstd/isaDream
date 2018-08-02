@@ -12,18 +12,20 @@ Attributes:
 # Generic Python imports.
 import os
 import json
-import itertools
-import collections
+# import itertools
+# import collections
 
 # Data science imports.
 import pandas as pd
 
-# Local package imports.
-from .utils import normalize, BASE_PATH, split_index
+# Local helper function imports.
 from . import utils
 
+# Local model class imports.
 from .sample import Sample
 from .factor import Factor
+from .assay import Assay
+from .comment import Comment
 
 
 class DrupalNode:
@@ -77,7 +79,7 @@ class DrupalNode:
 
     def __init__(self, node_json_path):
 
-        self.json_path = os.path.join(BASE_PATH, node_json_path)
+        self.json_path = os.path.join(utils.BASE_PATH, node_json_path)
 
         # Load the json file into memory.
         with open(self.json_path) as json_file:
@@ -101,7 +103,7 @@ class DrupalNode:
 
         '''
         # Normalize the dataframe to a list of dictionaries.
-        normalized_dict = list(normalize(self.json_dict.get(key)))
+        normalized_dict = list(utils.normalize(self.json_dict.get(key)))
         # Read the data into a pandas DataFrame.
         normalized_df = pd.io.json.json_normalize(normalized_dict)
         return normalized_df
@@ -111,34 +113,37 @@ class DrupalNode:
         '''Contains a list of assay dataframes associated with this instance.
 
         '''
-        return self.__study_assays
+        assays = self.__study_assays.to_dict('records')
+        return [Assay(data, self.samples, self.factors, self.comments)
+                for data in assays]
 
     @property
     def factors(self):
         '''
         '''
-        factor_records_dict = self.__study_factors.to_dict('records')
-        return [Factor(data) for data in factor_records_dict]
+        factors = self.__study_factors.to_dict('records')
+        return [Factor(data) for data in factors]
 
     @property
     def _sample_groups(self):
         '''
         '''
-        samples = self.__study_samples.copy()
-        samples = samples.set_index('sampleName').T
-        samples = utils.split_index(samples, 'index').T
-        samples.columns = pd.MultiIndex.from_tuples(samples.columns)
-        samples = samples.groupby(level=0)
+        _sample_groups = self.__study_samples.copy()
+        _sample_groups = _sample_groups.set_index('sampleName').T
+        _sample_groups = utils.split_index(_sample_groups, 'index').T
+        _sample_groups.columns = pd.MultiIndex.from_tuples(_sample_groups.columns)
+        _sample_groups = _sample_groups.groupby(level=0)
 
-        return samples
+        return _sample_groups
 
     @property
     def samples(self):
-        return [Sample(data) for _, data in self._sample_groups]
+        sample_records = [data for _, data in self._sample_groups]
+        return [Sample(data) for data in sample_records]
 
     @property
     def comments(self):
         '''
         '''
-        return self.__study_comments
-
+        comments = self.__study_comments.to_dict('records')
+        return [Comment(data) for _, data in comments]
