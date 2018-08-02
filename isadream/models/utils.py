@@ -46,29 +46,70 @@ def normalize(dict_or_list, left_join=False):
         yield dict_or_list
 
 
-def apply_multiindex(working_df):
-    '''Convert columns to multiindexed columns.
-
-    This assumes the columns are formatted as strings with period
-    delimiters denoting column level separation.
-
-    '''
-    working_df.columns = pd.MultiIndex.from_tuples(
-        [tuple(col.split('.')) for col in working_df.columns])
-    return working_df
+def pad_infinite(iterable, padding=None):
+    return itertools.chain(iterable, itertools.repeat(padding))
 
 
-def split_columns(working_df):
+def pad(iterable, size, padding=None):
+    return itertools.islice(pad_infinite(iterable, padding), size)
+
+
+def flatten(foo):
+    if isinstance(foo, str):
+        yield foo
+    else:
+        for x in foo:
+            if hasattr(x, '__iter__') and not isinstance(x, str):
+                for y in flatten(x):
+                    yield y
+            else:
+                yield x
+
+
+def split_index(dataframe, mode='index'):
     '''Split columns into tuples.
 
     This assumes the columns are formatted as strings with period
     delimiters denoting column level separation.
 
     '''
-    working_df.columns = [tuple(col.split('.'))
-                          for col in working_df.columns]
+    def try_split(val):
+        '''Just try to split, if we fail, return the original value.'''
+        try:
+            return val.split('.')
+        except:
+            return val
+
+    def tuplize_row(row):
+        '''Convert a given row to a tuple. See parent function.'''
+        values = flatten(row)
+        values = [try_split(val) for val in values]
+        values = flatten(values)
+
+        return list(values)
+
+    working_df = dataframe.copy()
+
+    if mode == 'index':
+        new_index = [tuplize_row(col) for col in working_df.index]
+        max_len = len(max(new_index, key=len))
+        working_df.index = [tuple(pad(col, max_len)) for col in new_index]
+
+    elif mode == 'columns':
+        new_cols = [tuplize_row(col) for col in working_df.columns]
+        max_len = len(max(new_cols, key=len))
+        working_df.columns = [tuple(pad(col, max_len)) for col in new_cols]
+
     return working_df
 
+
+def try_xs(dataframe, key, level=1):
+    '''
+    '''
+    try:
+        return dataframe.xs(key, level=level)
+    except KeyError:
+        return None
 
 def load_csv(path, base_path=BASE_PATH, **read_csv_kwargs):
     '''Implementation for handling user .csv files.

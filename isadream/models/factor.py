@@ -3,10 +3,10 @@
 '''
 
 class Factor:
-    '''
+    '''One of the Atomic models of isadream.
     '''
 
-    def __init__(self, factor_df):
+    def __init__(self, factor_dict):
         '''
 
         Each factor is made up of five possible fields:
@@ -19,11 +19,11 @@ class Factor:
         '''
 
         # Try to get the five possible values.
-        self.__unitRef = factor_df.get('unitRef')
-        self.__factorType = factor_df.get('factorType')
-        self.__csvColumnIndex = factor_df.get('csvColumnIndex')
-        self.__decimalValue = factor_df.get('decimalValue')
-        self.__stringValue = factor_df.get('stringValue')
+        self.__unitRef = factor_dict.get('unitRef')
+        self.__factorType = factor_dict.get('factorType')
+        self.__csvColumnIndex = factor_dict.get('csvColumnIndex')
+        self.__decimalValue = factor_dict.get('decimalValue')
+        self.__stringValue = factor_dict.get('stringValue')
 
     @property
     def unit(self):
@@ -41,10 +41,7 @@ class Factor:
     def value(self):
         '''
         '''
-        if self.__stringValue:
-            return self.__stringValue
-        elif self.__decimalValue:
-            return self.__decimalValue
+        return self.__decimalValue, self.__stringValue
 
     @property
     def factor_type(self):
