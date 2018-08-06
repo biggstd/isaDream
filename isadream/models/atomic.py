@@ -1,64 +1,94 @@
-'''Atomic Classes of the package.
+'''Property Classes of the package.
 
-These are classes which do not inherit from any other class.
+These classes define the properties of the compound Classes.
 
 '''
 
-class Factor:
 
-    def __init__(self, input_dict):
-        self._input_dict = input_dict
+class Factors:
+    '''Factor list property class.
 
-        # There are two general types of values, string and floats and
-        # then reference(string) values.
-        self._factor_type = input_dict.get('factorType')
+    Adds the factors property and associated functions for groups of factors.
+    '''
 
-        # There will usually only be one of a decimal or string value.
-        self._decimal_value = input_dict.get('decimalValue')
-        self._string_value = input_dict.get('stringValue')
+    def __init__(self, factors=None):
+        '''Initialization of a list of factors.
+        '''
+        self._factors = factors
 
-        # Or there may be one reference value.
-        self._ref_value = input_dict.get('RefValue')
+    @property
+    def factors(self):
+        return self._factors
 
-        # There will almost always be a unit string.
-        self._unit_ref = input_dict.get('unitRef')
-
-        # Special case of the csv index.
-        self._csv_column_index = input_dict.get('csvColumnIndex')
-
-    def __str__(self):
-        return (
-            f'Factor Type:   {self._factor_type}\n'
-            f'Float Value:   {self._decimal_value}\n'
-            f'String Value:  {self._string_value}\n'
-            f'Ref Value:     {self._ref_value}\n'
-            f'Unit:          {self._unit_ref}\n'
-            f'CSV Index:     {self._csv_column_index}\n'
-        )
+    @factors.setter
+    def factors(self, value):
+        self._factors = value
 
 
-class NodeInfo:
+class Comments:
 
-    def __init__(self, input_dict):
-        self._input_dict = input_dict
+    def __init__(self, comments=None):
+        self._comments = comments
 
-    def __str__(self):
-        return str(self._input_dict)
+    @property
+    def comments(self):
+        return self._comments
+
+    @comments.setter
+    def comments(self, value):
+        self._comments = value
+
+
+class Assays:
+
+    def __init__(self, assays):
+        self._assays = assays
+
+    @property
+    def assays(self):
+        return self._assays
+
+    @assays.setter
+    def assays(self, value):
+        self._assays = value
+
+
+class Samples:
+
+    def __init__(self, samples):
+        self._samples = samples
+
+    @property
+    def samples(self):
+        return self._samples
+
+    @samples.setter
+    def samples(self, value):
+        self._samples = value
 
 
 class Species:
 
-    def __init__(self, input_dict):
-        self._input_dict = input_dict
+    def __init__(self, species):
+        self._species = species
 
-    def __str__(self):
-        return str(self._input_dict)
+    @property
+    def species(self):
+        return self._species
 
+    @species.setter
+    def species(self, value):
+        self._species = value
 
-class Comment:
+class Sources:
 
-    def __init__(self, input_dict):
-        self._input_dict = input_dict
+    def __init__(self, Sources):
+        self._sources = None
 
-    def __str__(self):
-        return str(self._input_dict)
+    @property
+    def sources(self):
+        return self._sources
+
+    @sources.setter
+    def sources(self, value):
+        self._sources = value
