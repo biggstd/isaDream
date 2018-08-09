@@ -4,34 +4,126 @@
 '''
 # Generic Python imports.
 import os
+import csv
 import itertools
+import collections
 
 # Data science imports.
 import pandas as pd
 
+# TODO: Move this demo data elsewhere.
 # DEMO_BASE = '/Users/karinharrington/github/isadream/isadream/demo_data/'
 DEMO_BASE = '/home/tyler/git/isadream/isadream/demo_data/'
 # DEMO_BASE = '/home/tylerbiggs/git/isadream/isadream/demo_data/'
 BASE_PATH = os.environ.get('IDREAM_JSON_BASE_PATH', DEMO_BASE)
-
 # Demo and test json files.
-SIPOS_DEMO = os.path.join(
-    BASE_PATH,
-    'demo_json/sipos_2006_talanta_nmr_figs.json')
+SIPOS_DEMO = os.path.join(BASE_PATH, 'demo_json/sipos_2006_talanta_nmr_figs.json')
+
+
+def load_csv_as_dict(path, base_path=BASE_PATH):
+    """Load a CSV file as a Python dictionary.
+
+    The header in each file will be skipped.
+
+    :param path:
+    :param base_path:
+    :return: A dictionary object with integer keys representing the csv
+        column index the data was found in.
+
+    """
+
+    csv_path = os.path.join(str(base_path), str(path))
+
+    data = collections.defaultdict(list)
+
+    # Open the file and create a reader (an object that when iterated
+    # on gives the values of each row.
+    with open(csv_path) as csvfile:
+        reader = csv.DictReader(csvfile)
+
+        # Pop the header and get its length.
+        field_int_index = range(len(next(reader)))
+        field_int_index = [str(x) for x in field_int_index]
+
+        # Iterate over the remaining rows and append the data.
+        for row in reader:
+            for idx, header in zip(field_int_index, reader.fieldnames):
+                data[idx].append(float(row[header]))
+
+    return dict(data)
+
+
+def join_lists(input_lists):
+    """Helper function to join and flatten lists when one of the inputs
+    can be `None`.
+
+    """
+    lists = filter(None, input_lists)
+    return list(itertools.chain.from_iterable(lists))
+
+
+def ensure_list(val_or_values):
+    """Examine a value and ensure that it is returned as a list."""
+    if hasattr(val_or_values, '__iter__'):
+        return val_or_values
+    elif val_or_values is None:
+        return []
+    else:
+        return [val_or_values]
+
+
+def get_all_elementals(node, elemental_cls, children=('assays', 'samples', 'sources')):
+    """
+
+    :param node:
+    :param elemental_cls:
+    :param children:
+    :return:
+    """
+
+    # Construct the list to be output.
+    element_list = list()
+
+    # Examine the current node for the desired elemental.
+    if hasattr(node, elemental_cls):
+        element_container = getattr(node, elemental_cls)
+        if element_container:
+            element_list.extend(getattr(node, elemental_cls))
+
+    # Now examine the containers on the node that may contain the desired element.
+    for attr in children:
+
+        # Check if the node has a given container attribute.
+        # This method allows us to access the container regardless of what type it is.
+        if hasattr(node, attr):
+
+            # Get the value of that container.
+            element_containers = getattr(node, attr)
+
+            # Since the container can empty, check it here.
+            # This does not work when combined with the if statement above. Why?
+            if not element_containers:
+                # If this is empty simply go to the next loop iteration.
+                continue
+
+            # Each item this container is examined recursively with this function.
+            children_elements = [get_all_elementals(container, elemental_cls, children=children)
+                                 for container in element_containers]
+
+            # Flatten the list returned, and extend the output list with the new values.
+            element_list.extend(itertools.chain.from_iterable(children_elements))
+
+    return element_list
 
 
 def normalize(dict_or_list, left_join=False):
     '''Takes a json file and normlizes it into a list of dictionaries.
-
     From: https://stackoverflow.com/a/43173998/8715297
-
     Args:
         x (list or dict): The object to be flattened.
         left_join (bool): Controls left-join like behavior.
-
     Yields:
         A flattened dictionary.
-
     '''
     if isinstance(dict_or_list, dict):
         keys = dict_or_list.keys()
@@ -45,84 +137,3 @@ def normalize(dict_or_list, left_join=False):
             yield from normalize(i)
     else:
         yield dict_or_list
-
-
-def pad_infinite(iterable, padding=None):
-    return itertools.chain(iterable, itertools.repeat(padding))
-
-
-def pad(iterable, size, padding=None):
-    return itertools.islice(pad_infinite(iterable, padding), size)
-
-
-def flatten(foo):
-    if isinstance(foo, str):
-        yield foo
-    else:
-        for x in foo:
-            if hasattr(x, '__iter__') and not isinstance(x, str):
-                for y in flatten(x):
-                    yield y
-            else:
-                yield x
-
-
-def split_index(dataframe, mode='index'):
-    '''Split columns into tuples.
-
-    This assumes the columns are formatted as strings with period
-    delimiters denoting column level separation.
-
-    '''
-    def try_split(val):
-        '''Just try to split, if we fail, return the original value.'''
-        try:
-            return val.split('.')
-        except:
-            return val
-
-    def tuplize_row(row):
-        '''Convert a given row to a tuple. See parent function.'''
-        values = flatten(row)
-        values = [try_split(val) for val in values]
-        values = flatten(values)
-
-        return list(values)
-
-    working_df = dataframe.copy()
-
-    if mode == 'index':
-        new_index = [tuplize_row(col) for col in working_df.index]
-        max_len = len(max(new_index, key=len))
-        working_df.index = [tuple(pad(col, max_len)) for col in new_index]
-
-    elif mode == 'columns':
-        new_cols = [tuplize_row(col) for col in working_df.columns]
-        max_len = len(max(new_cols, key=len))
-        working_df.columns = [tuple(pad(col, max_len)) for col in new_cols]
-
-    return working_df
-
-
-def try_xs(dataframe, key, level=1):
-    '''
-    '''
-    try:
-        return dataframe.xs(key, level=level)
-    except KeyError:
-        return None
-
-def load_csv(path, base_path=BASE_PATH, **read_csv_kwargs):
-    '''Implementation for handling user .csv files.
-
-    Args:
-        path (str): The user defined name or path to a .csv datafile.
-        base_path (str): The path to be prepended to the path argument.
-        **read_csv_kwargs: Arbitrary keyword arguments.
-
-    Returns:
-        DataFrame: A pandas dataframe.
-
-    '''
-    csv_path = os.path.join(str(base_path), str(path))
-    return pd.read_csv(csv_path, skiprows=1, header=None, **read_csv_kwargs)

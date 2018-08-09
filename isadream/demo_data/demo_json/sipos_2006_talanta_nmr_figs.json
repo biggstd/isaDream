@@ -150,7 +150,7 @@
       "dataFile": "sipos_2006_talanta_fig_3_LiOH.csv",
       "samples": [
         {
-          "name": "Lithium Hydroxide",
+          "sampleName": "Lithium Hydroxide",
           "AssaySampleFactors": [
             {
               "factorType": "Measurement Condition",
@@ -175,7 +175,7 @@
       "dataFile": "sipos_2006_talanta_fig_3_NaOH.csv",
       "samples": [
         {
-          "name": "Sodium Hydroxide",
+          "sampleName": "Sodium Hydroxide",
           "AssaySampleFactors": [
             {
               "factorType": "Measurement Condition",

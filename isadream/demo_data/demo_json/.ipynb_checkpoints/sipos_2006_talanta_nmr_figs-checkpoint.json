@@ -11,13 +11,13 @@
   "studyFactors": [
     {
       "factorType": "Measurement Condition",
-      "decimalValue": 25,
+      "decimalValue": 25.0,
       "unitRef": "Celsius"
     },
     {
       "factorType": "Measurement",
       "unitRef": "ppm",
-      "csvColumnIndex": 1
+      "csvColumnIndex": 1.0
     },
     {
       "factorType": "Measurement Condition",
@@ -32,7 +32,7 @@
   ],
   "studySamples": [
     {
-      "name": "Aluminate Solution",
+      "sampleName": "Aluminate Solution",
       "studySampleFactors": [
         {
           "factorType": "Measurement Condition",
@@ -48,11 +48,11 @@
       ],
       "sources": [
         {
-          "name": "Aluminum Wire",
+          "sourceName": "Aluminum Wire",
           "materialCharacteristic": [
             {
               "factorType": "Material Property",
-              "decimalValue": 0.005,
+              "decimalValue": 0.98,
               "unitRef": "Percent",
               "RefValue": "Purity by Weight"
             }
@@ -65,11 +65,58 @@
           ]
         }
       ]
+    },
+    {
+      "sampleName": "Demo second Solution",
+      "studySampleFactors": [
+        {
+          "factorType": "Measurement Condition",
+          "decimalValue": 0.006,
+          "unitRef": "Molar"
+        }
+      ],
+      "species": [
+        {
+          "speciesReference": "Fake",
+          "stoichiometry": 2.0
+        }
+      ],
+      "sources": [
+        {
+          "sourceName": "Demo second source.",
+          "materialCharacteristic": [
+            {
+              "factorType": "Material Property",
+              "decimalValue": 1.05,
+              "unitRef": "g/cm^3",
+              "RefValue": "Density"
+            },
+            {
+              "factorType": "Material Property",
+              "unitRef": "Quality",
+              "RefValue": "Poor"
+            }
+          ],
+          "species": [
+            {
+              "speciesReference": "Fake",
+              "stoichiometry": 1.0
+            }
+          ]
+        }
+      ]
     }
   ],
   "assays": [
     {
       "dataFile": "sipos_2006_talanta_fig_3_KOH.csv",
+      "assayParameters": [
+        {
+          "factorType": "Measurement Condition",
+          "decimalValue": 1.05,
+          "unitRef": "Test"
+        }
+      ],
       "samples": [
         {
           "name": "Potassium Hydroxide",
@@ -77,7 +124,7 @@
             {
               "factorType": "Measurement Condition",
               "unitRef": "Molar",
-              "csvColumnIndex": 0
+              "csvColumnIndex": 0.0
             }
           ],
           "species": [
@@ -103,12 +150,12 @@
       "dataFile": "sipos_2006_talanta_fig_3_LiOH.csv",
       "samples": [
         {
-          "name": "Lithium Hydroxide",
+          "sampleName": "Lithium Hydroxide",
           "AssaySampleFactors": [
             {
               "factorType": "Measurement Condition",
               "unitRef": "Molar",
-              "csvColumnIndex": 0
+              "csvColumnIndex": 0.0
             }
           ],
           "species": [
@@ -128,12 +175,12 @@
       "dataFile": "sipos_2006_talanta_fig_3_NaOH.csv",
       "samples": [
         {
-          "name": "Sodium Hydroxide",
+          "sampleName": "Sodium Hydroxide",
           "AssaySampleFactors": [
             {
               "factorType": "Measurement Condition",
               "unitRef": "Molar",
-              "csvColumnIndex": 0
+              "csvColumnIndex": 0.0
             }
           ],
           "species": [
@@ -152,7 +199,7 @@
   ],
   "comments": [
     {
-      "name": "Comment on Sipos 2006.",
+      "name": "Study level comment on Sipos 2006.",
       "body": "I manually pulled this points out with a web tool."
     }
   ]
