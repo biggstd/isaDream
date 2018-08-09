@@ -66,13 +66,11 @@ class Factor:
 
         if self._string_value and self._decimal_value:
             labels = list(filter(None, (self._factor_type, self._ref_value,
-                                        self._unit_ref, self._string_value,
-                                        self.csv_index)))
+                                        self._unit_ref, self._string_value)))
 
         else:
             labels = list(filter(None, (self._factor_type, self._ref_value,
-                                        self._unit_ref,
-                                        self.csv_index)))
+                                        self._unit_ref)))
 
         # Replace any spaces in these labels with underscores.
         labels = [str(lab).replace(' ', '_') for lab in labels]
@@ -81,13 +79,17 @@ class Factor:
 
     @property
     def dict_value(self):
-        """Build the values for this factor."""
-        if not self._decimal_value and not self._string_value:
-            return self._ref_value
-        elif self._string_value and not self._decimal_value:
-            return self._string_value
-        else:
-            return self._decimal_value
+        """Build the values for this factor.
+
+        The priority of return order is:
+            1. decimal_value
+            2. string_value
+            3. ref_value
+
+        """
+        for item in (self._decimal_value, self._string_value, self._ref_value):
+            if item is not None:
+                return item
 
     @property
     def as_dict(self):
