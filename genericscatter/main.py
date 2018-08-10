@@ -1,54 +1,45 @@
 """
-#############################
-Generic Scatter Visualization
-#############################
-
-.. topic:: Overview
-
-    This Bokeh application will serve as a generic scatter plot for a range of
-    chemical values.
-
-    :Date: |today|
-    :Author: **Tyler Biggs**
 
 """
-import pandas as pd
-import json
-import os
-import itertools
-from pandas.io.json import json_normalize
+
+# Path hack to allow imports from the parent directory.
+import sys, os
+
+sys.path.insert(0, os.path.abspath('../'))
+
+# Local isadream imports.
+from isadream.models import utils
+from isadream import io
+
+# Load the demo data. This should be replaced by a function call,
+demo_json = io.read_idream_json(utils.SIPOS_DEMO)
+node = io.parse_json(demo_json)
+
+# Load the default factor?
+# TODO: Determine how this should be set.
+KEY_FACTOR = ('Measurement', 'ppm')
+
+# ---------------------- Demo data
+# Load the demo json.
+demo_json = io.read_idream_json(utils.SIPOS_DEMO)
+NODE = io.parse_json(demo_json)
 
 
-json_path = '../isadream/demo_data/demo_json/sipos_2006_talanta_nmr_figs.json'
-BASE_PATH = '../isadream/demo_data/'
+def create_figure():
+    """Create and return the bokeh figure."""
+    pass
 
 
-def normalize(x):
-    if isinstance(x, dict):
-        keys = x.keys()
-        values = (normalize(i) for i in x.values())
-        for i in itertools.product(*values):
-            yield (dict(zip(keys, i)))
-    elif isinstance(x, list):
-        for i in x:
-            yield from normalize(i)
-    else:
-        yield x
+def update_figure():
+    """Update the figure."""
+    pass
 
 
-def load_csv(path, base_path=BASE_PATH):
-    csv_path = os.path.join(base_path, path)
-    return pd.read_csv(csv_path, skiprows=1, header=None)
+def update_bk_cds():
+    """Updates the bokeh column data source."""
+    pass
 
 
-
-
-
-with open(json_path) as jp:
-    sjson = json.load(jp)
-
-
-
-assay_df = json_normalize(list(normalise(sjson['assays'])))
-study_sample_df = json_normalize(list(normalise(sjson['studySamples'])))
-full_df = json_normalize(list(normalise(sjson)))
+def tap_select_callback():
+    """Callback for selection of a single data point."""
+    pass

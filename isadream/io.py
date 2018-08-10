@@ -151,7 +151,7 @@ def parse_assays(assay_json):
                            comments=comment_nodes)
 
 
-def source_to_dict(source_node):
+def assay_to_key_value_dicts(source_node):
     """
     # TODO: Consider having this as a part of the DataFile class.
 
