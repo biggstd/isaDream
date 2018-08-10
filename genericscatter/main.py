@@ -26,7 +26,7 @@ NODE = io.parse_json(demo_json)
 
 
 def create_figure():
-    """Create and return the bokeh figure."""
+    """Create and return the Bokeh figure."""
     pass
 
 
@@ -36,7 +36,7 @@ def update_figure():
 
 
 def update_bk_cds():
-    """Updates the bokeh column data source."""
+    """Updates the Bokeh column data source."""
     pass
 
 

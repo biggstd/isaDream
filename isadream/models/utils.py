@@ -13,8 +13,8 @@ import pandas as pd
 
 # TODO: Move this demo data elsewhere.
 # DEMO_BASE = '/Users/karinharrington/github/isadream/isadream/demo_data/'
-DEMO_BASE = '/home/tyler/git/isadream/isadream/demo_data/'
-# DEMO_BASE = '/home/tylerbiggs/git/isadream/isadream/demo_data/'
+# DEMO_BASE = '/home/tyler/git/isadream/isadream/demo_data/'
+DEMO_BASE = '/home/tylerbiggs/git/isadream/isadream/demo_data/'
 BASE_PATH = os.environ.get('IDREAM_JSON_BASE_PATH', DEMO_BASE)
 # Demo and test json files.
 SIPOS_DEMO = os.path.join(BASE_PATH, 'demo_json/sipos_2006_talanta_nmr_figs.json')

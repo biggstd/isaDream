@@ -64,18 +64,23 @@ class Factor:
 
         """
 
-        if self._string_value and self._decimal_value:
-            labels = list(filter(None, (self._factor_type, self._ref_value,
-                                        self._unit_ref, self._string_value)))
+        # if self._string_value and self._decimal_value:
+        #     labels = list(filter(None, (self._factor_type, self._ref_value,
+        #                                 self._unit_ref, self._string_value)))
+        #
+        # else:
+        #     labels = list(filter(None, (self._factor_type, self._ref_value,
+        #                                 self._unit_ref)))
+        #
+        # # Replace any spaces in these labels with underscores.
+        # labels = [str(lab).replace(' ', '_') for lab in labels]
+        # # return '_'.join(labels)
+        # return tuple(labels)
+        return self._factor_type, self._unit_ref
 
-        else:
-            labels = list(filter(None, (self._factor_type, self._ref_value,
-                                        self._unit_ref)))
-
-        # Replace any spaces in these labels with underscores.
-        labels = [str(lab).replace(' ', '_') for lab in labels]
-        # return '_'.join(labels)
-        return tuple(labels)
+    @property
+    def hash_str(self):
+        return str(hash(self))
 
     @property
     def dict_value(self):

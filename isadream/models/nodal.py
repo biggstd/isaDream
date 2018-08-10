@@ -5,7 +5,6 @@ of the two.
 
 """
 
-import abc
 import collections
 
 from . import elemental
@@ -143,29 +142,25 @@ class AssayNode:
         # The data to be returned.
         data_source = dict()
 
-        # For reference we will want sets of all factors, samples, and species.
-        # Should this be a ChainMap?
-        node_samples_set = self.all_samples
-        node_csv_factor_set = self.csv_index_factors
-
         # We must iterate by samples so that species can properly be
         # adjusted based on their stoichiometry.
-        for sample in node_samples_set:
+        for sample in self.all_samples:
 
             # Get the csv data associated with this sample.
             sample_csv_factors = (set(sample.all_factors) | set(self.all_factors)) \
-                                 & set(node_csv_factor_set)
+                                 & set(self.csv_index_factors)
 
             # Get all the species associated with this sample node.
-            sample_species = tuple(set((s.dict_label, s.dict_value)
-                                       for s in sample.all_species))
+            sample_hash = list(set((s.dict_label, s.dict_value)
+                                   for s in sample.all_species))
+            sample_hash = '__'.join(str(x) for x in sample_hash),
 
             # Add the factors with csv data to data_source.
             for sample_idx_factor in sample_csv_factors:
                 # Get the corresponding data array.
                 data = self.datafile_dict.get(str(sample_idx_factor.csv_index))
                 # Merge the factor and species keys.
-                key = (sample_idx_factor.dict_label, sample_species)
+                key = sample_idx_factor.dict_label + sample_hash
                 # Update the output source.
                 data_source[key] = data
 
@@ -174,7 +169,7 @@ class AssayNode:
 
             # Iterate through the remaining, non-csv index, factors and update the dict.
             for factor in sample_factors:
-                key = (factor.dict_label, sample_species)
+                key = factor.dict_label + sample_hash
                 data_source[key] = [factor.dict_value for _ in range(self.factor_size)]
 
         return data_source
@@ -195,6 +190,10 @@ class SampleNode:
 
     def __repr__(self):
         return str(self.as_dict)
+
+    @property
+    def hash_str(self):
+        return str(hash(self))
 
     @property
     def all_factors(self):
