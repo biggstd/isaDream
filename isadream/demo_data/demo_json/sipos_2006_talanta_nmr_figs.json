@@ -74,7 +74,7 @@
       "dataFile": "sipos_2006_talanta_fig_3_KOH.csv",
       "samples": [
         {
-          "name": "Potassium Hydroxide",
+          "sampleName": "Potassium Hydroxide",
           "AssaySampleFactors": [
             {
               "factorType": "Measurement Condition",

@@ -4,6 +4,10 @@ These are classes which do not inherit from any other class, and do not
 combine with any other classes.
 
 """
+
+import re
+
+
 from . import utils
 
 
@@ -36,12 +40,13 @@ class Factor:
         self._csv_column_index = input_dict.get('csvColumnIndex')
 
     def __repr__(self):
-        return (f'Factor Type:   {self._factor_type}\n'
-                f'Float Value:   {self._decimal_value}\n'
-                f'String Value:  {self._string_value}\n'
-                f'Ref Value:     {self._ref_value}\n'
-                f'Unit:          {self._unit_ref}\n'
-                f'CSV Index:     {self._csv_column_index}\n')
+        return (f'Factor Type: {self._factor_type}, '
+                f'Float Value: {self._decimal_value}, '
+                # f'String Value:  {self._string_value}\t'
+                f'Ref Value: {self._ref_value}, '
+                f'Unit: {self._unit_ref}, '
+                # f'CSV Index:     {self._csv_column_index}\t'
+                )
 
     @property
     def is_csv_index(self):
@@ -117,9 +122,11 @@ class SpeciesFactor:
         if self.dict_value and self.dict_label:
             return {self.dict_label: self.dict_value}
 
-    def query(self, terms):
-        properties = (self._species_reference, self._stoichiometry)
-        if any(term in properties for term in terms):
+    def query(self, query_terms):
+        query_terms = utils.ensure_list(query_terms)
+
+        if any(re.match(term, self._species_reference)
+               for term in query_terms):
             return True
 
 

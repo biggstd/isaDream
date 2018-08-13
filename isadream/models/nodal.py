@@ -5,6 +5,7 @@ of the two.
 
 """
 
+import re
 import collections
 
 from . import elemental
@@ -141,55 +142,12 @@ class AssayNode:
         else:
             return 1
 
-    # @property
-    # def as_dict(self):
-    #     return {self._datafile: {
-    #         'data': self.datafile_dict,
-    #         'factors': [factor.as_dict for factor in self.all_factors],
-    #         'samples': [sample.as_dict for sample in self.samples],
-    #     }}
-
-    @property
-    def as_dict(self):
-        """
-
-
-        :return:
-        """
-        # The data to be returned.
-        data_source = dict()
-
-        # We must iterate by samples so that species can properly be
-        # adjusted based on their stoichiometry.
-        for sample in self.all_samples:
-
-            # Get the csv data associated with this sample.
-            sample_csv_factors = (set(sample.all_factors) | set(self.all_factors)) \
-                                 & set(self.csv_index_factors)
-
-            # Get all the species associated with this sample node.
-            sample_hash = list(set((s.dict_label, s.dict_value)
-                                   for s in sample.all_species))
-            sample_hash = '__'.join(str(x) for x in sample_hash),
-
-            # Add the factors with csv data to data_source.
-            for sample_idx_factor in sample_csv_factors:
-                # Get the corresponding data array.
-                data = self.datafile_dict.get(str(sample_idx_factor.csv_index))
-                # Merge the factor and species keys.
-                key = sample_hash + sample_idx_factor.dict_label
-                # Update the output source.
-                data_source[key] = data
-
-            # Get all the factors that apply to this sample that are not csv indexes.
-            sample_factors = set(sample.all_factors) - set(sample_csv_factors)
-
-            # Iterate through the remaining, non-csv index, factors and update the dict.
-            for factor in sample_factors:
-                key = sample_hash + factor.dict_label
-                data_source[key] = [factor.dict_value for _ in range(self.factor_size)]
-
-        return data_source
+    # def query(self, query_terms):
+    #     query_terms = utils.ensure_list(query_terms)
+    #     if any(species.query(term)
+    #            for term in query_terms
+    #            for species in self.all_species):
+    #         return True
 
 
 class SampleNode:
@@ -204,6 +162,9 @@ class SampleNode:
         self.factors = containers.Factors(factors)
         self.species = containers.Species(species)
         self.sources = containers.Sources(sources)
+
+    def __repr__(self):
+        return str(self.node_info)
 
     @property
     def all_factors(self):
