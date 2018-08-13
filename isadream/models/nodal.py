@@ -69,8 +69,15 @@ class AssayNode:
 
     def __init__(self, datafile, node_info=None, factors=None, samples=None, comments=None,
                  parental_factors=None, parental_samples=None):
-        """Initialization of an AssayNode.
+        """
 
+        :param datafile:
+        :param node_info:
+        :param factors:
+        :param samples:
+        :param comments:
+        :param parental_factors:
+        :param parental_samples:
         """
 
         # Assay-specific factors, samples and comments.
@@ -91,11 +98,21 @@ class AssayNode:
 
     @property
     def all_factors(self):
-        return set(utils.get_all_elementals(self, 'factors'))
+        return utils.get_all_elementals(self, 'factors')
 
     @property
     def all_species(self):
-        return utils.get_all_elementals(self, 'species')
+        nodes_out = list()
+        for species in set(utils.get_all_elementals(self, 'species')):
+            if species.dict_label is not None and species.dict_value is not None:
+                nodes_out.append(species)
+
+        return nodes_out
+
+    @property
+    def species_tuple(self):
+        species_maps = [{s.dict_label: s.dict_value} for s in self.all_species]
+        return tuple(collections.ChainMap(*species_maps))
 
     @property
     def all_samples(self):
@@ -160,7 +177,7 @@ class AssayNode:
                 # Get the corresponding data array.
                 data = self.datafile_dict.get(str(sample_idx_factor.csv_index))
                 # Merge the factor and species keys.
-                key = sample_idx_factor.dict_label + sample_hash
+                key = sample_hash + sample_idx_factor.dict_label
                 # Update the output source.
                 data_source[key] = data
 
@@ -169,7 +186,7 @@ class AssayNode:
 
             # Iterate through the remaining, non-csv index, factors and update the dict.
             for factor in sample_factors:
-                key = factor.dict_label + sample_hash
+                key = sample_hash + factor.dict_label
                 data_source[key] = [factor.dict_value for _ in range(self.factor_size)]
 
         return data_source
@@ -188,13 +205,6 @@ class SampleNode:
         self.species = containers.Species(species)
         self.sources = containers.Sources(sources)
 
-    def __repr__(self):
-        return str(self.as_dict)
-
-    @property
-    def hash_str(self):
-        return str(hash(self))
-
     @property
     def all_factors(self):
         return utils.get_all_elementals(self, 'factors')
@@ -209,15 +219,13 @@ class SampleNode:
         return nodes_out
 
     @property
-    def all_sources(self):
-        return utils.get_all_elementals(self, 'sources')
+    def species_tuple(self):
+        species_maps = [{s.dict_label: s.dict_value} for s in self.all_species]
+        return tuple(collections.ChainMap(*species_maps))
 
     @property
-    def as_dict(self):
-        return {self.sample_name: {
-            'species': [species.as_dict for species in self.species],
-            'sources': [source.as_dict for source in self.sources],
-            'factors': [factor.as_dict for factor in self.factors]}}
+    def all_sources(self):
+        return utils.get_all_elementals(self, 'sources')
 
 
 class SourceNode:
@@ -230,9 +238,6 @@ class SourceNode:
         self.node_info = elemental.NodeInfo(node_info)
         self.factors = containers.Factors(factors)
 
-    def __repr__(self):
-        return str(self.as_dict)
-
     @property
     def all_factors(self):
         return collections.ChainMap(utils.get_all_elementals(self, 'factors'))
@@ -240,8 +245,3 @@ class SourceNode:
     @property
     def all_species(self):
         return utils.get_all_elementals(self, 'species')
-
-    @property
-    def as_dict(self):
-        return {'species': self.species,
-                'factors': self.factors}

@@ -4,6 +4,7 @@ These are classes which do not inherit from any other class, and do not
 combine with any other classes.
 
 """
+from . import utils
 
 
 class Factor:
@@ -47,40 +48,21 @@ class Factor:
         # We accept values of 0, so just check that the value is not None,
         # and that it can be cast to an integer.
         if self._csv_column_index is not None:
-            try:
-                int(self._csv_column_index)
+            if int(self._csv_column_index) >= 0:  # if 0: returns False.
                 return True
-            except ValueError:
-                return False
+        return False
 
     @property
     def csv_index(self):
         if self.is_csv_index:
-            return int(self._csv_column_index)
+            return str(int(self._csv_column_index))
 
     @property
     def dict_label(self):
         """Build the dictionary key label for this factor.
 
         """
-
-        # if self._string_value and self._decimal_value:
-        #     labels = list(filter(None, (self._factor_type, self._ref_value,
-        #                                 self._unit_ref, self._string_value)))
-        #
-        # else:
-        #     labels = list(filter(None, (self._factor_type, self._ref_value,
-        #                                 self._unit_ref)))
-        #
-        # # Replace any spaces in these labels with underscores.
-        # labels = [str(lab).replace(' ', '_') for lab in labels]
-        # # return '_'.join(labels)
-        # return tuple(labels)
-        return self._factor_type, self._unit_ref
-
-    @property
-    def hash_str(self):
-        return str(hash(self))
+        return tuple([self._factor_type, self._ref_value, self._unit_ref])
 
     @property
     def dict_value(self):
@@ -102,6 +84,8 @@ class Factor:
             return {self.dict_label: self.dict_value}
 
     def query(self, query_terms):
+        query_terms = utils.ensure_list(query_terms)
+        # print(query_terms)
         properties = (self._factor_type, self._decimal_value,
                       self._string_value, self._ref_value, self._unit_ref,
                       self._csv_column_index)
@@ -118,8 +102,7 @@ class SpeciesFactor:
 
     def __repr__(self):
         """Create a human readable output for the print() function."""
-        return (f'Species Reference:  {self._species_reference}\n'
-                f'Stoichiometry:      {self._stoichiometry}')
+        return (f'{self._species_reference}: {self._stoichiometry}')
 
     @property
     def dict_label(self):

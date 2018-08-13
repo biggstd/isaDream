@@ -143,7 +143,6 @@ def parse_assays(assay_json):
     # print(factor_nodes)
 
     # Create the Comments.
-    # TODO: Examine comment nodes, gives strange results sometimes.
     comment_nodes = _build_from_field(elemental.Comment, assay_json, 'comments')
 
     return nodal.AssayNode(datafile=data_file, node_info=assay_json,
