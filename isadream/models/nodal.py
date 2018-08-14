@@ -6,6 +6,7 @@ of the two.
 """
 
 import re
+import itertools
 import collections
 
 from . import elemental
@@ -84,12 +85,10 @@ class AssayNode:
         # Assay-specific factors, samples and comments.
         self._datafile = datafile
 
-        # Merge the given parental and assay factors.
-        factors = utils.join_lists([factors, parental_factors])
-        samples = utils.join_lists([samples, parental_samples])
-
         # Initialize the container properties with their elemental instances.
         self.factors = containers.Factors(factors)
+        self.parental_factors = containers.Factors(parental_factors)
+        self.parental_samples = containers.Factors(parental_samples)
         self.samples = containers.Samples(samples)
         self.comments = containers.Comments(comments)
         self.node_info = elemental.NodeInfo(node_info)
@@ -142,12 +141,55 @@ class AssayNode:
         else:
             return 1
 
-    # def query(self, query_terms):
-    #     query_terms = utils.ensure_list(query_terms)
-    #     if any(species.query(term)
-    #            for term in query_terms
-    #            for species in self.all_species):
-    #         return True
+    def build_column_data_dict(self, groups):
+
+        # Create the output dictionary.
+        col_data_source = dict()
+
+        for group_label, group_unit, group_species in groups:
+
+            parental_factor_matches = [(group_label, group_unit, group_species, factor)
+                                       for factor in self.parental_factors
+                                       if factor.query(group_unit)]
+
+            parental_sample_matches = [(group_label, group_unit, group_species, factor)
+                                       for factor in self.parental_samples
+                                       if factor.query(group_unit)]
+
+            assay_factor_matches = [(group_label, group_unit, group_species, factor)
+                                    for factor in self.factors
+                                    if factor.query(group_unit)]
+
+            assay_sample_matches = [(group_label, group_unit, group_species, sample)
+                                    for sample in self.samples
+                                    if sample.query(group_species)]
+
+            for parental_match in parental_sample_matches + parental_factor_matches:
+
+                sample_match, factor_match = parental_match
+                sample_label, sample_unit, sample_species, sample = sample_match
+
+                if group_unit == 'Species':
+                    # A species reference column is requested, find the unique
+                    # set of species in the sample and in the query.
+                    unique_species = sample.unique_species & set(group_species)
+                    data = tuple(unique_species for _ in range(self.factor_size))
+                    col_data_source[group_label] = data
+
+                for factor_match in parental_factor_matches + assay_factor_matches:
+
+                    factor_label, factor_unit, factor_species, factor = factor_match
+
+                    if factor.is_csv_index:
+                        data = self.datafile_dict.get(factor.csv_index)
+                        col_data_source[group_label] = data
+
+                    else:
+                        data = tuple(factor.dict_value for _ in range(self.factor_size))
+                        print(data)
+                        col_data_source[group_label] = data
+
+        return col_data_source
 
 
 class SampleNode:
@@ -180,13 +222,24 @@ class SampleNode:
         return nodes_out
 
     @property
-    def species_tuple(self):
+    def unique_species(self):
+        return set((s.dict_label for s in self.all_species))
+
+    @property
+    def unique_species_tuples(self):
         species_maps = [{s.dict_label: s.dict_value} for s in self.all_species]
         return tuple(collections.ChainMap(*species_maps))
 
     @property
     def all_sources(self):
         return utils.get_all_elementals(self, 'sources')
+
+    def query(self, query_terms):
+        query_terms = utils.ensure_list(query_terms)
+        if any(species.query(term)
+               for term in query_terms
+               for species in self.all_species):
+            return True
 
 
 class SourceNode:
