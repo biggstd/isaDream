@@ -4,12 +4,12 @@ from .models import utils
 from .models import elemental
 from .models import nodal
 
+FACTOR_NAMES = '''studyFactors studySampleFactors 
+    materialCharacteristic studySampleFactors 
+    AssaySampleFactors parameters assayParameters'''.split()
 
-FACTOR_NAMES = '''studyFactors studySampleFactors materialCharacteristic
-    studySampleFactors AssaySampleFactors parameters assayParameters'''.split()
-
-FACTOR_FIELDS = '''factorType decimalValue unitRef csvColumnIndex RefValue
-stringValue'''.split()
+FACTOR_FIELDS = '''factorType decimalValue unitRef 
+csvColumnIndex RefValue stringValue'''.split()
 
 SAMPLE_NAMES = '''studySamples samples'''.split()
 
@@ -25,7 +25,8 @@ def parse_factors(json_str):
 
     for factor_name in FACTOR_NAMES:
         if json_str.get(factor_name):
-            return list(elemental.Factor(fact) for fact in json_str.pop(factor_name))
+            return list(elemental.Factor(fact)
+                        for fact in json_str.pop(factor_name))
         else:
             continue
     return []
@@ -70,13 +71,15 @@ def parse_json(raw_json_dict):
     for node in assay_nodes:
         node.parental_factors = factor_nodes
         node.parental_samples = sample_nodes
+        node.parent_info = raw_json_dict.get('nodeInformation')
 
     # Create the Comments.
     comment_nodes = _build_from_field(elemental.Comment, raw_json_dict,
                                       'comments')
 
-    # Create the DrupalNode
-    return nodal.DrupalNode(assays=assay_nodes, node_info=raw_json_dict.get('nodeInformation'),
+    # Create the DrupalNode.
+    return nodal.DrupalNode(assays=assay_nodes,
+                            node_info=raw_json_dict.get('nodeInformation'),
                             factors=factor_nodes, comments=comment_nodes,
                             samples=sample_nodes)
 

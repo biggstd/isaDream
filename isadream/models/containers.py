@@ -1,11 +1,10 @@
-"""Property Classes of the package.
+"""Container classes for isadream.
 
-These classes define the properties of the compound Classes. Such properties
-contain lists of `elemental` classes.
+These classes (list place-holders for now) are where the logic of ensuring valid
+objects are added to containers.
 
 """
 
-# from . import utils
 
 import collections
 

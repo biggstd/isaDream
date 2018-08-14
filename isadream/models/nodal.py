@@ -5,10 +5,11 @@ of the two.
 
 """
 
-import re
-import itertools
+# Standard library imports.
+import uuid
 import collections
 
+# Local project imports.
 from . import elemental
 from . import containers
 from . import utils
@@ -30,6 +31,7 @@ class DrupalNode:
             and comments above.
 
         """
+
         # Populate node attributes and properties by running parent init functions.
         self.assays = containers.Assays(assays)
         self.info = elemental.NodeInfo(node_info)
@@ -39,30 +41,6 @@ class DrupalNode:
         self.comments = containers.Comments(comments)
         self.samples = containers.Samples(samples)
 
-    @property
-    def all_factors(self):
-        return set(utils.get_all_elementals(self, 'factors'))
-
-    @property
-    def all_species(self):
-        nodes_out = list()
-        for species in set(utils.get_all_elementals(self, 'species')):
-            if species.dict_label is not None and species.dict_value is not None:
-                nodes_out.append(species)
-        return nodes_out
-
-    @property
-    def all_samples(self):
-        return set(utils.get_all_elementals(self, 'samples'))
-
-    @property
-    def as_dict(self):
-        return {self.title: {
-            'assays': [assay.as_dict for assay in self.assays],
-            'factors': [factor.as_dict for factor in self.factors],
-            'samples': [sample.as_dict for sample in self.samples]
-        }}
-
 
 class AssayNode:
     """Model of a single assay, experiment, or user file and its metadata within a DrupalNode.
@@ -70,7 +48,7 @@ class AssayNode:
     """
 
     def __init__(self, datafile, node_info=None, factors=None, samples=None, comments=None,
-                 parental_factors=None, parental_samples=None):
+                 parental_factors=None, parental_samples=None, parent_info=None):
         """
 
         :param datafile:
@@ -92,40 +70,10 @@ class AssayNode:
         self.samples = containers.Samples(samples)
         self.comments = containers.Comments(comments)
         self.node_info = elemental.NodeInfo(node_info)
+        self.parent_info = parent_info
 
         # Read the associated csv files, and create an index of those values.
         self.datafile_dict = utils.load_csv_as_dict(self._datafile)
-
-    @property
-    def all_factors(self):
-        return utils.get_all_elementals(self, 'factors')
-
-    @property
-    def all_species(self):
-        nodes_out = list()
-        for species in set(utils.get_all_elementals(self, 'species')):
-            if species.dict_label is not None and species.dict_value is not None:
-                nodes_out.append(species)
-
-        return nodes_out
-
-    @property
-    def species_tuple(self):
-        species_maps = [{s.dict_label: s.dict_value} for s in self.all_species]
-        return tuple(collections.ChainMap(*species_maps))
-
-    @property
-    def all_samples(self):
-        return utils.get_all_elementals(self, 'samples')
-
-    @property
-    def csv_index_factors(self):
-        """
-
-        :return:
-        """
-        return [factor for factor in self.all_factors
-                if factor.is_csv_index]
 
     @property
     def factor_size(self):
@@ -141,15 +89,36 @@ class AssayNode:
         else:
             return 1
 
-    def build_column_data_dict(self, groups):
+    def build_column_data_dicts(self, groups):
+        """Constructs a dictionary for data display based on given groups.
+
+        :param groups:
+        :return:
+        """
 
         def matching_factors(items, label, unit, species):
             return [(label, unit, species, item)
                     for item in items
-                    if utils.query_factor(item, unit) or utils.query_species(item, species)]
+                    if utils.query_factor(item, unit)
+                    or utils.query_species(item, species)]
 
-        # Create the output dictionary.
+        # Create the output dictionaries.
         col_data_source = dict()
+        metadata_dictionary = dict()
+
+        # Create node hashes for the metadata dictionary.
+        # uuid.uuid4() gives a universally unique identifier.
+        parent_key = str(uuid.uuid4())
+        assay_key = str(uuid.uuid4())
+
+        # Add the uuids to the column data source.
+        col_data_source['parent_node'] = [parent_key for _ in range(self.factor_size)]
+        col_data_source['assay_node'] = [assay_key for _ in range(self.factor_size)]
+        # col_data_source['sample node'] = sample_key
+
+        # Use the uuids as keys in the metadata dictionary.
+        metadata_dictionary[parent_key] = self.parent_info
+        metadata_dictionary[assay_key] = self.node_info
 
         # Iterate through and extract the values within the groups provided.
         for group_label, group_unit, group_species in groups:
@@ -164,12 +133,16 @@ class AssayNode:
             # All of the parental factors apply to all of the parental samples.
             for sample_label, sample_unit, sample_species, parental_sample in parental_sample_matches:
 
+                sample_key = str(uuid.uuid4())
+
                 # Check if a species reference column is requested.
                 if sample_unit == "Species":
 
                     # Find the species in both the query and the sample.
-                    matching_species = parental_sample.unique_species & set(sample_species)
+                    matching_species = list(parental_sample.unique_species & set(sample_species))[0]
                     data = [matching_species for _ in range(self.factor_size)]
+                    metadata_dictionary[sample_key] = parental_sample.node_info
+                    col_data_source['sample_node'] = [sample_key for _ in range(self.factor_size)]
                     col_data_source[sample_label] = data
 
                 else:
@@ -185,11 +158,15 @@ class AssayNode:
                         # Check if this factor is a csv column index.
                         if factor.is_csv_index:
                             data = self.datafile_dict.get(factor.csv_index)
+                            metadata_dictionary[sample_key] = parental_sample.node_info
+                            col_data_source['sample_node'] = [sample_key for _ in range(self.factor_size)]
                             col_data_source[group_label] = data
 
                         elif sample_label == factor_label:
-                            data = [factor.dict_value for _ in range(self.factor_size)]
+                            data = [factor.value for _ in range(self.factor_size)]
                             col_data_source[sample_label] = data
+                            metadata_dictionary[sample_key] = parental_sample.node_info
+                            col_data_source['sample_node'] = [sample_key for _ in range(self.factor_size)]
 
             assay_factor_matches = matching_factors(
                 self.factors, group_label, group_unit, group_species)
@@ -200,13 +177,17 @@ class AssayNode:
             # All of the parental factors apply to all of the parental samples.
             for sample_label, sample_unit, sample_species, assay_sample in assay_sample_matches:
 
+                sample_key = str(uuid.uuid4())
+
                 # Check if a species reference column is requested.
                 if sample_unit == "Species":
 
                     # Find the species in both the query and the sample.
-                    matching_species = assay_sample.unique_species & set(sample_species)
+                    matching_species = list(assay_sample.unique_species & set(sample_species))[0]
                     data = [matching_species for _ in range(self.factor_size)]
                     col_data_source[sample_label] = data
+                    metadata_dictionary[sample_key] = assay_sample.node_info
+                    col_data_source['sample_node'] = [sample_key for _ in range(self.factor_size)]
 
                 else:
                     # Get the factors that are private to this sample, as well as those from the parent.
@@ -222,38 +203,16 @@ class AssayNode:
                         if factor.is_csv_index:
                             data = self.datafile_dict.get(factor.csv_index)
                             col_data_source[group_label] = data
+                            col_data_source['sample_node'] = [sample_key for _ in range(self.factor_size)]
+                            metadata_dictionary[sample_key] = assay_sample.node_info
 
                         elif sample_label == factor_label:
-                            data = [factor.dict_value for _ in range(self.factor_size)]
+                            data = [factor.value for _ in range(self.factor_size)]
                             col_data_source[sample_label] = data
+                            col_data_source['sample_node'] = [sample_key for _ in range(self.factor_size)]
+                            metadata_dictionary[sample_key] = assay_sample.node_info
 
-            #
-            # for parental_match in parental_sample_matches + parental_factor_matches:
-            #
-            #     sample_match, factor_match = parental_match
-            #     sample_label, sample_unit, sample_species, sample = sample_match
-            #
-            #     if group_unit == 'Species':
-            #         # A species reference column is requested, find the unique
-            #         # set of species in the sample and in the query.
-            #         unique_species = sample.unique_species & set(group_species)
-            #         data = tuple(unique_species for _ in range(self.factor_size))
-            #         col_data_source[group_label] = data
-            #
-            #     for factor_match in parental_factor_matches + assay_factor_matches:
-            #
-            #         factor_label, factor_unit, factor_species, factor = factor_match
-            #
-            #         if factor.is_csv_index:
-            #             data = self.datafile_dict.get(factor.csv_index)
-            #             col_data_source[group_label] = data
-            #
-            #         else:
-            #             data = tuple(factor.dict_value for _ in range(self.factor_size))
-            #             print(data)
-            #             col_data_source[group_label] = data
-
-        return col_data_source
+        return col_data_source, metadata_dictionary
 
 
 class SampleNode:
@@ -280,19 +239,19 @@ class SampleNode:
     def all_species(self):
         nodes_out = list()
         for species in set(utils.get_all_elementals(self, 'species')):
-            if species.dict_label is not None and species.dict_value is not None:
+            if species.label is not None and species.value is not None:
                 nodes_out.append(species)
 
         return nodes_out
 
     @property
     def unique_species(self):
-        return set((s.dict_label for s in self.all_species))
+        return set((s.label for s in self.all_species))
 
-    @property
-    def unique_species_tuples(self):
-        species_maps = [{s.dict_label: s.dict_value} for s in self.all_species]
-        return tuple(collections.ChainMap(*species_maps))
+    # @property
+    # def unique_species_tuples(self):
+    #     species_maps = [{s.label: s.value} for s in self.all_species]
+    #     return tuple(collections.ChainMap(*species_maps))
 
     @property
     def all_sources(self):

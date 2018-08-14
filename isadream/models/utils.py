@@ -53,15 +53,6 @@ def load_csv_as_dict(path, base_path=BASE_PATH):
     return dict(data)
 
 
-def join_lists(input_lists):
-    """Helper function to join and flatten lists when one of the inputs
-    can be `None`.
-
-    """
-    lists = filter(None, input_lists)
-    return list(itertools.chain.from_iterable(lists))
-
-
 def ensure_list(val_or_values):
     """Examine a value and ensure that it is returned as a list."""
     if hasattr(val_or_values, '__iter__') and not isinstance(val_or_values, str):
@@ -103,7 +94,7 @@ def get_all_elementals(node, elemental_cls, children=('assays', 'samples', 'sour
             # Since the container can empty, check it here.
             # This does not work when combined with the if statement above. Why?
             if not element_containers:
-                # If this is empty simply go to the next loop iteration.
+                # If this is empty simply go on to the next loop iteration.
                 continue
 
             # Each item this container is examined recursively with this function.
@@ -114,29 +105,6 @@ def get_all_elementals(node, elemental_cls, children=('assays', 'samples', 'sour
             element_list.extend(itertools.chain.from_iterable(children_elements))
 
     return element_list
-
-
-def normalize(dict_or_list, left_join=False):
-    '''Takes a json file and normlizes it into a list of dictionaries.
-    From: https://stackoverflow.com/a/43173998/8715297
-    Args:
-        x (list or dict): The object to be flattened.
-        left_join (bool): Controls left-join like behavior.
-    Yields:
-        A flattened dictionary.
-    '''
-    if isinstance(dict_or_list, dict):
-        keys = dict_or_list.keys()
-        values = (normalize(i) for i in dict_or_list.values())
-        for i in itertools.product(*values):
-            yield dict(zip(keys, i))
-    elif isinstance(dict_or_list, list):
-        if not dict_or_list and left_join is True:
-            yield None
-        for i in dict_or_list:
-            yield from normalize(i)
-    else:
-        yield dict_or_list
 
 
 def query_factor(factor, factor_query):
