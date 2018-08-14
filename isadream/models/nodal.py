@@ -143,51 +143,115 @@ class AssayNode:
 
     def build_column_data_dict(self, groups):
 
+        def matching_factors(items, label, unit, species):
+            return [(label, unit, species, item)
+                    for item in items
+                    if utils.query_factor(item, unit) or utils.query_species(item, species)]
+
         # Create the output dictionary.
         col_data_source = dict()
 
+        # Iterate through and extract the values within the groups provided.
         for group_label, group_unit, group_species in groups:
 
-            parental_factor_matches = [(group_label, group_unit, group_species, factor)
-                                       for factor in self.parental_factors
-                                       if factor.query(group_unit)]
+            # Iterate through the top level samples and their factors.
+            parental_factor_matches = matching_factors(
+                self.parental_factors, group_label, group_unit, group_species)
 
-            parental_sample_matches = [(group_label, group_unit, group_species, factor)
-                                       for factor in self.parental_samples
-                                       if factor.query(group_unit)]
+            parental_sample_matches = matching_factors(
+                self.parental_samples, group_label, group_unit, group_species)
 
-            assay_factor_matches = [(group_label, group_unit, group_species, factor)
-                                    for factor in self.factors
-                                    if factor.query(group_unit)]
+            # All of the parental factors apply to all of the parental samples.
+            for sample_label, sample_unit, sample_species, parental_sample in parental_sample_matches:
 
-            assay_sample_matches = [(group_label, group_unit, group_species, sample)
-                                    for sample in self.samples
-                                    if sample.query(group_species)]
+                # Check if a species reference column is requested.
+                if sample_unit == "Species":
 
-            for parental_match in parental_sample_matches + parental_factor_matches:
+                    # Find the species in both the query and the sample.
+                    matching_species = parental_sample.unique_species & set(sample_species)
+                    data = [matching_species for _ in range(self.factor_size)]
+                    col_data_source[sample_label] = data
 
-                sample_match, factor_match = parental_match
-                sample_label, sample_unit, sample_species, sample = sample_match
+                else:
+                    # Get the factors that are private to this sample.
+                    sample_factors = matching_factors(
+                        parental_sample.factors, sample_label, sample_unit, sample_species)
 
-                if group_unit == 'Species':
-                    # A species reference column is requested, find the unique
-                    # set of species in the sample and in the query.
-                    unique_species = sample.unique_species & set(group_species)
-                    data = tuple(unique_species for _ in range(self.factor_size))
-                    col_data_source[group_label] = data
+                    # Check each of the factors which apply to this sample for a group match.
+                    for factor_group in parental_factor_matches + sample_factors:
 
-                for factor_match in parental_factor_matches + assay_factor_matches:
+                        factor_label, factor_unit, factor_species, factor = factor_group
 
-                    factor_label, factor_unit, factor_species, factor = factor_match
+                        # Check if this factor is a csv column index.
+                        if factor.is_csv_index:
+                            data = self.datafile_dict.get(factor.csv_index)
+                            col_data_source[group_label] = data
 
-                    if factor.is_csv_index:
-                        data = self.datafile_dict.get(factor.csv_index)
-                        col_data_source[group_label] = data
+                        elif sample_label == factor_label:
+                            data = [factor.dict_value for _ in range(self.factor_size)]
+                            col_data_source[sample_label] = data
 
-                    else:
-                        data = tuple(factor.dict_value for _ in range(self.factor_size))
-                        print(data)
-                        col_data_source[group_label] = data
+            assay_factor_matches = matching_factors(
+                self.factors, group_label, group_unit, group_species)
+
+            assay_sample_matches = matching_factors(
+                self.samples, group_label, group_unit, group_species)
+
+            # All of the parental factors apply to all of the parental samples.
+            for sample_label, sample_unit, sample_species, assay_sample in assay_sample_matches:
+
+                # Check if a species reference column is requested.
+                if sample_unit == "Species":
+
+                    # Find the species in both the query and the sample.
+                    matching_species = assay_sample.unique_species & set(sample_species)
+                    data = [matching_species for _ in range(self.factor_size)]
+                    col_data_source[sample_label] = data
+
+                else:
+                    # Get the factors that are private to this sample, as well as those from the parent.
+                    sample_factors = matching_factors(
+                        assay_sample.factors, sample_label, sample_unit, sample_species)
+
+                    # Check each of the factors which apply to this sample for a group match.
+                    for factor_group in assay_factor_matches + sample_factors + parental_factor_matches:
+
+                        factor_label, factor_unit, factor_species, factor = factor_group
+
+                        # Check if this factor is a csv column index.
+                        if factor.is_csv_index:
+                            data = self.datafile_dict.get(factor.csv_index)
+                            col_data_source[group_label] = data
+
+                        elif sample_label == factor_label:
+                            data = [factor.dict_value for _ in range(self.factor_size)]
+                            col_data_source[sample_label] = data
+
+            #
+            # for parental_match in parental_sample_matches + parental_factor_matches:
+            #
+            #     sample_match, factor_match = parental_match
+            #     sample_label, sample_unit, sample_species, sample = sample_match
+            #
+            #     if group_unit == 'Species':
+            #         # A species reference column is requested, find the unique
+            #         # set of species in the sample and in the query.
+            #         unique_species = sample.unique_species & set(group_species)
+            #         data = tuple(unique_species for _ in range(self.factor_size))
+            #         col_data_source[group_label] = data
+            #
+            #     for factor_match in parental_factor_matches + assay_factor_matches:
+            #
+            #         factor_label, factor_unit, factor_species, factor = factor_match
+            #
+            #         if factor.is_csv_index:
+            #             data = self.datafile_dict.get(factor.csv_index)
+            #             col_data_source[group_label] = data
+            #
+            #         else:
+            #             data = tuple(factor.dict_value for _ in range(self.factor_size))
+            #             print(data)
+            #             col_data_source[group_label] = data
 
         return col_data_source
 

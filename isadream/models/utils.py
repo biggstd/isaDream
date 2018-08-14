@@ -13,8 +13,8 @@ import pandas as pd
 
 # TODO: Move this demo data elsewhere.
 # DEMO_BASE = '/Users/karinharrington/github/isadream/isadream/demo_data/'
-DEMO_BASE = '/home/tyler/git/isadream/isadream/demo_data/'
-# DEMO_BASE = '/home/tylerbiggs/git/isadream/isadream/demo_data/'
+# DEMO_BASE = '/home/tyler/git/isadream/isadream/demo_data/'
+DEMO_BASE = '/home/tylerbiggs/git/isadream/isadream/demo_data/'
 BASE_PATH = os.environ.get('IDREAM_JSON_BASE_PATH', DEMO_BASE)
 # Demo and test json files.
 SIPOS_DEMO = os.path.join(BASE_PATH, 'demo_json/sipos_2006_talanta_nmr_figs.json')
@@ -34,7 +34,7 @@ def load_csv_as_dict(path, base_path=BASE_PATH):
 
     csv_path = os.path.join(str(base_path), str(path))
 
-    data = collections.defaultdict(tuple)
+    data = collections.defaultdict(list)
 
     # Open the file and create a reader (an object that when iterated
     # on gives the values of each row.
@@ -48,7 +48,7 @@ def load_csv_as_dict(path, base_path=BASE_PATH):
         # Iterate over the remaining rows and append the data.
         for row in reader:
             for idx, header in zip(field_int_index, reader.fieldnames):
-                data[idx] = data[idx] + (float(row[header]), )
+                data[idx].append(float(row[header]))
 
     return dict(data)
 
@@ -139,13 +139,11 @@ def normalize(dict_or_list, left_join=False):
         yield dict_or_list
 
 
-def query_node_factors(node, factor_query):
-    for factor in node.factors:
-        if factor.query(factor_query):
-            return True
+def query_factor(factor, factor_query):
+    if factor.query(factor_query):
+        return True
 
 
-def query_node_species(node, species_query):
-    for species in node.species:
-        if species.query(species_query):
-            return True
+def query_species(species, species_query):
+    if species.query(species_query):
+        return True

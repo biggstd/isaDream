@@ -68,8 +68,8 @@ def parse_json(raw_json_dict):
     assay_nodes = _build_from_field(parse_assays, raw_json_dict, 'assays')
     # Add the parental factors and samples to the assay_nodes.
     for node in assay_nodes:
-        node.factors.extend(factor_nodes)
-        node.samples.extend(sample_nodes)
+        node.parental_factors = factor_nodes
+        node.parental_samples = sample_nodes
 
     # Create the Comments.
     comment_nodes = _build_from_field(elemental.Comment, raw_json_dict,
