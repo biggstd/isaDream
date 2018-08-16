@@ -8,7 +8,6 @@ import sys, os
 sys.path.insert(0, os.path.abspath('../isadream/'))
 
 # Data science imports.
-import pandas as pd
 
 # Visualization imports.
 import bokeh as bk
@@ -19,11 +18,10 @@ import bokeh.plotting
 import bokeh.transform
 
 # Local isadream imports.
-from isadream.models import utils
-from isadream import helpers
+from isadream import helpers, modelUtils
 
 x_groups = (('Total Aluminate Concentration', 'Molar', ("Al",)),
-            ('Counter Ion Concentration', 'Molar', ("Na+", "Li+", "Cs+", "K+",)),
+            ('Counter Ion Concentration', 'Molar', ("Na+", "Li+", "Cs+", "K+")),
             ('Counter Ion', 'Species', ("Na+", "Li+", "Cs+", "K+",)),
             ('Base Concentration', 'Molar', ("OH-",)))
 
@@ -49,9 +47,9 @@ try:
 except Exception as inst:
     print(type(inst))
     print(inst)
-    demo_base_path = utils.SIPOS_DEMO
+    demo_base_path = modelUtils.SIPOS_DEMO
 
-    json_paths = [utils.SIPOS_DEMO, ]
+    json_paths = [modelUtils.SIPOS_DEMO, ]
 
     nodes = helpers.create_drupal_nodes(json_paths)
 
@@ -72,16 +70,13 @@ def build_metadata_paragraph(parent_key=None, assay_key=None, sample_key=None):
 
     :return:
     """
-
     if all(key is None for key in (parent_key, assay_key, sample_key)):
         return bk.models.widgets.Paragraph(text="No data point selected.",
                                            name='metadata_paragraph')
 
     else:
         keys = filter(None, (parent_key, assay_key, sample_key))
-
         selected_information = str([meta_df[key].values for key in keys])
-
         paragraph = bk.models.widgets.Paragraph(
             name='metadata_paragraph',
             text=selected_information)
@@ -123,20 +118,21 @@ def tap_select_callback(attr, old, new):
     metadata_column.children = paragraphs
 
 
-def update_figure(attr, old, new):
+def update_document(attr, old, new):
     update_bk_cds()
 
-    panels = list()
-    for axis_type in ['linear', 'log']:
-        panel, renderer = build_panel(axis_type)
-        panels.append(panel)
+    panels = create_tab_panels()
 
     bk_figure = bk.plotting.curdoc().get_model_by_name('figure_tab')
     bk_figure.tabs = panels
 
-    bk_legend = bk.plotting.curdoc().get_model_by_name('legend')
-    bk_legend.label = dict(field="x")
-    bk_legend.renderers = [renderer]
+
+def initialize_tabs():
+    update_bk_cds()
+    panels = create_tab_panels()
+    tabs = bk.models.widgets.Tabs(tabs=panels, name='figure_tab')
+
+    return tabs
 
 
 def build_figure(axis_type):
@@ -159,21 +155,25 @@ def build_figure(axis_type):
             field_name=color.value,
             palette=bk.palettes.Category10[len(source.data[color.value].unique())],
             factors=sorted(source.data[color.value].unique()),
-            # palette=bk.palettes.viridis(len(source.data[color.value].unique())),
         )
     else:
         colors = "#31AADE"
 
-    renderer = figure.circle(
+    rend = figure.circle(
+        name='figure_renderer',
         source=source,
         x='x',
         y='y',
         color=colors,
         size=sizes,
-        legend=color.value,
     )
 
-    # figure.legend.location = "bottom_left"
+    if color.value is not "None":
+        legend = bk.models.Legend(
+            items=[bk.models.LegendItem(label=dict(field=color.value),
+                                        renderers=[rend])])
+        figure.add_layout(legend, "below")
+        figure.legend.orientation = "horizontal"
 
     x_title = x_selector.value
     y_title = y_selector.value
@@ -184,28 +184,22 @@ def build_figure(axis_type):
     # figure.add_tools(build_hover_tool())
     figure.add_tools(bk.models.TapTool())
 
-    return figure, renderer
+    return figure
 
 
 def build_panel(axis_type):
-    figure, renderer = build_figure(axis_type)
-    return bk.models.widgets.Panel(child=figure, title=axis_type), renderer
+    figure = bk.layouts.row(build_figure(axis_type))
+    return bk.models.widgets.Panel(child=figure, title=axis_type)
 
 
-def create_legend(render):
-    return bk.models.Legend(
-        items=[bk.models.LegendItem(label=dict(field="x", renderers=render))])
-
-
-def create_figure():
+def create_tab_panels():
     """Update the figure."""
-    update_bk_cds()
+    tab_panels = list()
+    for axis_type in ['linear', 'log']:
+        panel = build_panel(axis_type)
+        tab_panels.append(panel)
 
-    panels = build_panel()
-
-    tabs = bk.models.widgets.Tabs(tabs=panels, width=750, name='figure_tab')
-
-    return tabs
+    return tab_panels
 
 
 def update_bk_cds():
@@ -220,16 +214,16 @@ def update_bk_cds():
 
 
 x_selector = bk.models.Select(title="X Axis", options=continuous, value=continuous[0])
-x_selector.on_change('value', update_figure)
+x_selector.on_change('value', update_document)
 
 y_selector = bk.models.Select(title="X Axis", options=y_keys, value=y_keys[0])
-y_selector.on_change('value', update_figure)
+y_selector.on_change('value', update_document)
 
 color = bk.models.Select(title='Color', value='None', options=['None'] + discrete)
-color.on_change('value', update_figure)
+color.on_change('value', update_document)
 
 size = bk.models.Select(title='Size', value='None', options=['None'] + continuous)
-size.on_change('value', update_figure)
+size.on_change('value', update_document)
 
 controls = bk.layouts.widgetbox([x_selector, y_selector, color, size])
 
@@ -238,8 +232,8 @@ source.on_change('selected', tap_select_callback)
 layout = bk.layouts.layout(
     children=[
         bk.models.widgets.Div(text="<h1>Aluminate CrossFilter</h1>"),
-        [controls, create_figure()],
-        build_metadata_column(None)
+        [controls, initialize_tabs()],
+        build_metadata_column([build_metadata_paragraph()])
     ],
     sizing_mode='fixed'
 )

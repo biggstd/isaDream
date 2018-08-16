@@ -14,10 +14,6 @@ import pandas as pd
 from . import io
 
 
-# from . import models
-# from .models import utils
-
-
 def prepare_bokeh_dicts(x_groups, y_groups, drupal_nodes):
     groups = x_groups + y_groups
 

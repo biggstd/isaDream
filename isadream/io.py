@@ -1,6 +1,6 @@
 import json
 
-from .models import utils
+from . import modelUtils
 from .models import elemental
 from .models import nodal
 
@@ -49,10 +49,9 @@ def _build_from_field(callable_fn, json_data, key=None):
     if key and json_data.get(key):
         return list(callable_fn(dat) for dat in json_data.pop(key) if dat)
     else:
-        return utils.ensure_list(callable_fn(json_data))
+        return modelUtils.ensure_list(callable_fn(json_data))
 
 
-# TODO: Rename me.
 def parse_json(raw_json_dict):
     """Convert a dictionary to a DrupalNode object.
 
@@ -65,6 +64,10 @@ def parse_json(raw_json_dict):
     sample_nodes = _build_from_field(parse_sample, raw_json_dict,
                                      'studySamples')
 
+    # Create the Comments.
+    comment_nodes = _build_from_field(elemental.Comment, raw_json_dict,
+                                      'comments')
+
     # Parse the assays.
     assay_nodes = _build_from_field(parse_assays, raw_json_dict, 'assays')
     # Add the parental factors and samples to the assay_nodes.
@@ -72,10 +75,7 @@ def parse_json(raw_json_dict):
         node.parental_factors = factor_nodes
         node.parental_samples = sample_nodes
         node.parent_info = raw_json_dict.get('nodeInformation')
-
-    # Create the Comments.
-    comment_nodes = _build_from_field(elemental.Comment, raw_json_dict,
-                                      'comments')
+        node.parent_comments = comment_nodes
 
     # Create the DrupalNode.
     return nodal.DrupalNode(assays=assay_nodes,
@@ -151,17 +151,3 @@ def parse_assays(assay_json):
     return nodal.AssayNode(datafile=data_file, node_info=assay_json,
                            factors=factor_nodes, samples=sample_nodes,
                            comments=comment_nodes)
-
-
-def assay_to_key_value_dicts(source_node):
-    """
-    # TODO: Consider having this as a part of the DataFile class.
-
-    :param assay_node:
-    :return:
-    """
-    # Get a set of all unique factors of this assay.
-
-    # Get a set of all unique samples of this assay.
-
-    # Get a set of all unique species of this assay.

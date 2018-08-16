@@ -9,7 +9,7 @@ combine with any other classes.
 import re
 
 # Local project imports.
-from . import utils
+from .. import modelUtils
 
 
 class Factor:
@@ -122,7 +122,7 @@ class Factor:
         """
 
         # Ensure the query is a list to avoid iterating over single strings.
-        query_terms = utils.ensure_list(query_terms)
+        query_terms = modelUtils.ensure_list(query_terms)
 
         # Make an tuple to handle the properties easily.
         properties = (self._factor_type, self._decimal_value,
@@ -169,7 +169,7 @@ class SpeciesFactor:
         return self._stoichiometry
 
     def query(self, query_terms):
-        query_terms = utils.ensure_list(query_terms)
+        query_terms = modelUtils.ensure_list(query_terms)
 
         if any(re.match(term, self._species_reference)
                for term in query_terms):

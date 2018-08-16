@@ -8,16 +8,11 @@ import csv
 import itertools
 import collections
 
-# Data science imports.
-import pandas as pd
-
-# TODO: Move this demo data elsewhere.
-# DEMO_BASE = '/Users/karinharrington/github/isadream/isadream/demo_data/'
-# DEMO_BASE = '/home/tyler/git/isadream/isadream/demo_data/'
-DEMO_BASE = '/home/tylerbiggs/git/isadream/isadream/demo_data/'
-BASE_PATH = os.environ.get('IDREAM_JSON_BASE_PATH', DEMO_BASE)
-# Demo and test json files.
-SIPOS_DEMO = os.path.join(BASE_PATH, 'demo_json/sipos_2006_talanta_nmr_figs.json')
+# Demo data.
+BASE_PATH = os.path.dirname(__file__)
+BASE_PATH = os.path.join(BASE_PATH, 'demo_data')
+SIPOS_DEMO = os.path.join(BASE_PATH,
+                          'demo_json/sipos_2006_talanta_nmr_figs.json')
 
 
 def load_csv_as_dict(path, base_path=BASE_PATH):

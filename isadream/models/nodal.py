@@ -12,7 +12,7 @@ import collections
 # Local project imports.
 from . import elemental
 from . import containers
-from . import utils
+from .. import modelUtils
 
 
 class DrupalNode:
@@ -48,7 +48,8 @@ class AssayNode:
     """
 
     def __init__(self, datafile, node_info=None, factors=None, samples=None, comments=None,
-                 parental_factors=None, parental_samples=None, parent_info=None):
+                 parental_factors=None, parental_samples=None, parent_info=None,
+                 parent_comments=None):
         """
 
         :param datafile:
@@ -71,9 +72,10 @@ class AssayNode:
         self.comments = containers.Comments(comments)
         self.node_info = elemental.NodeInfo(node_info)
         self.parent_info = parent_info
+        self.parent_comments = containers.Comments(parent_comments)
 
         # Read the associated csv files, and create an index of those values.
-        self.datafile_dict = utils.load_csv_as_dict(self._datafile)
+        self.datafile_dict = modelUtils.load_csv_as_dict(self._datafile)
 
     @property
     def factor_size(self):
@@ -99,8 +101,8 @@ class AssayNode:
         def matching_factors(items, label, unit, species):
             return [(label, unit, species, item)
                     for item in items
-                    if utils.query_factor(item, unit)
-                    or utils.query_species(item, species)]
+                    if modelUtils.query_factor(item, unit)
+                    or modelUtils.query_species(item, species)]
 
         # Create the output dictionaries.
         col_data_source = dict()
@@ -117,8 +119,8 @@ class AssayNode:
         # col_data_source['sample node'] = sample_key
 
         # Use the uuids as keys in the metadata dictionary.
-        metadata_dictionary[parent_key] = self.parent_info
-        metadata_dictionary[assay_key] = self.node_info
+        metadata_dictionary[parent_key] = (self.parent_info, self.parent_comments)
+        metadata_dictionary[assay_key] = (self.node_info, self.comments)
 
         # Iterate through and extract the values within the groups provided.
         for group_label, group_unit, group_species in groups:
@@ -233,12 +235,12 @@ class SampleNode:
 
     @property
     def all_factors(self):
-        return utils.get_all_elementals(self, 'factors')
+        return modelUtils.get_all_elementals(self, 'factors')
 
     @property
     def all_species(self):
         nodes_out = list()
-        for species in set(utils.get_all_elementals(self, 'species')):
+        for species in set(modelUtils.get_all_elementals(self, 'species')):
             if species.label is not None and species.value is not None:
                 nodes_out.append(species)
 
@@ -255,10 +257,10 @@ class SampleNode:
 
     @property
     def all_sources(self):
-        return utils.get_all_elementals(self, 'sources')
+        return modelUtils.get_all_elementals(self, 'sources')
 
     def query(self, query_terms):
-        query_terms = utils.ensure_list(query_terms)
+        query_terms = modelUtils.ensure_list(query_terms)
         if any(species.query(term)
                for term in query_terms
                for species in self.all_species):
@@ -277,8 +279,8 @@ class SourceNode:
 
     @property
     def all_factors(self):
-        return collections.ChainMap(utils.get_all_elementals(self, 'factors'))
+        return collections.ChainMap(modelUtils.get_all_elementals(self, 'factors'))
 
     @property
     def all_species(self):
-        return utils.get_all_elementals(self, 'species')
+        return modelUtils.get_all_elementals(self, 'species')
