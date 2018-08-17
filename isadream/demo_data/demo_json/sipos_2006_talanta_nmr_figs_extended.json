@@ -27,7 +27,7 @@
       "unitRef": "MHz"
     },
     {
-      "factorType": "Measurement Reference",
+      "factorType": "Measurement Condition",
       "unitRef": "27_Al Reference Compound",
       "RefValue": "[KAl(SO4)2]"
     }

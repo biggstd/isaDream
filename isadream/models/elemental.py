@@ -7,12 +7,14 @@ combine with any other classes.
 
 # Standard Python modules.
 import re
+import param
+
 
 # Local project imports.
 from .. import modelUtils
 
 
-class Factor:
+class Factor(param.Parameterized):
     """The factor is the fundamental storage model for an observation.
 
     It is designed in such a way that it should be able to store:
@@ -27,6 +29,13 @@ class Factor:
 
     """
 
+    factor_type = param.Parameter()
+    decimal_value = param.Parameter()
+    string_value = param.Parameter()
+    reference_value = param.Parameter()
+    unit_reference = param.Parameter()
+    csv_column_index = param.Parameter()
+
     def __init__(self, input_dict):
         """
         Args:
@@ -34,6 +43,8 @@ class Factor:
                 entry.
 
         """
+        super().__init__()
+
         self._input_dict = input_dict
 
         # There are two general types of values, string and floats and
