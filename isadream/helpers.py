@@ -6,6 +6,7 @@
 import os
 import glob
 import itertools
+import collections
 
 # Data science imports.
 import pandas as pd
@@ -25,14 +26,15 @@ def prepare_bokeh_dicts(x_groups, y_groups, drupal_nodes):
 
     cds_frames = [pd.DataFrame(cds) for cds, _ in cds_dicts]
 
-    metadata_dfs = [pd.DataFrame(mdf) for _, mdf in cds_dicts]
+    # metadata_dfs = [pd.DataFrame(mdf) for _, mdf in cds_dicts]
+    metadata = collections.ChainMap(*[mdf for _, mdf in cds_dicts])
 
     main_dataframe = pd.concat(cds_frames, sort=False)
     main_dataframe = main_dataframe.reset_index(drop=True)
 
-    metadata_dataframe = pd.concat(metadata_dfs, axis=1, sort=False)
+    # metadata = pd.concat(metadata_dfs, axis=1, sort=False)
 
-    return main_dataframe, metadata_dataframe
+    return main_dataframe, metadata
 
 
 def categorize_columns(dataframe, x_groups, y_groups):

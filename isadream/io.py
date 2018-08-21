@@ -25,11 +25,33 @@ def parse_factors(json_str):
 
     for factor_name in FACTOR_NAMES:
         if json_str.get(factor_name):
-            return list(elemental.Factor(fact)
+            return list(elemental.Factor(**parse_factor_kwargs(fact))
                         for fact in json_str.pop(factor_name))
         else:
             continue
     return []
+
+
+def parse_factor_kwargs(factor_dict):
+    parsed_dict = dict(factor_type=factor_dict.get('factorType'),
+                       decimal_value=factor_dict.get('decimalValue'),
+                       string_value=factor_dict.get('stringValue'),
+                       reference_value=factor_dict.get('RefValue'),
+                       unit_reference=factor_dict.get('unitRef'),
+                       csv_column_index=factor_dict.get('csvColumnIndex'))
+    return parsed_dict
+
+
+def parse_comment_kwargs(comment_dict):
+    parsed_dict = dict(comment_name=comment_dict.get("name"),
+                       body=comment_dict.get("body"))
+
+
+def parse_species_kwargs(species_dict):
+    parsed_dict = dict(species_reference=species_dict.get('speciesReference'),
+                       stoichiometry=species_dict.get('stoichiometry'))
+    if parsed_dict['species_reference'] is not None:
+        return parsed_dict
 
 
 def read_idream_json(json_path):
@@ -47,7 +69,7 @@ def _build_from_field(callable_fn, json_data, key=None):
     """
 
     if key and json_data.get(key):
-        return list(callable_fn(dat) for dat in json_data.pop(key) if dat)
+        return [callable_fn(dat) for dat in json_data.pop(key) if dat]
     else:
         return modelUtils.ensure_list(callable_fn(json_data))
 
@@ -64,12 +86,14 @@ def parse_json(raw_json_dict):
     sample_nodes = _build_from_field(parse_sample, raw_json_dict,
                                      'studySamples')
 
+    # print(sample_nodes)
     # Create the Comments.
-    comment_nodes = _build_from_field(elemental.Comment, raw_json_dict,
+    comment_nodes = _build_from_field(parse_comment_kwargs, raw_json_dict,
                                       'comments')
 
     # Parse the assays.
     assay_nodes = _build_from_field(parse_assays, raw_json_dict, 'assays')
+
     # Add the parental factors and samples to the assay_nodes.
     for node in assay_nodes:
         node.parental_factors = factor_nodes
@@ -79,7 +103,7 @@ def parse_json(raw_json_dict):
 
     # Create the DrupalNode.
     return nodal.DrupalNode(assays=assay_nodes,
-                            node_info=raw_json_dict.get('nodeInformation'),
+                            info=raw_json_dict.get('nodeInformation'),
                             factors=factor_nodes, comments=comment_nodes,
                             samples=sample_nodes)
 
@@ -94,12 +118,14 @@ def parse_sample(sample_json):
     factor_nodes = _build_from_field(parse_factors, sample_json)
 
     # Create the Species.
-    species_nodes = _build_from_field(elemental.SpeciesFactor, sample_json, 'species')
+    species_kwargs = _build_from_field(parse_species_kwargs, sample_json, 'species')
+    species_nodes = [elemental.SpeciesFactor(**sk) for sk in species_kwargs if sk]
+    # print(species_nodes)
 
     # Create the Sources.
     source_nodes = _build_from_field(parse_source, sample_json, 'sources')
 
-    return nodal.SampleNode(node_info=sample_json, species=species_nodes,
+    return nodal.SampleNode(info=sample_json, species=species_nodes,
                             factors=factor_nodes, sources=source_nodes)
 
 
@@ -115,18 +141,18 @@ def parse_source(source_json):
     factor_nodes = _build_from_field(parse_factors, source_json)
 
     # Get the species within this source.
-    species_nodes = _build_from_field(elemental.SpeciesFactor, source_json, 'species')
+    species_kwargs = _build_from_field(parse_species_kwargs, source_json, 'species')
+    # print([x for x in species_kwargs])
 
-    # TODO: Rexamine nested sources (low priority).
-    # Sources can be nested!
-    # source_json = source_json.get('sources')
-    # if source_json:
-    #     source_nodes = _build_from_field(parse_source, source_json)
-    # else:
-    #     source_nodes = None
+    if species_kwargs:
+        species_nodes = [elemental.SpeciesFactor(**sk) for sk in species_kwargs]
+
+    else:
+        species_nodes = []
+    #         species_nodes = None
 
     # Build the source node and return it.
-    return nodal.SourceNode(node_info=source_json, factors=factor_nodes,
+    return nodal.SourceNode(info=source_json, factors=factor_nodes,
                             species=species_nodes)
 
 
@@ -146,7 +172,7 @@ def parse_assays(assay_json):
     # print(factor_nodes)
 
     # Create the Comments.
-    comment_nodes = _build_from_field(elemental.Comment, assay_json, 'comments')
+    comment_nodes = _build_from_field(parse_comment_kwargs, assay_json, 'comments')
 
     return nodal.AssayNode(datafile=data_file, node_info=assay_json,
                            factors=factor_nodes, samples=sample_nodes,

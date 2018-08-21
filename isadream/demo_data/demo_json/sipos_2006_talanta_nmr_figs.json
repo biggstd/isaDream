@@ -18,7 +18,7 @@
       "factorType": "Measurement",
       "unitRef": "ppm",
       "RefValue": "27_Al",
-      "csvColumnIndex": 1.0
+      "csvColumnIndex": 1
     },
     {
       "factorType": "Measurement Condition",
@@ -79,7 +79,7 @@
             {
               "factorType": "Measurement Condition",
               "unitRef": "Molar",
-              "csvColumnIndex": 0.0
+              "csvColumnIndex": 0
             }
           ],
           "species": [
@@ -110,7 +110,7 @@
             {
               "factorType": "Measurement Condition",
               "unitRef": "Molar",
-              "csvColumnIndex": 0.0
+              "csvColumnIndex": 0
             }
           ],
           "species": [
@@ -135,7 +135,7 @@
             {
               "factorType": "Measurement Condition",
               "unitRef": "Molar",
-              "csvColumnIndex": 0.0
+              "csvColumnIndex": 0
             }
           ],
           "species": [

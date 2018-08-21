@@ -18,7 +18,7 @@
       "factorType": "Measurement",
       "unitRef": "ppm",
       "RefValue": "27_Al",
-      "csvColumnIndex": 1.0
+      "csvColumnIndex": 1
     },
     {
       "factorType": "Measurement Condition",
@@ -67,66 +67,19 @@
           ]
         }
       ]
-    },
-    {
-      "sampleName": "Demo second Solution",
-      "studySampleFactors": [
-        {
-          "factorType": "Measurement Condition",
-          "decimalValue": 0.006,
-          "unitRef": "Molar"
-        }
-      ],
-      "species": [
-        {
-          "speciesReference": "Fake",
-          "stoichiometry": 2.0
-        }
-      ],
-      "sources": [
-        {
-          "sourceName": "Demo second source.",
-          "materialCharacteristic": [
-            {
-              "factorType": "Material Property",
-              "decimalValue": 1.05,
-              "unitRef": "g/cm^3",
-              "RefValue": "Density"
-            },
-            {
-              "factorType": "Material Property",
-              "unitRef": "Quality",
-              "RefValue": "Poor"
-            }
-          ],
-          "species": [
-            {
-              "speciesReference": "Fake",
-              "stoichiometry": 1.0
-            }
-          ]
-        }
-      ]
     }
   ],
   "assays": [
     {
       "dataFile": "sipos_2006_talanta_fig_3_KOH.csv",
-      "assayParameters": [
-        {
-          "factorType": "Measurement Condition",
-          "decimalValue": 1.05,
-          "unitRef": "Test"
-        }
-      ],
       "samples": [
         {
-          "name": "Potassium Hydroxide",
+          "sampleName": "Potassium Hydroxide",
           "AssaySampleFactors": [
             {
               "factorType": "Measurement Condition",
               "unitRef": "Molar",
-              "csvColumnIndex": 0.0
+              "csvColumnIndex": 0
             }
           ],
           "species": [
@@ -157,7 +110,7 @@
             {
               "factorType": "Measurement Condition",
               "unitRef": "Molar",
-              "csvColumnIndex": 0.0
+              "csvColumnIndex": 0
             }
           ],
           "species": [
@@ -182,7 +135,7 @@
             {
               "factorType": "Measurement Condition",
               "unitRef": "Molar",
-              "csvColumnIndex": 0.0
+              "csvColumnIndex": 0
             }
           ],
           "species": [

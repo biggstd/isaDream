@@ -14,6 +14,9 @@ BASE_PATH = os.path.join(BASE_PATH, 'demo_data')
 SIPOS_DEMO = os.path.join(BASE_PATH,
                           'demo_json/sipos_2006_talanta_nmr_figs.json')
 
+RAMAN_DEMO = os.path.join(BASE_PATH,
+                          'demo_json/sipos_2006_science_direct_raman.json')
+
 
 def load_csv_as_dict(path, base_path=BASE_PATH):
     """Load a CSV file as a Python dictionary.

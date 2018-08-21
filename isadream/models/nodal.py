@@ -9,38 +9,23 @@ of the two.
 import uuid
 import collections
 
+import param  # For type-setting.
+import networkx as nx
+
 # Local project imports.
 from . import elemental
 from . import containers
 from .. import modelUtils
 
 
-class DrupalNode:
-    """Model of a single DrupalNode.
-
-    """
-
-    def __init__(self, assays, node_info, factors=None, comments=None, samples=None):
-        """DrupalNode initialization function.
-
-        :param node_info: A dictionary of information concerning this node object.
-        :param factors: A list of factors that apply to the node and all its childeren.
-        :param comments: A list of comments that apply to the node and all its childeren.
-        :param samples: A list of samples that apply to the node and all its childeren.
-        :param assays: A list of assays, each assay inherits the factors, samples,
-            and comments above.
-
-        """
-
-        # Populate node attributes and properties by running parent init functions.
-        self.assays = containers.Assays(assays)
-        self.info = elemental.NodeInfo(node_info)
-        self.title = node_info.get('title')
-        # Optional values.
-        self.factors = containers.Factors(factors)
-        self.comments = containers.Comments(comments)
-        self.samples = containers.Samples(samples)
-
+class DrupalNode(param.Parameterized):
+    assays = param.List()
+    info = param.Dict()
+    title = param.String()
+    factors = param.List()
+    comments = param.List()
+    samples = param.List()
+    
 
 class AssayNode:
     """Model of a single assay, experiment, or user file and its metadata within a DrupalNode.
@@ -70,7 +55,7 @@ class AssayNode:
         self.parental_samples = containers.Factors(parental_samples)
         self.samples = containers.Samples(samples)
         self.comments = containers.Comments(comments)
-        self.node_info = elemental.NodeInfo(node_info)
+        self.node_info = elemental.NodeInfo(info=node_info)
         self.parent_info = parent_info
         self.parent_comments = containers.Comments(parent_comments)
 
@@ -87,7 +72,7 @@ class AssayNode:
 
         """
         if self.datafile_dict:
-            return max(len(vals) for vals in self.datafile_dict.values())
+            return max(len(values) for values in self.datafile_dict.values())
         else:
             return 1
 
@@ -105,7 +90,8 @@ class AssayNode:
                     or modelUtils.query_species(item, species)]
 
         # Create the output dictionaries.
-        col_data_source = dict()
+        col_data_source = collections.defaultdict(tuple)
+        # metadata_dictionary = collections.defaultdict(tuple)
         metadata_dictionary = dict()
 
         # Create node hashes for the metadata dictionary.
@@ -143,7 +129,7 @@ class AssayNode:
                     # Find the species in both the query and the sample.
                     matching_species = list(parental_sample.unique_species & set(sample_species))[0]
                     data = [matching_species for _ in range(self.factor_size)]
-                    metadata_dictionary[sample_key] = parental_sample.node_info
+                    metadata_dictionary[sample_key] = parental_sample.info
                     col_data_source['sample_node'] = [sample_key for _ in range(self.factor_size)]
                     col_data_source[sample_label] = data
 
@@ -159,15 +145,15 @@ class AssayNode:
 
                         # Check if this factor is a csv column index.
                         if factor.is_csv_index:
-                            data = self.datafile_dict.get(factor.csv_index)
-                            metadata_dictionary[sample_key] = parental_sample.node_info
+                            data = self.datafile_dict.get(str(factor.csv_column_index))
+                            metadata_dictionary[sample_key] = parental_sample.info
                             col_data_source['sample_node'] = [sample_key for _ in range(self.factor_size)]
                             col_data_source[group_label] = data
 
                         elif sample_label == factor_label:
                             data = [factor.value for _ in range(self.factor_size)]
                             col_data_source[sample_label] = data
-                            metadata_dictionary[sample_key] = parental_sample.node_info
+                            metadata_dictionary[sample_key] = parental_sample.info
                             col_data_source['sample_node'] = [sample_key for _ in range(self.factor_size)]
 
             assay_factor_matches = matching_factors(
@@ -188,7 +174,7 @@ class AssayNode:
                     matching_species = list(assay_sample.unique_species & set(sample_species))[0]
                     data = [matching_species for _ in range(self.factor_size)]
                     col_data_source[sample_label] = data
-                    metadata_dictionary[sample_key] = assay_sample.node_info
+                    metadata_dictionary[sample_key] = assay_sample.info
                     col_data_source['sample_node'] = [sample_key for _ in range(self.factor_size)]
 
                 else:
@@ -203,36 +189,27 @@ class AssayNode:
 
                         # Check if this factor is a csv column index.
                         if factor.is_csv_index:
-                            data = self.datafile_dict.get(factor.csv_index)
+                            data = self.datafile_dict.get(str(factor.csv_column_index))
                             col_data_source[group_label] = data
                             col_data_source['sample_node'] = [sample_key for _ in range(self.factor_size)]
-                            metadata_dictionary[sample_key] = assay_sample.node_info
+                            metadata_dictionary[sample_key] = assay_sample.info
 
                         elif sample_label == factor_label:
                             data = [factor.value for _ in range(self.factor_size)]
                             col_data_source[sample_label] = data
                             col_data_source['sample_node'] = [sample_key for _ in range(self.factor_size)]
-                            metadata_dictionary[sample_key] = assay_sample.node_info
+                            metadata_dictionary[sample_key] = assay_sample.info
 
         return col_data_source, metadata_dictionary
 
 
-class SampleNode:
-    """SampleNode model.
-
-    """
-
-    def __init__(self, species, node_info=None, factors=None, sources=None):
-        # Call inherited classes initialization functions.
-        self.node_info = elemental.NodeInfo(node_info)
-        self.sample_name = node_info.get('sampleName')
-        self.factors = containers.Factors(factors)
-        self.species = containers.Species(species)
-        self.sources = containers.Sources(sources)
-
-    def __repr__(self):
-        return str(self.node_info)
-
+class SampleNode(param.Parameterized):
+    info = param.Dict()
+    sample_name = param.String()
+    factors = param.List()
+    species = param.List()
+    sources = param.List()
+    
     @property
     def all_factors(self):
         return modelUtils.get_all_elementals(self, 'factors')
@@ -241,19 +218,14 @@ class SampleNode:
     def all_species(self):
         nodes_out = list()
         for species in set(modelUtils.get_all_elementals(self, 'species')):
-            if species.label is not None and species.value is not None:
+            if species.species_reference is not None and species.stoichiometry is not None:
                 nodes_out.append(species)
 
         return nodes_out
 
     @property
     def unique_species(self):
-        return set((s.label for s in self.all_species))
-
-    # @property
-    # def unique_species_tuples(self):
-    #     species_maps = [{s.label: s.value} for s in self.all_species]
-    #     return tuple(collections.ChainMap(*species_maps))
+        return set((s.species_reference for s in self.all_species))
 
     @property
     def all_sources(self):
@@ -266,17 +238,39 @@ class SampleNode:
                for species in self.all_species):
             return True
 
+    @property
+    def as_nx_graph(self):
+        """Gives this node object as a NetworkX graph object."""
+        graph = nx.DiGraph()
+        graph.add_node(self)
 
-class SourceNode:
-    """
+        #         for sp in self.species:
+        #             if sp:
+        #                 graph.add_edge(self, sp, label="species")
 
-    """
+        #         for factor in self.factors:
+        #             if factor:
+        #                 graph.add_edge(self, factor, label="factors")
 
-    def __init__(self, species, node_info=None, factors=None):
-        self.species = containers.Species(species)
-        self.node_info = elemental.NodeInfo(node_info)
-        self.factors = containers.Factors(factors)
+        for source in self.sources:
+            if source:
+                # Create the graph as a balanced tree and find the root node.
+                source_graph = source.as_nx_graph
+                #                 root_node = list(nx.topological_sort(source_graph))[0]
+                graph.add_edge(self, source, label="sources")
 
+                #                 graph.add_nodes_from(source_graph.nodes(data=True))
+                #                 graph.add_edges_from(source_graph.edges(data=True))
+                graph = nx.disjoint_union(graph, source_graph)
+
+        return graph
+
+
+class SourceNode(param.Parameterized):
+    species = param.List()
+    info = param.Dict()
+    factors = param.List()
+    
     @property
     def all_factors(self):
         return collections.ChainMap(modelUtils.get_all_elementals(self, 'factors'))
@@ -284,3 +278,19 @@ class SourceNode:
     @property
     def all_species(self):
         return modelUtils.get_all_elementals(self, 'species')
+
+    @property
+    def as_nx_graph(self):
+        """Gives this node object as a NetworkX graph object."""
+        graph = nx.DiGraph()
+        graph.add_node(self)
+
+        for sp in self.species:
+            if sp:
+                graph.add_edge(self, sp, label="species")
+
+        for factor in self.factors:
+            if factor:
+                graph.add_edge(self, factor, label="factors")
+
+        return graph
