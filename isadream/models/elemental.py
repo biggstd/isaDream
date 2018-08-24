@@ -37,24 +37,56 @@ class Factor(param.Parameterized):
         """)
     )
 
-    decimal_value = param.Parameter()
+    decimal_value = param.Number(
+        allow_None=True,
+        doc=dedent("""\
+        The decimal value of this factor.
+        """)
+    )
 
-    string_value = param.Parameter()
+    string_value = param.String(
+        allow_None=True,
+        doc=dedent("""\
+        The string value of this factor. This should be used only if no other
+        value field will work for the data.
+        """)
+    )
 
-    reference_value = param.Parameter()
+    reference_value = param.String(
+        allow_None=True,
+        doc=dedent("""\
+        A reference value of this factor. This should be used when The value of
+        this factor has a discreet set of possible values.
+        """)
+    )
 
-    unit_reference = param.Parameter()
+    unit_reference = param.String(
+        allow_None=True,  # Some string or factor values may not have units.
+        doc=dedent("""The unit that describes this factor.""")
+    )
 
-    csv_column_index = param.Integer(allow_None=True)
-
-    # label = param.Tuple(default=(factor_type, reference_value, unit_reference))
+    csv_column_index = param.Integer(
+        allow_None=True,
+        doc=dedent("""\
+        An integer reference that points to the column index of the data that this
+        factor describes.
+        """)
+    )
 
     @property
     def label(self):
-        return (self.factor_type, self.reference_value, self.unit_reference)
+        """A label property. These three parameters are the categorical units or
+        ontology term of this factor.
+
+        """
+        return self.factor_type, self.reference_value, self.unit_reference
 
     @property
     def is_csv_index(self):
+        """A boolean property. True if this factor describes a datafile column,
+        and False otherwise.
+
+        """
         if self.csv_column_index is not None:
             return True
         return False
@@ -68,6 +100,7 @@ class Factor(param.Parameterized):
             2. string_value
             3. ref_value
 
+        The first one of these that is present is returned.
         """
 
         for item in (self.decimal_value, self.string_value, self.reference_value):
@@ -95,24 +128,68 @@ class Factor(param.Parameterized):
 
 
 class SpeciesFactor(param.Parameterized):
-    """
+    """A species factor is a pair of values. A species and a stoichiometry coefficient.
+
+    Such stoichiometry coefficients are only relatable within a single Sample or Source
+    object.
 
     """
-    species_reference = param.Parameter(allow_None=False)
-    stoichiometry = param.Parameter(allow_None=True)
+
+    species_reference = param.String(
+        allow_None=False,
+        doc=dedent("""\
+        The species being referenced.
+        """)
+    )
+
+    stoichiometry = param.Number(
+        allow_None=True,
+        doc=dedent("""\
+        The coefficient corresponding to this species factor.
+        """)
+    )
 
     def query(self, query_term):
+        """A boolean search function. Returns True if the query term
+        is found, and False otherwise.
+
+        """
         if re.match(query_term, self.species_reference):
             return True
 
 
 class NodeInfo(param.Parameterized):
-    info = param.Parameter(allow_None=True)
+    """A node information model.
+
+    This class ensures that not all key-value paris need be defined in
+    the json schema.
+
+    """
+    info = param.Dict(
+        allow_None=True,
+        doc=dedent("""\
+        A dictionary of Key-value paris which describe this node.
+        """)
+    )
 
 
 class Comment(param.Parameterized):
-    comment_name = param.String()
-    body = param.String()
+    """A node comment model.
+
+    """
+    comment_name = param.String(
+        allow_None=False,  # There must at least be a comment name.
+        doc=dedent("""\
+        The title of a comment.
+        """)
+    )
+
+    body = param.String(
+        allow_None=Factor,
+        doc=dedent("""\
+        The body text of a comment.
+        """)
+    )
 
 
 class DataFile(param.Parameterized):
