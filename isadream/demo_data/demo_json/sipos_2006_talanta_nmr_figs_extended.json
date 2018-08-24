@@ -10,41 +10,41 @@
   },
   "studyFactors": [
     {
-      "factorType": "Measurement Condition",
-      "decimalValue": 25.0,
-      "unitRef": "Celsius"
+      "factor_type": "Measurement Condition",
+      "decimal_value": 25.0,
+      "unit_reference": "Celsius"
     },
     {
-      "factorType": "Measurement",
-      "unitRef": "ppm",
-      "RefValue": "27_Al",
-      "csvColumnIndex": 1
+      "factor_type": "Measurement",
+      "unit_reference": "ppm",
+      "reference_value": "27_Al",
+      "csv_column_index": 1
     },
     {
-      "factorType": "Measurement Condition",
-      "decimalValue": 78.204,
-      "RefValue": "27_Al",
-      "unitRef": "MHz"
+      "factor_type": "Measurement Condition",
+      "decimal_value": 78.204,
+      "reference_value": "27_Al",
+      "unit_reference": "MHz"
     },
     {
-      "factorType": "Measurement Condition",
-      "unitRef": "27_Al Reference Compound",
-      "RefValue": "[KAl(SO4)2]"
+      "factor_type": "Measurement Condition",
+      "unit_reference": "27_Al Reference Compound",
+      "reference_value": "[KAl(SO4)2]"
     }
   ],
   "studySamples": [
     {
-      "sampleName": "Aluminate Solution",
+      "sample_name": "Aluminate Solution",
       "studySampleFactors": [
         {
-          "factorType": "Measurement Condition",
-          "decimalValue": 0.005,
-          "unitRef": "Molar"
+          "factor_type": "Measurement Condition",
+          "decimal_value": 0.005,
+          "unit_reference": "Molar"
         }
       ],
       "species": [
         {
-          "speciesReference": "Al(III)",
+          "species_reference": "Al(III)",
           "stoichiometry": 1.0
         }
       ],
@@ -53,15 +53,15 @@
           "sourceName": "Aluminum Wire",
           "materialCharacteristic": [
             {
-              "factorType": "Material Property",
-              "decimalValue": 0.98,
-              "unitRef": "Percent",
-              "RefValue": "Purity by Weight"
+              "factor_type": "Material Property",
+              "decimal_value": 0.98,
+              "unit_reference": "Percent",
+              "reference_value": "Purity by Weight"
             }
           ],
           "species": [
             {
-              "speciesReference": "Al(III)",
+              "species_reference": "Al(III)",
               "stoichiometry": 1.0
             }
           ]
@@ -69,17 +69,17 @@
       ]
     },
     {
-      "sampleName": "Demo second Solution",
+      "sample_name": "Demo second Solution",
       "studySampleFactors": [
         {
-          "factorType": "Measurement Condition",
-          "decimalValue": 0.006,
-          "unitRef": "Molar"
+          "factor_type": "Measurement Condition",
+          "decimal_value": 0.006,
+          "unit_reference": "Molar"
         }
       ],
       "species": [
         {
-          "speciesReference": "Fake",
+          "species_reference": "Fake",
           "stoichiometry": 2.0
         }
       ],
@@ -88,20 +88,20 @@
           "sourceName": "Demo second source.",
           "materialCharacteristic": [
             {
-              "factorType": "Material Property",
-              "decimalValue": 1.05,
-              "unitRef": "g/cm^3",
-              "RefValue": "Density"
+              "factor_type": "Material Property",
+              "decimal_value": 1.05,
+              "unit_reference": "g/cm^3",
+              "reference_value": "Density"
             },
             {
-              "factorType": "Material Property",
-              "unitRef": "Quality",
-              "RefValue": "Poor"
+              "factor_type": "Material Property",
+              "unit_reference": "Quality",
+              "reference_value": "Poor"
             }
           ],
           "species": [
             {
-              "speciesReference": "Fake",
+              "species_reference": "Fake",
               "stoichiometry": 1.0
             }
           ]
@@ -114,28 +114,28 @@
       "dataFile": "sipos_2006_talanta_fig_3_KOH.csv",
       "assayParameters": [
         {
-          "factorType": "Measurement Condition",
-          "decimalValue": 1.05,
-          "unitRef": "Assay level Parameter Test"
+          "factor_type": "Measurement Condition",
+          "decimal_value": 1.05,
+          "unit_reference": "Assay level Parameter Test"
         }
       ],
       "samples": [
         {
           "name": "Potassium Hydroxide",
-          "AssaySampleFactors": [
+          "sample_factors": [
             {
-              "factorType": "Measurement Condition",
-              "unitRef": "Molar",
-              "csvColumnIndex": 0
+              "factor_type": "Measurement Condition",
+              "unit_reference": "Molar",
+              "csv_column_index": 0
             }
           ],
           "species": [
             {
-              "speciesReference": "K+",
+              "species_reference": "K+",
               "stoichiometry": 1.0
             },
             {
-              "speciesReference": "OH-",
+              "species_reference": "OH-",
               "stoichiometry": 1.0
             }
           ]
@@ -152,21 +152,21 @@
       "dataFile": "sipos_2006_talanta_fig_3_LiOH.csv",
       "samples": [
         {
-          "sampleName": "Lithium Hydroxide",
-          "AssaySampleFactors": [
+          "sample_name": "Lithium Hydroxide",
+          "sample_factors": [
             {
-              "factorType": "Measurement Condition",
-              "unitRef": "Molar",
-              "csvColumnIndex": 0
+              "factor_type": "Measurement Condition",
+              "unit_reference": "Molar",
+              "csv_column_index": 0
             }
           ],
           "species": [
             {
-              "speciesReference": "Li+",
+              "species_reference": "Li+",
               "stoichiometry": 1.0
             },
             {
-              "speciesReference": "OH-",
+              "species_reference": "OH-",
               "stoichiometry": 1.0
             }
           ]
@@ -177,21 +177,21 @@
       "dataFile": "sipos_2006_talanta_fig_3_NaOH.csv",
       "samples": [
         {
-          "sampleName": "Sodium Hydroxide",
-          "AssaySampleFactors": [
+          "sample_name": "Sodium Hydroxide",
+          "sample_factors": [
             {
-              "factorType": "Measurement Condition",
-              "unitRef": "Molar",
-              "csvColumnIndex": 0
+              "factor_type": "Measurement Condition",
+              "unit_reference": "Molar",
+              "csv_column_index": 0
             }
           ],
           "species": [
             {
-              "speciesReference": "Na+",
+              "species_reference": "Na+",
               "stoichiometry": 1.0
             },
             {
-              "speciesReference": "OH-",
+              "species_reference": "OH-",
               "stoichiometry": 1.0
             }
           ]

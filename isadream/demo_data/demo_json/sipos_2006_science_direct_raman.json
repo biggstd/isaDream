@@ -9,21 +9,21 @@
   },
   "studySamples": [
     {
-      "sampleName": "Sodium Hydroxide Solution",
+      "sample_name": "Sodium Hydroxide Solution",
       "studySampleFactors": [
         {
-          "factorType": "Measurement Condition",
-          "decimalValue": 18.0,
-          "unitRef": "Molar"
+          "factor_type": "Measurement Condition",
+          "decimal_value": 18.0,
+          "unit_reference": "Molar"
         }
       ],
       "species": [
         {
-          "speciesReference": "Na+",
+          "species_reference": "Na+",
           "stoichiometry": 1.0
         },
         {
-          "speciesReference": "OH-",
+          "species_reference": "OH-",
           "stoichiometry": 1.0
         }
       ]
@@ -34,27 +34,27 @@
       "dataFile": "sipos_2006_SD_fig_6.csv",
       "samples": [
         {
-          "sampleName": "Aluminate Solution",
-          "AssaySampleFactors": [
+          "sample_name": "Aluminate Solution",
+          "sample_factors": [
             {
-              "factorType": "Measurement Condition",
-              "unitRef": "Molar",
-              "csvColumnIndex": 0
+              "factor_type": "Measurement Condition",
+              "unit_reference": "Molar",
+              "csv_column_index": 0
             },
             {
-              "factorType": "Measurement Condition",
-              "unitRef": "Integrated Intensity",
-              "csvColumnIndex": 1
+              "factor_type": "Measurement Condition",
+              "unit_reference": "Integrated Intensity",
+              "csv_column_index": 1
             },
             {
-              "factorType": "Measurement Condition",
-              "unitRef": "cm-1",
-              "csvColumnIndex": 2
+              "factor_type": "Measurement Condition",
+              "unit_reference": "cm-1",
+              "csv_column_index": 2
             }
           ],
           "species": [
             {
-              "speciesReference": "Al(III)",
+              "species_reference": "Al(III)",
               "stoichiometry": 1.0
             }
           ]

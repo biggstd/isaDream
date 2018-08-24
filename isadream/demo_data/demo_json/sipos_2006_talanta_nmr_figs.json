@@ -1,67 +1,65 @@
 {
   "nodeInformation": {
-      "$id": "https://lampdev02.pnl.gov/bigg006/idreamdrupal/",
-      "title": "Sipos 2006, Talanta NMR Figures",
-      "filename": "sipos_2006_talanta_nmr_figs.json",
-      "description" : "Extracted figures.",
-      "submissionDate" : "2018-5-25",
-      "publicReleaseDate" : "2006-03-13",
-      "experimentSubType": "Al_NMR"
+    "node_title": "Sipos 2006, Talanta NMR Figures",
+    "node_description": "Extracted figures.",
+    "node_url": "www.url.com",
+    "submission_date": "2018-5-25",
+    "public_release_date": "2006-03-13"
   },
-  "studyFactors": [
+  "node_factors": [
     {
-      "factorType": "Measurement Condition",
-      "decimalValue": 25.0,
-      "unitRef": "Celsius"
+      "factor_type": "Measurement Condition",
+      "decimal_value": 25.0,
+      "unit_reference": "Celsius"
     },
     {
-      "factorType": "Measurement",
-      "unitRef": "ppm",
-      "RefValue": "27_Al",
-      "csvColumnIndex": 1
+      "factor_type": "Measurement",
+      "unit_reference": "ppm",
+      "reference_value": "27_Al",
+      "csv_column_index": 1
     },
     {
-      "factorType": "Measurement Condition",
-      "decimalValue": 78.204,
-      "RefValue": "27_Al",
-      "unitRef": "MHz"
+      "factor_type": "Measurement Condition",
+      "decimal_value": 78.204,
+      "reference_value": "27_Al",
+      "unit_reference": "MHz"
     },
     {
-      "factorType": "Measurement Reference",
-      "unitRef": "27_Al Reference Compound",
-      "RefValue": "[KAl(SO4)2]"
+      "factor_type": "Measurement Reference",
+      "unit_reference": "27_Al Reference Compound",
+      "reference_value": "[KAl(SO4)2]"
     }
   ],
-  "studySamples": [
+  "node_samples": [
     {
-      "sampleName": "Aluminate Solution",
-      "studySampleFactors": [
+      "sample_name": "Aluminate Solution",
+      "sample_factors": [
         {
-          "factorType": "Measurement Condition",
-          "decimalValue": 0.005,
-          "unitRef": "Molar"
+          "factor_type": "Measurement Condition",
+          "decimal_value": 0.005,
+          "unit_reference": "Molar"
         }
       ],
-      "species": [
+      "sample_species": [
         {
-          "speciesReference": "Al(III)",
+          "species_reference": "Al(III)",
           "stoichiometry": 1.0
         }
       ],
-      "sources": [
+      "sample_sources": [
         {
-          "sourceName": "Aluminum Wire",
-          "materialCharacteristic": [
+          "source_name": "Aluminum Wire",
+          "source_factors": [
             {
-              "factorType": "Material Property",
-              "decimalValue": 0.98,
-              "unitRef": "Percent",
-              "RefValue": "Purity by Weight"
+              "factor_type": "Material Property",
+              "decimal_value": 0.98,
+              "unit_reference": "Percent",
+              "reference_value": "Purity by Weight"
             }
           ],
-          "species": [
+          "source_species": [
             {
-              "speciesReference": "Al(III)",
+              "species_reference": "Al(III)",
               "stoichiometry": 1.0
             }
           ]
@@ -69,57 +67,59 @@
       ]
     }
   ],
-  "assays": [
+  "node_assays": [
     {
-      "dataFile": "sipos_2006_talanta_fig_3_KOH.csv",
-      "samples": [
+      "assay_title": "Potassium Hydroxide Assay",
+      "assay_datafile": "sipos_2006_talanta_fig_3_KOH.csv",
+      "assay_samples": [
         {
-          "sampleName": "Potassium Hydroxide",
-          "AssaySampleFactors": [
+          "sample_name": "Potassium Hydroxide",
+          "sample_factors": [
             {
-              "factorType": "Measurement Condition",
-              "unitRef": "Molar",
-              "csvColumnIndex": 0
+              "factor_type": "Measurement Condition",
+              "unit_reference": "Molar",
+              "csv_column_index": 0
             }
           ],
-          "species": [
+          "sample_species": [
             {
-              "speciesReference": "K+",
+              "species_reference": "K+",
               "stoichiometry": 1.0
             },
             {
-              "speciesReference": "OH-",
+              "species_reference": "OH-",
               "stoichiometry": 1.0
             }
           ]
         }
       ],
-      "comments": [
-          {
-              "name": "Data extraction method.",
-              "body": "I manually pulled this points out with a web tool."
-          }
+      "assay_comments": [
+        {
+          "name": "Data extraction method.",
+          "body": "I manually pulled this points out with a web tool."
+        }
       ]
     },
     {
-      "dataFile": "sipos_2006_talanta_fig_3_LiOH.csv",
-      "samples": [
+      "assay_title": "Lithium Hydroxide Assay",
+      "assay_datafile": "sipos_2006_talanta_fig_3_LiOH.csv",
+      "assay_samples": [
         {
-          "sampleName": "Lithium Hydroxide",
-          "AssaySampleFactors": [
+          "sample_name": "Lithium Hydroxide",
+          "sample_factors": [
             {
-              "factorType": "Measurement Condition",
-              "unitRef": "Molar",
-              "csvColumnIndex": 0
+              "factor_type": "Measurement Condition",
+              "unit_reference": "Molar",
+              "csv_column_index": 0
             }
           ],
-          "species": [
+          "sample_species": [
             {
-              "speciesReference": "Li+",
+              "species_reference": "Li+",
               "stoichiometry": 1.0
             },
             {
-              "speciesReference": "OH-",
+              "species_reference": "OH-",
               "stoichiometry": 1.0
             }
           ]
@@ -127,24 +127,25 @@
       ]
     },
     {
-      "dataFile": "sipos_2006_talanta_fig_3_NaOH.csv",
-      "samples": [
+      "assay_title": "Sodium Hydroxide Assay",
+      "assay_datafile": "sipos_2006_talanta_fig_3_NaOH.csv",
+      "assay_samples": [
         {
-          "sampleName": "Sodium Hydroxide",
-          "AssaySampleFactors": [
+          "sample_name": "Sodium Hydroxide",
+          "sample_factors": [
             {
-              "factorType": "Measurement Condition",
-              "unitRef": "Molar",
-              "csvColumnIndex": 0
+              "factor_type": "Measurement Condition",
+              "unit_reference": "Molar",
+              "csv_column_index": 0
             }
           ],
-          "species": [
+          "sample_species": [
             {
-              "speciesReference": "Na+",
+              "species_reference": "Na+",
               "stoichiometry": 1.0
             },
             {
-              "speciesReference": "OH-",
+              "species_reference": "OH-",
               "stoichiometry": 1.0
             }
           ]
@@ -152,7 +153,7 @@
       ]
     }
   ],
-  "comments": [
+  "node_comments": [
     {
       "name": "Study level comment on Sipos 2006.",
       "body": "I manually pulled this points out with a web tool."

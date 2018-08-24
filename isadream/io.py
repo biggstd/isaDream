@@ -1,179 +1,219 @@
+"""Input and Output Operations
+
+"""
+
 import json
+import uuid
+import collections
 
 from . import modelUtils
-from .models import elemental
-from .models import nodal
-
-FACTOR_NAMES = '''studyFactors studySampleFactors 
-    materialCharacteristic studySampleFactors 
-    AssaySampleFactors parameters assayParameters'''.split()
-
-FACTOR_FIELDS = '''factorType decimalValue unitRef 
-csvColumnIndex RefValue stringValue'''.split()
-
-SAMPLE_NAMES = '''studySamples samples'''.split()
-
-SAMPLE_VALUES = '''species sources'''.split()
-
-SPECIES_VALUES = '''speciesReference stoichiometry'''.split()
-
-
-def parse_factors(json_str):
-    """Find and return a factor, regardless of what the factors name
-    within the json specification.
-    """
-
-    for factor_name in FACTOR_NAMES:
-        if json_str.get(factor_name):
-            return list(elemental.Factor(**parse_factor_kwargs(fact))
-                        for fact in json_str.pop(factor_name))
-        else:
-            continue
-    return []
-
-
-def parse_factor_kwargs(factor_dict):
-    parsed_dict = dict(factor_type=factor_dict.get('factorType'),
-                       decimal_value=factor_dict.get('decimalValue'),
-                       string_value=factor_dict.get('stringValue'),
-                       reference_value=factor_dict.get('RefValue'),
-                       unit_reference=factor_dict.get('unitRef'),
-                       csv_column_index=factor_dict.get('csvColumnIndex'))
-    return parsed_dict
-
-
-def parse_comment_kwargs(comment_dict):
-    parsed_dict = dict(comment_name=comment_dict.get("name"),
-                       body=comment_dict.get("body"))
-
-
-def parse_species_kwargs(species_dict):
-    parsed_dict = dict(species_reference=species_dict.get('speciesReference'),
-                       stoichiometry=species_dict.get('stoichiometry'))
-    if parsed_dict['species_reference'] is not None:
-        return parsed_dict
+from .models.elemental import Factor, SpeciesFactor, Comment, NodeInfo, DataFile
+from .models.nodal import DrupalNode, AssayNode, SampleNode, SourceNode
 
 
 def read_idream_json(json_path):
-    """Read a json from a path and return as a python dictionary.
-    """
-
+    """Read a json from a path and return as a python dictionary. """
     with open(json_path) as json_file:
         data = json.load(json_file)
     return data
 
 
-def _build_from_field(callable_fn, json_data, key=None):
-    """Returns a callable() or None for every entry found from json_data.
-
-    """
-
-    if key and json_data.get(key):
-        return [callable_fn(dat) for dat in json_data.pop(key) if dat]
-    else:
-        return modelUtils.ensure_list(callable_fn(json_data))
+def build_elemental_model(json_dict, model, key):
+    # Many entries are optional, ensure the entry exists.
+    if json_dict.get(key):
+        model_list = json_dict.get(key)
+        return [model(**kwargs) for kwargs in model_list]
+    return []
 
 
-def parse_json(raw_json_dict):
-    """Convert a dictionary to a DrupalNode object.
-
-    """
-
-    # Create the Factors.
-    factor_nodes = _build_from_field(parse_factors, raw_json_dict)
-
-    # Parse the samples.
-    sample_nodes = _build_from_field(parse_sample, raw_json_dict,
-                                     'studySamples')
-
-    # print(sample_nodes)
-    # Create the Comments.
-    comment_nodes = _build_from_field(parse_comment_kwargs, raw_json_dict,
-                                      'comments')
-
-    # Parse the assays.
-    assay_nodes = _build_from_field(parse_assays, raw_json_dict, 'assays')
-
-    # Add the parental factors and samples to the assay_nodes.
-    for node in assay_nodes:
-        node.parental_factors = factor_nodes
-        node.parental_samples = sample_nodes
-        node.parent_info = raw_json_dict.get('nodeInformation')
-        node.parent_comments = comment_nodes
-
-    # Create the DrupalNode.
-    return nodal.DrupalNode(assays=assay_nodes,
-                            info=raw_json_dict.get('nodeInformation'),
-                            factors=factor_nodes, comments=comment_nodes,
-                            samples=sample_nodes)
+def build_nodal_model(json_dict, model, key):
+    if json_dict.get(key):
+        model_list = json_dict.get(key)
+        return [model(item) for item in model_list]
+    return []
 
 
-def parse_sample(sample_json):
-    """
+def parse_sources(json_dict):
+    source_name = json_dict.get("source_name")
+    factors = build_elemental_model(json_dict, Factor, "source_factors")
+    species = build_elemental_model(json_dict, SpeciesFactor, "source_species")
+    comments = build_elemental_model(json_dict, Comment, "source_comments")
 
-    :param sample_json:
+    return SourceNode(source_name=source_name, species=species, factors=factors,
+                      comments=comments)
+
+
+def parse_samples(json_dict):
+    sample_name = json_dict.get("sample_name")
+    factors = build_elemental_model(json_dict, Factor, "sample_factors")
+    species = build_elemental_model(json_dict, SpeciesFactor, "sample_species")
+    comments = build_elemental_model(json_dict, Comment, "sample_comments")
+
+    sources = build_nodal_model(json_dict, parse_sources, "sample_sources")
+
+    return SampleNode(sample_name=sample_name, factors=factors, species=species,
+                      sources=sources, comments=comments)
+
+
+def parse_assays(json_dict):
+    assay_title = json_dict.get("assay_title")
+    assay_datafile = json_dict.get("assay_datafile")
+
+    comments = build_elemental_model(json_dict, Comment, "assay_comments")
+    factors = build_elemental_model(json_dict, Factor, "assay_factors")
+
+    samples = build_nodal_model(json_dict, parse_samples, "assay_samples")
+
+    return AssayNode(assay_title=assay_title, assay_datafile=assay_datafile,
+                     comments=comments, factors=factors, samples=samples)
+
+
+def parse_node_json(json_dict):
+    """Convert a dictionary to a DrupalNode object. """
+    # Info, factors and comments can be directly created from the json.
+    info = json_dict.get("node_information")
+    factors = build_elemental_model(json_dict, Factor, "node_factors")
+    comments = build_elemental_model(json_dict, Comment, "node_comments")
+
+    # Samples and assays have nested items, and require more processing.
+    samples = build_nodal_model(json_dict, parse_samples, "node_samples")
+    assays = build_nodal_model(json_dict, parse_assays, "node_assays")
+
+    for assay in assays:
+        assay.parental_factors = factors
+        assay.parental_samples = samples
+        assay.parental_info = info
+        assay.parental_comments = comments
+
+    return DrupalNode(info=info, assays=assays, factors=factors,
+                      samples=samples, comments=comments)
+
+
+def build_node_data(node, groups):
+    """Constructs a dictionary for data display based on given groups.
+
+    :param groups:
     :return:
     """
-    # Create the Factors.
-    factor_nodes = _build_from_field(parse_factors, sample_json)
 
-    # Create the Species.
-    species_kwargs = _build_from_field(parse_species_kwargs, sample_json, 'species')
-    species_nodes = [elemental.SpeciesFactor(**sk) for sk in species_kwargs if sk]
-    # print(species_nodes)
+    def matching_factors(items, label, unit, species):
+        return [(label, unit, species, item)
+                for item in items
+                if modelUtils.query_factor(item, unit)
+                or modelUtils.query_species(item, species)]
 
-    # Create the Sources.
-    source_nodes = _build_from_field(parse_source, sample_json, 'sources')
+    datafile_dict = modelUtils.load_csv_as_dict(node.assay_datafile)
 
-    return nodal.SampleNode(info=sample_json, species=species_nodes,
-                            factors=factor_nodes, sources=source_nodes)
+    factor_size = max(len(values) for values in datafile_dict.values())
 
+    # Create the output dictionaries.
+    col_data_source = collections.defaultdict(tuple)
+    metadata_dictionary = dict()
 
-def parse_source(source_json):
-    """
+    # Create node hashes for the metadata dictionary.
+    # uuid.uuid4() gives a universally unique identifier.
+    parent_key = str(uuid.uuid4())
+    assay_key = str(uuid.uuid4())
 
-    :param source_json:
-    :return:
-    """
-    # print(source_json)
+    # Add the uuids to the column data source.
+    col_data_source['parent_node'] = [parent_key for _ in range(factor_size)]
+    col_data_source['assay_node'] = [assay_key for _ in range(factor_size)]
+    # col_data_source['sample node'] = sample_key
 
-    # Get the factors within this source.
-    factor_nodes = _build_from_field(parse_factors, source_json)
+    # Use the uuids as keys in the metadata dictionary.
+    metadata_dictionary[parent_key] = (node.parental_info, node.parental_comments)
+    metadata_dictionary[assay_key] = (node.assay_title, node.comments)
 
-    # Get the species within this source.
-    species_kwargs = _build_from_field(parse_species_kwargs, source_json, 'species')
-    # print([x for x in species_kwargs])
+    # Iterate through and extract the values within the groups provided.
+    for group_label, group_unit, group_species in groups:
 
-    if species_kwargs:
-        species_nodes = [elemental.SpeciesFactor(**sk) for sk in species_kwargs]
+        # Iterate through the top level samples and their factors.
+        parental_factor_matches = matching_factors(
+            node.parental_factors, group_label, group_unit, group_species)
 
-    else:
-        species_nodes = []
-    #         species_nodes = None
+        parental_sample_matches = matching_factors(
+            node.parental_samples, group_label, group_unit, group_species)
 
-    # Build the source node and return it.
-    return nodal.SourceNode(info=source_json, factors=factor_nodes,
-                            species=species_nodes)
+        # All of the parental factors apply to all of the parental samples.
+        for sample_label, sample_unit, sample_species, parental_sample in parental_sample_matches:
 
+            sample_key = str(uuid.uuid4())
 
-def parse_assays(assay_json):
-    """
+            # Check if a species reference column is requested.
+            if sample_unit == "Species":
 
-    :param assay_json:
-    :return:
-    """
-    # Get the datafile.
-    data_file = assay_json.get('dataFile')
+                # Find the species in both the query and the sample.
+                matching_species = list(parental_sample.unique_species & set(sample_species))[0]
+                data = [matching_species for _ in range(factor_size)]
+                metadata_dictionary[sample_key] = parental_sample.info
+                col_data_source['sample_node'] = [sample_key for _ in range(factor_size)]
+                col_data_source[sample_label] = data
 
-    # Create the Samples
-    sample_nodes = _build_from_field(parse_sample, assay_json, 'samples')
+            else:
+                # Get the factors that are private to this sample.
+                sample_factors = matching_factors(
+                    parental_sample.factors, sample_label, sample_unit, sample_species)
 
-    factor_nodes = _build_from_field(parse_factors, assay_json)
-    # print(factor_nodes)
+                # Check each of the factors which apply to this sample for a group match.
+                for factor_group in parental_factor_matches + sample_factors:
 
-    # Create the Comments.
-    comment_nodes = _build_from_field(parse_comment_kwargs, assay_json, 'comments')
+                    factor_label, factor_unit, factor_species, factor = factor_group
 
-    return nodal.AssayNode(datafile=data_file, node_info=assay_json,
-                           factors=factor_nodes, samples=sample_nodes,
-                           comments=comment_nodes)
+                    # Check if this factor is a csv column index.
+                    if factor.is_csv_index:
+                        data = datafile_dict.get(str(factor.csv_column_index))
+                        metadata_dictionary[sample_key] = parental_sample.sample_name
+                        col_data_source['sample_node'] = [sample_key for _ in range(factor_size)]
+                        col_data_source[group_label] = data
+
+                    elif sample_label == factor_label:
+                        data = [factor.value for _ in range(factor_size)]
+                        col_data_source[sample_label] = data
+                        metadata_dictionary[sample_key] = parental_sample.sample_name
+                        col_data_source['sample_node'] = [sample_key for _ in range(factor_size)]
+
+        assay_factor_matches = matching_factors(
+            node.factors, group_label, group_unit, group_species)
+
+        assay_sample_matches = matching_factors(
+            node.samples, group_label, group_unit, group_species)
+
+        # All of the parental factors apply to all of the parental samples.
+        for sample_label, sample_unit, sample_species, assay_sample in assay_sample_matches:
+
+            sample_key = str(uuid.uuid4())
+
+            # Check if a species reference column is requested.
+            if sample_unit == "Species":
+
+                # Find the species in both the query and the sample.
+                matching_species = list(assay_sample.unique_species & set(sample_species))[0]
+                data = [matching_species for _ in range(factor_size)]
+                col_data_source[sample_label] = data
+                metadata_dictionary[sample_key] = assay_sample.sample_name
+                col_data_source['sample_node'] = [sample_key for _ in range(factor_size)]
+
+            else:
+                # Get the factors that are private to this sample, as well as those from the parent.
+                sample_factors = matching_factors(
+                    assay_sample.factors, sample_label, sample_unit, sample_species)
+
+                # Check each of the factors which apply to this sample for a group match.
+                for factor_group in assay_factor_matches + sample_factors + parental_factor_matches:
+
+                    factor_label, factor_unit, factor_species, factor = factor_group
+
+                    # Check if this factor is a csv column index.
+                    if factor.is_csv_index:
+                        data = datafile_dict.get(str(factor.csv_column_index))
+                        col_data_source[group_label] = data
+                        col_data_source['sample_node'] = [sample_key for _ in range(factor_size)]
+                        metadata_dictionary[sample_key] = assay_sample.sample_name
+
+                    elif sample_label == factor_label:
+                        data = [factor.value for _ in range(factor_size)]
+                        col_data_source[sample_label] = data
+                        col_data_source['sample_node'] = [sample_key for _ in range(factor_size)]
+                        metadata_dictionary[sample_key] = assay_sample.sample_name
+
+    return col_data_source, metadata_dictionary

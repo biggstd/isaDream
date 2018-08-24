@@ -35,7 +35,11 @@ class Factor(param.Parameterized):
     unit_reference = param.Parameter()
     csv_column_index = param.Integer(allow_None=True)
 
-    label = param.Tuple(default=(factor_type, reference_value, unit_reference))
+    # label = param.Tuple(default=(factor_type, reference_value, unit_reference))
+
+    @property
+    def label(self):
+        return (self.factor_type, self.reference_value, self.unit_reference)
 
     @property
     def is_csv_index(self):

@@ -6,216 +6,217 @@ of the two.
 """
 
 # Standard library imports.
-import uuid
-import collections
+from textwrap import dedent  # Prevent indents from percolating to the user.
+import collections  # For sub-classing Python built-ins.
 
-import param  # For type-setting.
-import networkx as nx
+import param  # Boiler-plate for controlled class attributes.
 
 # Local project imports.
-from . import elemental
-from . import containers
 from .. import modelUtils
 
 
 class DrupalNode(param.Parameterized):
-    assays = param.List()
-    info = param.Dict()
-    title = param.String()
-    factors = param.List()
-    comments = param.List()
-    samples = param.List()
-    
+    """Model for a single Drupal content node.
 
-class AssayNode:
-    """Model of a single assay, experiment, or user file and its metadata within a DrupalNode.
+    Much of this class is declarative, with the Param package doing all of the
+    heavy-lifting in the background.
 
     """
 
-    def __init__(self, datafile, node_info=None, factors=None, samples=None, comments=None,
-                 parental_factors=None, parental_samples=None, parent_info=None,
-                 parent_comments=None):
-        """
+    title = param.String(
+        allow_None=False,
+        doc=dedent("""\
+        User supplied title of the Drupal Node or experiment.
+        
+        This model contains all the information concerning a given Drupal Node.
+        """)
+    )
 
-        :param datafile:
-        :param node_info:
-        :param factors:
-        :param samples:
-        :param comments:
-        :param parental_factors:
-        :param parental_samples:
-        """
+    info = param.Dict(
+        allow_None=True,
+        doc=dedent("""\
+        A set of key-value pairs of information concerning this experiment. 
+        
+        This can be any arbitrary set of key-value paris.
+        """)
+    )
 
-        # Assay-specific factors, samples and comments.
-        self._datafile = datafile
+    assays = param.List(
+        allow_None=True,
+        doc=dedent("""\
+        A list of Assay models that contain all core data components.
+        """)
+    )
 
-        # Initialize the container properties with their elemental instances.
-        self.factors = containers.Factors(factors)
-        self.parental_factors = containers.Factors(parental_factors)
-        self.parental_samples = containers.Factors(parental_samples)
-        self.samples = containers.Samples(samples)
-        self.comments = containers.Comments(comments)
-        self.node_info = elemental.NodeInfo(info=node_info)
-        self.parent_info = parent_info
-        self.parent_comments = containers.Comments(parent_comments)
+    factors = param.List(
+        allow_None=True,
+        doc=dedent("""\
+        A list of Factor models that pertain to all assays contained by this
+        DrupalNode instance.
+        """)
+    )
 
-        # Read the associated csv files, and create an index of those values.
-        self.datafile_dict = modelUtils.load_csv_as_dict(self._datafile)
+    samples = param.List(
+        allow_None=True,
+        doc=dedent("""\
+        A list of Sample models that are used by all assays contained by this
+        DrupalNode instance.
+        """)
+    )
 
-    @property
-    def factor_size(self):
-        """Get the length of the data vectors loaded from the .csv fil.e
+    comments = param.List(
+        allow_None=True,
+        doc=dedent("""\
+        A list of Comment models that apply to all of the assays contained by
+        this DrupalNode instance.
+        """)
+    )
 
-        Consider moving this and other csv functions to a datafile class!
 
-        :return: Integer length of the data read (if applicable) or 1.
+class AssayNode(param.Parameterized):
+    """Model for single assay / experiment - contains a datafile and all
+    metadata pertaining to that file.
 
-        """
-        if self.datafile_dict:
-            return max(len(values) for values in self.datafile_dict.values())
-        else:
-            return 1
+    This model is used by the `isadream.io` module to create data frames
+    and metadata dictionaries. This model should be considered the 'core'
+    of this model set.
 
-    def build_column_data_dicts(self, groups):
-        """Constructs a dictionary for data display based on given groups.
+    """
 
-        :param groups:
-        :return:
-        """
+    assay_datafile = param.String(
+        allow_None=True,  # There could technically be a single point uploaded.
+        doc=dedent("""\
+        The filename of the data file which this assay instance models.
+        
+        The base-path of where this file is actually stored is not considered here.
+        """)
+    )
 
-        def matching_factors(items, label, unit, species):
-            return [(label, unit, species, item)
-                    for item in items
-                    if modelUtils.query_factor(item, unit)
-                    or modelUtils.query_species(item, species)]
+    assay_title = param.String(
+        allow_None=False,
+        doc=dedent("""\
+        The user-supplied title of this assay.
+        """)
+    )
 
-        # Create the output dictionaries.
-        col_data_source = collections.defaultdict(tuple)
-        # metadata_dictionary = collections.defaultdict(tuple)
-        metadata_dictionary = dict()
+    factors = param.List(
+        allow_None=True,
+        doc=dedent("""\
+        A list of Factor objects that apply to this assay.
+        """)
+    )
 
-        # Create node hashes for the metadata dictionary.
-        # uuid.uuid4() gives a universally unique identifier.
-        parent_key = str(uuid.uuid4())
-        assay_key = str(uuid.uuid4())
+    samples = param.List(
+        allow_None=True,
+        doc=dedent("""\
+        A list of Sample objects that are used within this assay.
+        """)
+    )
 
-        # Add the uuids to the column data source.
-        col_data_source['parent_node'] = [parent_key for _ in range(self.factor_size)]
-        col_data_source['assay_node'] = [assay_key for _ in range(self.factor_size)]
-        # col_data_source['sample node'] = sample_key
+    comments = param.List(
+        allow_None=True,
+        doc=dedent("""\
+        A list of Comment objects that describe this assay.
+        """)
+    )
 
-        # Use the uuids as keys in the metadata dictionary.
-        metadata_dictionary[parent_key] = (self.parent_info, self.parent_comments)
-        metadata_dictionary[assay_key] = (self.node_info, self.comments)
+    parental_factors = param.List(
+        allow_None=True,
+        doc=dedent("""\
+        A list of Factor objects from the parent DrupalNode of this assay.
+        
+        All of these factors apply to this assay.
+        """)
+    )
 
-        # Iterate through and extract the values within the groups provided.
-        for group_label, group_unit, group_species in groups:
+    parental_samples = param.List(
+        allow_None=True,
+        doc=dedent("""\
+        A list of Sample objects from the parent DrupalNode of this assay.
+        
+        All of these Samples are used by this assay.
+        """)
+    )
 
-            # Iterate through the top level samples and their factors.
-            parental_factor_matches = matching_factors(
-                self.parental_factors, group_label, group_unit, group_species)
+    parental_info = param.Dict(
+        allow_None=True,
+        doc=dedent("""\
+        The metadata information of the parent DrupalNode of this assay.
+        """)
+    )
 
-            parental_sample_matches = matching_factors(
-                self.parental_samples, group_label, group_unit, group_species)
-
-            # All of the parental factors apply to all of the parental samples.
-            for sample_label, sample_unit, sample_species, parental_sample in parental_sample_matches:
-
-                sample_key = str(uuid.uuid4())
-
-                # Check if a species reference column is requested.
-                if sample_unit == "Species":
-
-                    # Find the species in both the query and the sample.
-                    matching_species = list(parental_sample.unique_species & set(sample_species))[0]
-                    data = [matching_species for _ in range(self.factor_size)]
-                    metadata_dictionary[sample_key] = parental_sample.info
-                    col_data_source['sample_node'] = [sample_key for _ in range(self.factor_size)]
-                    col_data_source[sample_label] = data
-
-                else:
-                    # Get the factors that are private to this sample.
-                    sample_factors = matching_factors(
-                        parental_sample.factors, sample_label, sample_unit, sample_species)
-
-                    # Check each of the factors which apply to this sample for a group match.
-                    for factor_group in parental_factor_matches + sample_factors:
-
-                        factor_label, factor_unit, factor_species, factor = factor_group
-
-                        # Check if this factor is a csv column index.
-                        if factor.is_csv_index:
-                            data = self.datafile_dict.get(str(factor.csv_column_index))
-                            metadata_dictionary[sample_key] = parental_sample.info
-                            col_data_source['sample_node'] = [sample_key for _ in range(self.factor_size)]
-                            col_data_source[group_label] = data
-
-                        elif sample_label == factor_label:
-                            data = [factor.value for _ in range(self.factor_size)]
-                            col_data_source[sample_label] = data
-                            metadata_dictionary[sample_key] = parental_sample.info
-                            col_data_source['sample_node'] = [sample_key for _ in range(self.factor_size)]
-
-            assay_factor_matches = matching_factors(
-                self.factors, group_label, group_unit, group_species)
-
-            assay_sample_matches = matching_factors(
-                self.samples, group_label, group_unit, group_species)
-
-            # All of the parental factors apply to all of the parental samples.
-            for sample_label, sample_unit, sample_species, assay_sample in assay_sample_matches:
-
-                sample_key = str(uuid.uuid4())
-
-                # Check if a species reference column is requested.
-                if sample_unit == "Species":
-
-                    # Find the species in both the query and the sample.
-                    matching_species = list(assay_sample.unique_species & set(sample_species))[0]
-                    data = [matching_species for _ in range(self.factor_size)]
-                    col_data_source[sample_label] = data
-                    metadata_dictionary[sample_key] = assay_sample.info
-                    col_data_source['sample_node'] = [sample_key for _ in range(self.factor_size)]
-
-                else:
-                    # Get the factors that are private to this sample, as well as those from the parent.
-                    sample_factors = matching_factors(
-                        assay_sample.factors, sample_label, sample_unit, sample_species)
-
-                    # Check each of the factors which apply to this sample for a group match.
-                    for factor_group in assay_factor_matches + sample_factors + parental_factor_matches:
-
-                        factor_label, factor_unit, factor_species, factor = factor_group
-
-                        # Check if this factor is a csv column index.
-                        if factor.is_csv_index:
-                            data = self.datafile_dict.get(str(factor.csv_column_index))
-                            col_data_source[group_label] = data
-                            col_data_source['sample_node'] = [sample_key for _ in range(self.factor_size)]
-                            metadata_dictionary[sample_key] = assay_sample.info
-
-                        elif sample_label == factor_label:
-                            data = [factor.value for _ in range(self.factor_size)]
-                            col_data_source[sample_label] = data
-                            col_data_source['sample_node'] = [sample_key for _ in range(self.factor_size)]
-                            metadata_dictionary[sample_key] = assay_sample.info
-
-        return col_data_source, metadata_dictionary
+    parental_comments = param.List(
+        allow_None=True,
+        doc=dedent("""\
+        A list of comments from the parent DrupalNode of this assay.
+        """)
+    )
 
 
 class SampleNode(param.Parameterized):
-    info = param.Dict()
-    sample_name = param.String()
-    factors = param.List()
-    species = param.List()
-    sources = param.List()
-    
+    """Model for a physical of simulated sample.
+
+    A Sample object is a collection of species and factors.
+
+    """
+
+    sample_name = param.String(
+        allow_None=False,
+        doc=dedent("""\
+        The user supplied name of this sample.
+        """)
+    )
+
+    factors = param.List(
+        allow_None=True,
+        doc=dedent("""\
+        Factors that apply to only to this sample.
+        """)
+    )
+
+    species = param.List(
+        allow_None=False,  # There must at least be a reference for a sample to be of use.
+        doc=dedent("""\
+        A list of species that are contained within this source.
+        """)
+    )
+
+    sources = param.List(
+        allow_None=True,
+        doc=dedent("""\
+        A list of sources that are contained within this sample.
+        
+        If supplied, factors and species from sources will apply to this assay instance
+        as well. If matching factors are found, the highest ranking source or sample
+        factor will take precedence.
+        """)
+    )
+
+    comments = param.List(
+        allow_None=True,
+        doc=dedent("""\
+        A list of comment objects that pertain to this sample.
+        """)
+    )
+
     @property
     def all_factors(self):
+        """Recursively find all factors of this assay.
+
+        This includes all those factors and species within sources as well.
+        See the ` modelUtils.get_all_elementals` documentation for details.
+
+        """
         return modelUtils.get_all_elementals(self, 'factors')
 
     @property
     def all_species(self):
+        """Recursively find all species of this assay.
+
+        This includes all those factors and species within sources as well.
+        See the ` modelUtils.get_all_elementals` documentation for details.
+
+        """
         nodes_out = list()
         for species in set(modelUtils.get_all_elementals(self, 'species')):
             if species.species_reference is not None and species.stoichiometry is not None:
@@ -225,52 +226,41 @@ class SampleNode(param.Parameterized):
 
     @property
     def unique_species(self):
+        """Get all unique species contained within this assay.
+
+        This prevents sources from adding duplicate species.
+
+        """
         return set((s.species_reference for s in self.all_species))
 
     @property
     def all_sources(self):
+        """Get all sources contained within this assay.
+
+        This includes nested sources.
+
+        :return: A list of Source model objects.
+        """
         return modelUtils.get_all_elementals(self, 'sources')
 
     def query(self, query_terms):
+        """Perform a simple query on the values of this assay instance, returns a boolean.
+
+        :return: `True` if a query term is found, `False` otherwise.
+        """
         query_terms = modelUtils.ensure_list(query_terms)
         if any(species.query(term)
                for term in query_terms
                for species in self.all_species):
             return True
 
-    @property
-    def as_nx_graph(self):
-        """Gives this node object as a NetworkX graph object."""
-        graph = nx.DiGraph()
-        graph.add_node(self)
-
-        #         for sp in self.species:
-        #             if sp:
-        #                 graph.add_edge(self, sp, label="species")
-
-        #         for factor in self.factors:
-        #             if factor:
-        #                 graph.add_edge(self, factor, label="factors")
-
-        for source in self.sources:
-            if source:
-                # Create the graph as a balanced tree and find the root node.
-                source_graph = source.as_nx_graph
-                #                 root_node = list(nx.topological_sort(source_graph))[0]
-                graph.add_edge(self, source, label="sources")
-
-                #                 graph.add_nodes_from(source_graph.nodes(data=True))
-                #                 graph.add_edges_from(source_graph.edges(data=True))
-                graph = nx.disjoint_union(graph, source_graph)
-
-        return graph
-
 
 class SourceNode(param.Parameterized):
+    source_name = param.String()
     species = param.List()
-    info = param.Dict()
     factors = param.List()
-    
+    comments = param.List()
+
     @property
     def all_factors(self):
         return collections.ChainMap(modelUtils.get_all_elementals(self, 'factors'))
@@ -278,19 +268,3 @@ class SourceNode(param.Parameterized):
     @property
     def all_species(self):
         return modelUtils.get_all_elementals(self, 'species')
-
-    @property
-    def as_nx_graph(self):
-        """Gives this node object as a NetworkX graph object."""
-        graph = nx.DiGraph()
-        graph.add_node(self)
-
-        for sp in self.species:
-            if sp:
-                graph.add_edge(self, sp, label="species")
-
-        for factor in self.factors:
-            if factor:
-                graph.add_edge(self, factor, label="factors")
-
-        return graph

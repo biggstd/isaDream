@@ -8,36 +8,36 @@
   "experimentSubType": "Al_NMR",
   "studyFactors": [
     {
-      "factorType": "Measurement Condition",
-      "decimalValue": 25,
-      "unitRef": "Celsius",
+      "factor_type": "Measurement Condition",
+      "decimal_value": 25,
+      "unit_reference": "Celsius",
       "stringValue": "",
-      "RefValue": "",
-      "csvColumnIndex": ""
+      "reference_value": "",
+      "csv_column_index": ""
     },
     {
-      "factorType": "Measurement",
-      "decimalValue": "",
-      "unitRef": "ppm",
+      "factor_type": "Measurement",
+      "decimal_value": "",
+      "unit_reference": "ppm",
       "stringValue": "",
-      "RefValue": "",
-      "csvColumnIndex": 1
+      "reference_value": "",
+      "csv_column_index": 1
     },
     {
-      "factorType": "Measurement Condition",
-      "decimalValue": 78.204,
-      "unitRef": "MHz",
+      "factor_type": "Measurement Condition",
+      "decimal_value": 78.204,
+      "unit_reference": "MHz",
       "stringValue": "",
-      "RefValue": "",
-      "csvColumnIndex": ""
+      "reference_value": "",
+      "csv_column_index": ""
     },
     {
-      "factorType": "Measurement Reference",
-      "decimalValue": "",
-      "unitRef": "Reference Compound",
+      "factor_type": "Measurement Reference",
+      "decimal_value": "",
+      "unit_reference": "Reference Compound",
       "stringValue": "",
-      "RefValue": "[KAl(SO4)2]",
-      "csvColumnIndex": ""
+      "reference_value": "[KAl(SO4)2]",
+      "csv_column_index": ""
     }
   ],
   "studySamples": [
@@ -45,17 +45,17 @@
       "name": "Aluminate Solution",
       "studySampleFactors": [
         {
-          "factorType": "Measurement Condition",
-          "decimalValue": 0.005,
-          "unitRef": "Molar",
+          "factor_type": "Measurement Condition",
+          "decimal_value": 0.005,
+          "unit_reference": "Molar",
           "stringValue": "",
-          "RefValue": "",
-          "csvColumnIndex": ""
+          "reference_value": "",
+          "csv_column_index": ""
         }
       ],
       "species": [
         {
-          "speciesReference": "Al(III)",
+          "species_reference": "Al(III)",
           "stoichiometry": 1.0
         }
       ],
@@ -64,17 +64,17 @@
           "name": "Aluminum Wire",
           "materialCharacteristic": [
             {
-              "factorType": "Material Property",
-              "decimalValue": 0.005,
-              "unitRef": "Percent",
+              "factor_type": "Material Property",
+              "decimal_value": 0.005,
+              "unit_reference": "Percent",
               "stringValue": "",
-              "RefValue": "Purity by Weight",
-              "csvColumnIndex": ""
+              "reference_value": "Purity by Weight",
+              "csv_column_index": ""
             }
           ],
           "species": [
             {
-              "speciesReference": "Al(III)",
+              "species_reference": "Al(III)",
               "stoichiometry": 1.0
             }
           ]
@@ -89,23 +89,23 @@
       "samples": [
         {
           "name": "Potassium Hydroxide",
-          "AssaySampleFactors": [
+          "sample_factors": [
             {
-              "factorType": "Measurement Condition",
-              "decimalValue": "",
-              "unitRef": "Molar",
+              "factor_type": "Measurement Condition",
+              "decimal_value": "",
+              "unit_reference": "Molar",
               "stringValue": "",
-              "RefValue": "",
-              "csvColumnIndex": 0
+              "reference_value": "",
+              "csv_column_index": 0
             }
           ],
           "species": [
             {
-              "speciesReference": "K+",
+              "species_reference": "K+",
               "stoichiometry": 1.0
             },
             {
-              "speciesReference": "OH-",
+              "species_reference": "OH-",
               "stoichiometry": 1.0
             }
           ],
@@ -125,23 +125,23 @@
       "samples": [
         {
           "name": "Lithium Hydroxide",
-          "AssaySampleFactors": [
+          "sample_factors": [
             {
-              "factorType": "Measurement Condition",
-              "decimalValue": "",
-              "unitRef": "Molar",
+              "factor_type": "Measurement Condition",
+              "decimal_value": "",
+              "unit_reference": "Molar",
               "stringValue": "",
-              "RefValue": "",
-              "csvColumnIndex": 0
+              "reference_value": "",
+              "csv_column_index": 0
             }
           ],
           "species": [
             {
-              "speciesReference": "Li+",
+              "species_reference": "Li+",
               "stoichiometry": 1.0
             },
             {
-              "speciesReference": "OH-",
+              "species_reference": "OH-",
               "stoichiometry": 1.0
             }
           ],
@@ -156,23 +156,23 @@
       "samples": [
         {
           "name": "Sodium Hydroxide",
-          "AssaySampleFactors": [
+          "sample_factors": [
             {
-              "factorType": "Measurement Condition",
-              "decimalValue": "",
-              "unitRef": "Molar",
+              "factor_type": "Measurement Condition",
+              "decimal_value": "",
+              "unit_reference": "Molar",
               "stringValue": "",
-              "RefValue": "",
-              "csvColumnIndex": 0
+              "reference_value": "",
+              "csv_column_index": 0
             }
           ],
           "species": [
             {
-              "speciesReference": "Na+",
+              "species_reference": "Na+",
               "stoichiometry": 1.0
             },
             {
-              "speciesReference": "OH-",
+              "species_reference": "OH-",
               "stoichiometry": 1.0
             }
           ],
