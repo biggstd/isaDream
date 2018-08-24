@@ -107,7 +107,7 @@ def build_node_data(node, groups):
     factor_size = max(len(values) for values in datafile_dict.values())
 
     # Create the output dictionaries.
-    col_data_source = collections.defaultdict(tuple)
+    col_data_source = dict()  # collections.defaultdict(tuple)
     metadata_dictionary = dict()
 
     # Create node hashes for the metadata dictionary.

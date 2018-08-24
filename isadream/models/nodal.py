@@ -256,43 +256,57 @@ class SampleNode(param.Parameterized):
 
 
 class SourceNode(param.Parameterized):
-    """Model for a physical or simulated material source.
+    """Model for a single Source.
 
-    Example use include: characterizing the original form of solid
-    material prior to being dissolved.
+    A source is similar to a sample.
 
+    # TODO: Consider adding nested sources.
     """
 
     source_name = param.String(
         allow_None=False,
         doc=dedent("""\
-        User supplied name for a given source.
+        User given name of this source.
         """)
     )
 
     species = param.List(
-        allow_None=False,  # There must be some species to reference.
+        allow_None=False,
         doc=dedent("""\
-        A list of Species assigned to this Source.
+        A list of species objects that this source models.
         """)
     )
 
-    factors = param.List()
-    comments = param.List()
+    factors = param.List(
+        allow_None=True,
+        doc=dedent("""\
+        A list of factor objects that describe this source.
+        """)
+    )
+
+    comments = param.List(
+        allow_None=True,
+        doc=dedent("""\
+        A list of comment objects that describe this source.
+        """)
+    )
 
     @property
     def all_factors(self):
-        """Returns all factors pertaining to this Source.
+        """Get all factors associated with this source.
 
-        ChainMap ensures that matching keys are overwritten with the higher-ranking
-        value.
+        This function should handle nested sources in the future with only
+        minor modifications.
 
         """
         return collections.ChainMap(modelUtils.get_all_elementals(self, 'factors'))
 
     @property
     def all_species(self):
-        """Returns all species pertaining to this Source.
+        """Get all species associated with this source.
 
+        This function should handle nested sources with only minor modifications.
+
+        :return:
         """
         return modelUtils.get_all_elementals(self, 'species')
