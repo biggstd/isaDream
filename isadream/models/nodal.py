@@ -244,7 +244,8 @@ class SampleNode(param.Parameterized):
         return modelUtils.get_all_elementals(self, 'sources')
 
     def query(self, query_terms):
-        """Perform a simple query on the values of this assay instance, returns a boolean.
+        """Perform a simple query on the values of this assay instance,
+        returns a boolean.
 
         :return: `True` if a query term is found, `False` otherwise.
         """
