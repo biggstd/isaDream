@@ -7,7 +7,7 @@ import uuid
 import collections
 
 from . import modelUtils
-from .models.elemental import Factor, SpeciesFactor, Comment, NodeInfo, DataFile
+from .models.elemental import Factor, SpeciesFactor, Comment
 from .models.nodal import DrupalNode, AssayNode, SampleNode, SourceNode
 
 

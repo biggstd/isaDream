@@ -158,21 +158,6 @@ class SpeciesFactor(param.Parameterized):
             return True
 
 
-class NodeInfo(param.Parameterized):
-    """A node information model.
-
-    This class ensures that not all key-value paris need be defined in
-    the json schema.
-
-    """
-    info = param.Dict(
-        allow_None=True,
-        doc=dedent("""\
-        A dictionary of Key-value paris which describe this node.
-        """)
-    )
-
-
 class Comment(param.Parameterized):
     """A node comment model.
 
