@@ -1,13 +1,15 @@
 """Elemental Classes of the package.
 
 These are classes which do not inherit from any other class, and do not
-combine with any other classes.
+combine (mixin) with any other classes.
 
 """
 
 # Standard Python modules.
-import re
-import param
+import re  # Regular expression functions.
+import param  # Boiler-plate for controlled class attributes.
+from textwrap import dedent  # Prevent indents from percolating to the user.
+
 
 # Local project imports.
 from .. import modelUtils
@@ -28,11 +30,21 @@ class Factor(param.Parameterized):
 
     """
 
-    factor_type = param.String()
+    factor_type = param.String(
+        allow_None=False,
+        doc=dedent("""\
+        A factor type is the outermost ontology group.
+        """)
+    )
+
     decimal_value = param.Parameter()
+
     string_value = param.Parameter()
+
     reference_value = param.Parameter()
+
     unit_reference = param.Parameter()
+
     csv_column_index = param.Integer(allow_None=True)
 
     # label = param.Tuple(default=(factor_type, reference_value, unit_reference))

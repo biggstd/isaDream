@@ -256,15 +256,57 @@ class SampleNode(param.Parameterized):
 
 
 class SourceNode(param.Parameterized):
-    source_name = param.String()
-    species = param.List()
-    factors = param.List()
-    comments = param.List()
+    """Model for a single Source.
+
+    A source is similar to a sample.
+
+    # TODO: Consider adding nested sources.
+    """
+
+    source_name = param.String(
+        allow_None=False,
+        doc=dedent("""\
+        User given name of this source.
+        """)
+    )
+
+    species = param.List(
+        allow_None=False,
+        doc=dedent("""\
+        A list of species objects that this source models.
+        """)
+    )
+
+    factors = param.List(
+        allow_None=True,
+        doc=dedent("""\
+        A list of factor objects that describe this source.
+        """)
+    )
+
+    comments = param.List(
+        allow_None=True,
+        doc=dedent("""\
+        A list of comment objects that describe this source.
+        """)
+    )
 
     @property
     def all_factors(self):
+        """Get all factors associated with this source.
+
+        This function should handle nested sources in the future with only
+        minor modifications.
+
+        """
         return collections.ChainMap(modelUtils.get_all_elementals(self, 'factors'))
 
     @property
     def all_species(self):
+        """Get all species associated with this source.
+
+        This function should handle nested sources with only minor modifications.
+
+        :return:
+        """
         return modelUtils.get_all_elementals(self, 'species')
