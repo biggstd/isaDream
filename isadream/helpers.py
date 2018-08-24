@@ -2,17 +2,68 @@
 
 """
 
-# Standard library imports.
+# ----------------------------------------------------------------------------
+# Boilerplate
+# ----------------------------------------------------------------------------
+
+import logging
+
+log = logging.getLogger(__name__)
+
+# ----------------------------------------------------------------------------
+# Imports
+# ----------------------------------------------------------------------------
+
+# Standard library imports
 import os
 import glob
 import itertools
 import collections
 
-# Data science imports.
+# External imports
 import pandas as pd
+
+# Bokeh imports
+import bokeh as bk
+import bokeh.models
+import bokeh.layouts
+import bokeh.palettes
+import bokeh.plotting
+import bokeh.transform
 
 # Local project imports.
 from . import io
+
+
+# ----------------------------------------------------------------------------
+# Globals and constants
+# ----------------------------------------------------------------------------
+
+
+# ----------------------------------------------------------------------------
+# General API
+# ----------------------------------------------------------------------------
+
+
+def load_session_data(x_groups, y_groups, current_document):
+    """
+
+    :return:
+    """
+    # Find the paths based on the session context.
+    json_paths = get_session_json_paths(current_document)
+
+    # Build DrupalNode models from each of the found json files.
+    nodes = create_drupal_nodes(json_paths)
+
+    # Combine these nodes into a single set of data and metadata
+    # based on the user-supplied query groups.
+    main_data_frame, metadata_dict = prepare_bokeh_dicts(
+        x_groups=x_groups, y_groups=y_groups, nodes=nodes)
+
+    source = bk.models.ColumnDataSource(main_data_frame)
+
+    return source, metadata_dict
 
 
 def prepare_bokeh_dicts(x_groups, y_groups, drupal_nodes):

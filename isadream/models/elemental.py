@@ -178,7 +178,9 @@ class Comment(param.Parameterized):
 
 
 class DataFile(param.Parameterized):
-    """
+    """FUTURE: This class is not used or implemented.
+
+    In the future it will may handle data file paths / objects.
 
     """
     pass
