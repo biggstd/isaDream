@@ -256,15 +256,43 @@ class SampleNode(param.Parameterized):
 
 
 class SourceNode(param.Parameterized):
-    source_name = param.String()
-    species = param.List()
+    """Model for a physical or simulated material source.
+
+    Example use include: characterizing the original form of solid
+    material prior to being dissolved.
+
+    """
+
+    source_name = param.String(
+        allow_None=False,
+        doc=dedent("""\
+        User supplied name for a given source.
+        """)
+    )
+
+    species = param.List(
+        allow_None=False,  # There must be some species to reference.
+        doc=dedent("""\
+        A list of Species assigned to this Source.
+        """)
+    )
+
     factors = param.List()
     comments = param.List()
 
     @property
     def all_factors(self):
+        """Returns all factors pertaining to this Source.
+
+        ChainMap ensures that matching keys are overwritten with the higher-ranking
+        value.
+
+        """
         return collections.ChainMap(modelUtils.get_all_elementals(self, 'factors'))
 
     @property
     def all_species(self):
+        """Returns all species pertaining to this Source.
+
+        """
         return modelUtils.get_all_elementals(self, 'species')
