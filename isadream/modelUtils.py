@@ -1,7 +1,3 @@
-'''
-
-
-'''
 # Generic Python imports.
 import os
 import csv
@@ -103,6 +99,14 @@ def get_all_elementals(node, elemental_cls, children=('assays', 'samples', 'sour
             element_list.extend(itertools.chain.from_iterable(children_elements))
 
     return element_list
+
+
+def get_all_factors(node):
+    return collections.ChainMap(get_all_elementals(node, 'factors'))
+
+
+def get_all_species(node):
+    return collections.ChainMap(get_all_elementals(node, "species"))
 
 
 def query_factor(factor, factor_query):

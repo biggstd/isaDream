@@ -5,6 +5,14 @@ combine (mixin) with any other classes.
 
 """
 
+# ----------------------------------------------------------------------------
+# Boilerplate
+# ----------------------------------------------------------------------------
+
+import logging
+
+log = logging.getLogger(__name__)
+
 # Standard Python modules.
 import re  # Regular expression functions.
 import param  # Boiler-plate for controlled class attributes.
@@ -143,7 +151,8 @@ class SpeciesFactor(param.Parameterized):
     )
 
     stoichiometry = param.Number(
-        allow_None=True,
+        allow_None=False,
+        default=1.0,
         doc=dedent("""\
         The coefficient corresponding to this species factor.
         """)

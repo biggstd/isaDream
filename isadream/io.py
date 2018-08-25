@@ -4,7 +4,6 @@
 
 import json
 import uuid
-import collections
 
 from . import modelUtils
 from .models.elemental import Factor, SpeciesFactor, Comment
@@ -96,18 +95,59 @@ def build_node_data(node, groups):
     :return:
     """
 
+    # Load the assay node data.
+    datafile_dict = modelUtils.load_csv_as_dict(node.assay_datafile)
+
+    # Get the size of this retrieved data array.
+    factor_size = max(len(values) for values in datafile_dict.values())
+
     def matching_factors(items, label, unit, species):
         return [(label, unit, species, item)
                 for item in items
                 if modelUtils.query_factor(item, unit)
                 or modelUtils.query_species(item, species)]
 
-    datafile_dict = modelUtils.load_csv_as_dict(node.assay_datafile)
+    def add_species(parent_sample, species_query, key, label):
+        # Get the species of the provided parent sample.
+        parent_species = [species for species in
+                          modelUtils.get_all_elementals(parent_sample, "species")]
 
-    factor_size = max(len(values) for values in datafile_dict.values())
+        # Get only those species objects which match the query.
+        matching_species = [species for species in parent_species
+                            if species.species_reference in species_query]
+
+        # Add the species to the column data source.
+        col_data_source[label] = [matching_species for _ in range(factor_size)]
+
+        # Add the sample of this factor to the metadata dictionary.
+        metadata_dictionary[key] = parent_sample
+
+        # Add the sample key to the column data source.
+        col_data_source["sample_node"] = [key for _ in range(factor_size)]
+
+    def add_csv_factor(csv_factor, parent_sample, key, label):
+        # Get the data using the factors csv index value, and add the
+        # data to the column data source.
+        col_data_source[label] = datafile_dict.get(str(csv_factor.csv_column_index))
+
+        # Add the sample of this factor to the metadata dictionary.
+        metadata_dictionary[key] = parent_sample
+
+        # Add the key to the metadata dictionary entry to the data source.
+        col_data_source["sample_node"] = [key for _ in range(factor_size)]
+
+    def add_factor_array(factor, parent_sample, label):
+        # Add the factor value to the column data source.
+        col_data_source[label] = [factor.value for _ in range(factor_size)]
+
+        # Add the sample of this factor to the metadata dictionary.
+        metadata_dictionary[sample_key] = parent_sample
+
+        # Add the key to the metadata dictionary entry to the data source.
+        col_data_source["sample_node"] = [sample_key for _ in range(factor_size)]
 
     # Create the output dictionaries.
-    col_data_source = dict()  # collections.defaultdict(tuple)
+    col_data_source = dict()
     metadata_dictionary = dict()
 
     # Create node hashes for the metadata dictionary.
@@ -135,42 +175,33 @@ def build_node_data(node, groups):
             node.parental_samples, group_label, group_unit, group_species)
 
         # All of the parental factors apply to all of the parental samples.
-        for sample_label, sample_unit, sample_species, parental_sample in parental_sample_matches:
+        for group_sample_label, group_sample_unit, group_sample_species, parental_sample \
+                in parental_sample_matches:
 
             sample_key = str(uuid.uuid4())
 
             # Check if a species reference column is requested.
-            if sample_unit == "Species":
-
-                # Find the species in both the query and the sample.
-                matching_species = list(parental_sample.unique_species & set(sample_species))[0]
-                data = [matching_species for _ in range(factor_size)]
-                metadata_dictionary[sample_key] = parental_sample.info
-                col_data_source['sample_node'] = [sample_key for _ in range(factor_size)]
-                col_data_source[sample_label] = data
+            if group_sample_unit == "Species":
+                add_species(parental_sample, group_sample_species, sample_key,
+                            group_sample_label)
 
             else:
                 # Get the factors that are private to this sample.
-                sample_factors = matching_factors(
-                    parental_sample.factors, sample_label, sample_unit, sample_species)
+                sample_factors = matching_factors(parental_sample.factors,
+                                                  group_sample_label, group_sample_unit,
+                                                  group_sample_species)
 
                 # Check each of the factors which apply to this sample for a group match.
                 for factor_group in parental_factor_matches + sample_factors:
-
-                    factor_label, factor_unit, factor_species, factor = factor_group
+                    factor_label, factor_unit, factor_species, active_factor = factor_group
 
                     # Check if this factor is a csv column index.
-                    if factor.is_csv_index:
-                        data = datafile_dict.get(str(factor.csv_column_index))
-                        metadata_dictionary[sample_key] = parental_sample.sample_name
-                        col_data_source['sample_node'] = [sample_key for _ in range(factor_size)]
-                        col_data_source[group_label] = data
+                    if active_factor.is_csv_index:
+                        add_csv_factor(active_factor, parental_sample, sample_key,
+                                       group_sample_label)
 
-                    elif sample_label == factor_label:
-                        data = [factor.value for _ in range(factor_size)]
-                        col_data_source[sample_label] = data
-                        metadata_dictionary[sample_key] = parental_sample.sample_name
-                        col_data_source['sample_node'] = [sample_key for _ in range(factor_size)]
+                    elif group_sample_label == factor_label:
+                        add_factor_array(active_factor, parental_sample, group_sample_label)
 
         assay_factor_matches = matching_factors(
             node.factors, group_label, group_unit, group_species)
@@ -179,41 +210,32 @@ def build_node_data(node, groups):
             node.samples, group_label, group_unit, group_species)
 
         # All of the parental factors apply to all of the parental samples.
-        for sample_label, sample_unit, sample_species, assay_sample in assay_sample_matches:
+        for assay_sample_label, assay_sample_unit, assay_sample_species, assay_sample \
+                in assay_sample_matches:
 
             sample_key = str(uuid.uuid4())
 
             # Check if a species reference column is requested.
-            if sample_unit == "Species":
-
-                # Find the species in both the query and the sample.
-                matching_species = list(assay_sample.unique_species & set(sample_species))[0]
-                data = [matching_species for _ in range(factor_size)]
-                col_data_source[sample_label] = data
-                metadata_dictionary[sample_key] = assay_sample.sample_name
-                col_data_source['sample_node'] = [sample_key for _ in range(factor_size)]
+            if assay_sample_unit == "Species":
+                add_species(assay_sample, assay_sample_species, sample_key,
+                            assay_sample_label)
 
             else:
                 # Get the factors that are private to this sample, as well as those from the parent.
                 sample_factors = matching_factors(
-                    assay_sample.factors, sample_label, sample_unit, sample_species)
+                    assay_sample.factors, assay_sample_label, assay_sample_unit,
+                    assay_sample_species)
 
                 # Check each of the factors which apply to this sample for a group match.
                 for factor_group in assay_factor_matches + sample_factors + parental_factor_matches:
 
-                    factor_label, factor_unit, factor_species, factor = factor_group
+                    factor_label, factor_unit, factor_species, active_factor = factor_group
 
                     # Check if this factor is a csv column index.
-                    if factor.is_csv_index:
-                        data = datafile_dict.get(str(factor.csv_column_index))
-                        col_data_source[group_label] = data
-                        col_data_source['sample_node'] = [sample_key for _ in range(factor_size)]
-                        metadata_dictionary[sample_key] = assay_sample.sample_name
+                    if active_factor.is_csv_index:
+                        add_csv_factor(active_factor, assay_sample, sample_key, assay_sample_label)
 
-                    elif sample_label == factor_label:
-                        data = [factor.value for _ in range(factor_size)]
-                        col_data_source[sample_label] = data
-                        col_data_source['sample_node'] = [sample_key for _ in range(factor_size)]
-                        metadata_dictionary[sample_key] = assay_sample.sample_name
+                    elif assay_sample_label == factor_label:
+                        add_factor_array(active_factor, assay_sample, assay_sample_label)
 
     return col_data_source, metadata_dictionary

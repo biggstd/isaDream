@@ -55,25 +55,25 @@ class SourceNode(param.Parameterized):
         """)
     )
 
-    @property
-    def all_factors(self):
-        """Get all factors associated with this source.
+    # @property
+    # def all_factors(self):
+    #     """Get all factors associated with this source.
+    #
+    #     This function should handle nested sources in the future with only
+    #     minor modifications.
+    #
+    #     """
+    #     return collections.ChainMap(modelUtils.get_all_elementals(self, 'factors'))
 
-        This function should handle nested sources in the future with only
-        minor modifications.
-
-        """
-        return collections.ChainMap(modelUtils.get_all_elementals(self, 'factors'))
-
-    @property
-    def all_species(self):
-        """Get all species associated with this source.
-
-        This function should handle nested sources with only minor modifications.
-
-        :return:
-        """
-        return modelUtils.get_all_elementals(self, 'species')
+    # @property
+    # def all_species(self):
+    #     """Get all species associated with this source.
+    #
+    #     This function should handle nested sources with only minor modifications.
+    #
+    #     :return:
+    #     """
+    #     return modelUtils.get_all_elementals(self, 'species')
 
 
 class SampleNode(param.Parameterized):
@@ -126,15 +126,15 @@ class SampleNode(param.Parameterized):
         """)
     )
 
-    @property
-    def all_factors(self):
-        """Recursively find all factors of this assay.
-
-        This includes all those factors and species within sources as well.
-        See the ` modelUtils.get_all_elementals` documentation for details.
-
-        """
-        return modelUtils.get_all_elementals(self, 'factors')
+    # @property
+    # def all_factors(self):
+    #     """Recursively find all factors of this assay.
+    #
+    #     This includes all those factors and species within sources as well.
+    #     See the ` modelUtils.get_all_elementals` documentation for details.
+    #
+    #     """
+    #     return modelUtils.get_all_elementals(self, 'factors')
 
     @property
     def all_species(self):
@@ -160,15 +160,15 @@ class SampleNode(param.Parameterized):
         """
         return set((s.species_reference for s in self.all_species))
 
-    @property
-    def all_sources(self):
-        """Get all sources contained within this assay.
-
-        This includes nested sources.
-
-        :return: A list of Source model objects.
-        """
-        return modelUtils.get_all_elementals(self, 'sources')
+    # @property
+    # def all_sources(self):
+    #     """Get all sources contained within this assay.
+    #
+    #     This includes nested sources.
+    #
+    #     :return: A list of Source model objects.
+    #     """
+    #     return modelUtils.get_all_elementals(self, 'sources')
 
     def query(self, query_terms):
         """Perform a simple query on the values of this assay instance,
