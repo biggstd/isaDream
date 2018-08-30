@@ -1,6 +1,4 @@
 # Generic Python imports.
-import os
-import csv
 import itertools
 import collections
 

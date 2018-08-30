@@ -9,18 +9,11 @@ or interacts with the isadream api, it should not be placed in this module.
 """
 
 # ----------------------------------------------------------------------------
-# Boilerplate
-# ----------------------------------------------------------------------------
-
-import logging
-
-log = logging.getLogger(__name__)
-
-# ----------------------------------------------------------------------------
 # Imports
 # ----------------------------------------------------------------------------
 
 # Standard library imports
+import logging
 
 # External imports
 
@@ -28,13 +21,17 @@ log = logging.getLogger(__name__)
 import bokeh as bk
 import bokeh.models
 import bokeh.layouts
-import bokeh.palettes
-import bokeh.plotting
-import bokeh.transform
+
+# import bokeh.palettes
+# import bokeh.plotting
+# import bokeh.transform
 
 # ----------------------------------------------------------------------------
 # Globals and constants
 # ----------------------------------------------------------------------------
+
+# Setup the logger.
+log = logging.getLogger(__name__)
 
 # These are the columns (as generated from `isadream.io`) where the
 # foreign key for the metadata dictionary resides.
@@ -113,15 +110,3 @@ def build_metadata_column(name, paragraphs):
     :return:
     """
     return bk.layouts.column(name=name, children=paragraphs)
-
-# ----------------------------------------------------------------------------
-# Dev API
-# ----------------------------------------------------------------------------
-
-# ----------------------------------------------------------------------------
-# Private API
-# ----------------------------------------------------------------------------
-
-# ----------------------------------------------------------------------------
-# Code
-# ----------------------------------------------------------------------------

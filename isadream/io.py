@@ -58,8 +58,8 @@ def load_csv_as_dict(path, base_path=DATA_MOUNT):
 
     # Open the file and create a reader (an object that when iterated
     # on gives the values of each row.
-    with open(csv_path) as csvfile:
-        reader = csv.DictReader(csvfile)
+    with open(csv_path) as csv_file:
+        reader = csv.DictReader(csv_file)
 
         # Pop the header and get its length.
         field_int_index = range(len(next(reader)))
@@ -148,12 +148,13 @@ def build_node_data(node: AssayNode, groups):
         parent_species = [species for species in
                           utils.get_all_elements(parent_sample, "species")]
 
+        # TODO: Return the matching_species with the highest concentration?
+        #       Or perhaps the highest stoichiometry coefficient.
         # Get only those species objects which match the query.
         matching_species = [species for species in parent_species
                             if species.species_reference in species_query]
-
         # Add the species to the column data source.
-        col_data_source[label] = [matching_species for _ in range(factor_size)]
+        col_data_source[label] = [matching_species[0] for _ in range(factor_size)]
 
         # Add the sample of this factor to the metadata dictionary.
         metadata_dictionary[key] = parent_sample
@@ -191,12 +192,11 @@ def build_node_data(node: AssayNode, groups):
     parent_key = str(uuid.uuid4())
     assay_key = str(uuid.uuid4())
 
-    # Add the uuids to the column data source.
+    # Add the universally unique identifiers to the column data source.
     col_data_source['parent_node'] = [parent_key for _ in range(factor_size)]
     col_data_source['assay_node'] = [assay_key for _ in range(factor_size)]
-    # col_data_source['sample node'] = sample_key
 
-    # Use the uuids as keys in the metadata dictionary.
+    # Use the universally unique identifiers as keys in the metadata dictionary.
     metadata_dictionary[parent_key] = (node.parental_info, node.parental_comments)
     metadata_dictionary[assay_key] = (node.assay_title, node.comments)
 
