@@ -204,21 +204,21 @@ class SampleNode(param.Parameterized):
         """Recursively find all factors of this assay.
 
         This includes all those factors and species within sources as well.
-        See the ` modelUtils.get_all_elementals` documentation for details.
+        See the ` utils.get_all_elements` documentation for details.
 
         """
-        return utils.get_all_elementals(self, 'factors')
+        return utils.get_all_elements(self, 'factors')
 
     @property
     def all_species(self):
         """Recursively find all species of this assay.
 
         This includes all those factors and species within sources as well.
-        See the ` modelUtils.get_all_elementals` documentation for details.
+        See the ` utils.get_all_elements` documentation for details.
 
         """
         nodes_out = list()
-        for species in set(utils.get_all_elementals(self, 'species')):
+        for species in set(utils.get_all_elements(self, 'species')):
             if species.species_reference is not None and species.stoichiometry is not None:
                 nodes_out.append(species)
 
@@ -241,7 +241,7 @@ class SampleNode(param.Parameterized):
 
         :return: A list of Source model objects.
         """
-        return utils.get_all_elementals(self, 'sources')
+        return utils.get_all_elements(self, 'sources')
 
     def query(self, query_terms):
         """Perform a simple query on the values of this assay instance,
@@ -300,7 +300,7 @@ class SourceNode(param.Parameterized):
         minor modifications.
 
         """
-        return collections.ChainMap(utils.get_all_elementals(self, 'factors'))
+        return collections.ChainMap(utils.get_all_elements(self, 'factors'))
 
     @property
     def all_species(self):
@@ -310,4 +310,4 @@ class SourceNode(param.Parameterized):
 
         :return:
         """
-        return utils.get_all_elementals(self, 'species')
+        return utils.get_all_elements(self, 'species')

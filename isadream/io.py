@@ -2,17 +2,24 @@
 
 """
 
+import os
+import csv
 import json
 import uuid
 import collections
 
-from isadream.models import utils
+from .models import utils
+from isadream import DATA_MOUNT
+
 from .models.elemental import Factor, SpeciesFactor, Comment
 from .models.nodal import DrupalNode, AssayNode, SampleNode, SourceNode
 
 
 def read_idream_json(json_path):
-    """Read a json from a path and return as a python dictionary. """
+    """Read a json from a path and return as a python dictionary.
+
+    """
+
     with open(json_path) as json_file:
         data = json.load(json_file)
     return data
@@ -33,12 +40,44 @@ def build_nodal_model(json_dict, model, key):
     return []
 
 
+def load_csv_as_dict(path, base_path=DATA_MOUNT):
+    """Load a CSV file as a Python dictionary.
+
+    The header in each file will be skipped.
+
+    :param path:
+    :param base_path:
+    :return: A dictionary object with integer keys representing the csv
+        column index the data was found in.
+
+    """
+
+    csv_path = os.path.join(str(base_path), str(path))
+
+    data = collections.defaultdict(list)
+
+    # Open the file and create a reader (an object that when iterated
+    # on gives the values of each row.
+    with open(csv_path) as csvfile:
+        reader = csv.DictReader(csvfile)
+
+        # Pop the header and get its length.
+        field_int_index = range(len(next(reader)))
+        field_int_index = [str(x) for x in field_int_index]
+
+        # Iterate over the remaining rows and append the data.
+        for row in reader:
+            for idx, header in zip(field_int_index, reader.fieldnames):
+                data[idx].append(float(row[header]))
+
+    return dict(data)
+
+
 def parse_sources(json_dict):
     source_name = json_dict.get("source_name")
     factors = build_elemental_model(json_dict, Factor, "source_factors")
     species = build_elemental_model(json_dict, SpeciesFactor, "source_species")
     comments = build_elemental_model(json_dict, Comment, "source_comments")
-
     return SourceNode(source_name=source_name, species=species, factors=factors,
                       comments=comments)
 
@@ -48,9 +87,7 @@ def parse_samples(json_dict):
     factors = build_elemental_model(json_dict, Factor, "sample_factors")
     species = build_elemental_model(json_dict, SpeciesFactor, "sample_species")
     comments = build_elemental_model(json_dict, Comment, "sample_comments")
-
     sources = build_nodal_model(json_dict, parse_sources, "sample_sources")
-
     return SampleNode(sample_name=sample_name, factors=factors, species=species,
                       sources=sources, comments=comments)
 
@@ -58,12 +95,9 @@ def parse_samples(json_dict):
 def parse_assays(json_dict):
     assay_title = json_dict.get("assay_title")
     assay_datafile = json_dict.get("assay_datafile")
-
     comments = build_elemental_model(json_dict, Comment, "assay_comments")
     factors = build_elemental_model(json_dict, Factor, "assay_factors")
-
     samples = build_nodal_model(json_dict, parse_samples, "assay_samples")
-
     return AssayNode(assay_title=assay_title, assay_datafile=assay_datafile,
                      comments=comments, factors=factors, samples=samples)
 
@@ -74,7 +108,6 @@ def parse_node_json(json_dict):
     info = json_dict.get("node_information")
     factors = build_elemental_model(json_dict, Factor, "node_factors")
     comments = build_elemental_model(json_dict, Comment, "node_comments")
-
     # Samples and assays have nested items, and require more processing.
     samples = build_nodal_model(json_dict, parse_samples, "node_samples")
     assays = build_nodal_model(json_dict, parse_assays, "node_assays")
@@ -89,15 +122,17 @@ def parse_node_json(json_dict):
                       samples=samples, comments=comments)
 
 
-def build_node_data(node, groups):
+def build_node_data(node: AssayNode, groups):
     """Constructs a dictionary for data display based on given groups.
 
+    :param node:
     :param groups:
-    :return:
+
+    :returns:
     """
 
     # Load the assay node data.
-    datafile_dict = modelUtils.load_csv_as_dict(node.assay_datafile)
+    datafile_dict = load_csv_as_dict(node.assay_datafile)
 
     # Get the size of this retrieved data array.
     factor_size = max(len(values) for values in datafile_dict.values())
@@ -111,7 +146,7 @@ def build_node_data(node, groups):
     def add_species(parent_sample, species_query, key, label):
         # Get the species of the provided parent sample.
         parent_species = [species for species in
-                          modelUtils.get_all_elementals(parent_sample, "species")]
+                          utils.get_all_elements(parent_sample, "species")]
 
         # Get only those species objects which match the query.
         matching_species = [species for species in parent_species

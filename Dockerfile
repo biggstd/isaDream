@@ -24,6 +24,9 @@ RUN pip install --upgrade pip \
 # Setup bokeh variables.
 ENV BOKEH_RESOURCES=inline
 
+# Setup isadream data environment variable.
+ENV DREAM_CONFIG=DEFAULT
+
 COPY ./bokehtest /bokehtest
 COPY ./NMRDemo /NMRDemo
 COPY ./testvis /testvis

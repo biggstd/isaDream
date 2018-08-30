@@ -95,7 +95,7 @@
       ],
       "assay_comments": [
         {
-          "name": "Data extraction method.",
+          "comment_title": "Data extraction method.",
           "body": "I manually pulled this points out with a web tool."
         }
       ]
@@ -155,7 +155,7 @@
   ],
   "node_comments": [
     {
-      "name": "Study level comment on Sipos 2006.",
+      "comment_title": "Study level comment on Sipos 2006.",
       "body": "I manually pulled this points out with a web tool."
     }
   ]

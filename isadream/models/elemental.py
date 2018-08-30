@@ -9,15 +9,10 @@ combine (mixin) with any other classes.
 # Boilerplate
 # ----------------------------------------------------------------------------
 
-import logging
-
-log = logging.getLogger(__name__)
-
 # Standard Python modules.
 import re  # Regular expression functions.
 import param  # Boiler-plate for controlled class attributes.
 from textwrap import dedent  # Prevent indents from percolating to the user.
-
 
 # Local project imports.
 from isadream.models import utils
@@ -171,7 +166,7 @@ class Comment(param.Parameterized):
     """A node comment model.
 
     """
-    comment_name = param.String(
+    comment_title = param.String(
         allow_None=False,  # There must at least be a comment name.
         doc=dedent("""\
         The title of a comment.

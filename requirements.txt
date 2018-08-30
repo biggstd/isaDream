@@ -1,2 +1,4 @@
 bokeh
 pandas
+param
+pytest

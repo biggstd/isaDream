@@ -30,6 +30,7 @@ import bokeh.document
 
 # Local project imports.
 from isadream import io
+from isadream import DATA_MOUNT
 from isadream.models.nodal import DrupalNode
 
 # ----------------------------------------------------------------------------
@@ -41,7 +42,6 @@ log = logging.getLogger(__name__)
 
 # Get the environment variable to find the base path for data files
 # described in the loaded metadata.
-DATA_MOUNT = os.environ.get("DREAMDATA", default="data")
 HTTP_QUERY_STRING = "JD"
 
 
@@ -94,8 +94,8 @@ def create_drupal_nodes(json_files: List[str]) -> List[DrupalNode]:
 
 def prepare_bokeh_dicts(x_groups: Tuple[str, str, Tuple[str]],
                         y_groups: Tuple[str, str, Tuple[str]],
-                        drupal_nodes) -> Tuple[pd.DataFrame,
-                                               collections.ChainMap]:
+                        drupal_nodes: List[DrupalNode]
+                        ) -> Tuple[pd.DataFrame, collections.ChainMap]:
     """Prepare a main pd.DataFrame and a metadata ChainMap from a
     list of DrupalNodes.
 
