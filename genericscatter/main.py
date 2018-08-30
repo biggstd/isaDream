@@ -76,7 +76,8 @@ import bokeh.plotting
 import bokeh.transform
 
 # Local isadream imports.
-from isadream import helpers, modelUtils
+from isadream.display import helpers
+from isadream.models import utils
 
 # Define the X and Y axis groups. These are the ontologies that the
 # data will be grouped by.
@@ -126,7 +127,7 @@ except Exception as inst:
     print(inst)
 
     # demo_base_path = modelUtils.SIPOS_DEMO
-    json_paths = [modelUtils.SIPOS_DEMO, ]
+    json_paths = [utils.SIPOS_DEMO, ]
     # json_paths = [modelUtils.RAMAN_DEMO, ]
 
     nodes = helpers.create_drupal_nodes(json_paths)

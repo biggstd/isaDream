@@ -20,7 +20,7 @@ from textwrap import dedent  # Prevent indents from percolating to the user.
 
 
 # Local project imports.
-from .. import modelUtils
+from isadream.models import utils
 
 
 class Factor(param.Parameterized):
@@ -124,7 +124,7 @@ class Factor(param.Parameterized):
         """
 
         # Ensure the query is a list to avoid iterating over single strings.
-        query_terms = modelUtils.ensure_list(query_terms)
+        query_terms = utils.ensure_list(query_terms)
 
         # Make an tuple to handle the properties easily.
         properties = [val for _, val in self.get_param_values()]
