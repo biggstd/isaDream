@@ -4,10 +4,9 @@
 
 import json
 import uuid
-import collections
 
-from . import modelUtils
-from .models.elemental import Factor, SpeciesFactor, Comment, NodeInfo, DataFile
+from isadream.models import utils
+from .models.elemental import Factor, SpeciesFactor, Comment
 from .models.nodal import DrupalNode, AssayNode, SampleNode, SourceNode
 
 
@@ -99,10 +98,10 @@ def build_node_data(node, groups):
     def matching_factors(items, label, unit, species):
         return [(label, unit, species, item)
                 for item in items
-                if modelUtils.query_factor(item, unit)
-                or modelUtils.query_species(item, species)]
+                if utils.query_factor(item, unit)
+                or utils.query_species(item, species)]
 
-    datafile_dict = modelUtils.load_csv_as_dict(node.assay_datafile)
+    datafile_dict = utils.load_csv_as_dict(node.assay_datafile)
 
     factor_size = max(len(values) for values in datafile_dict.values())
 

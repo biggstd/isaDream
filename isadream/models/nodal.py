@@ -12,7 +12,7 @@ import collections  # For sub-classing Python built-ins.
 import param  # Boiler-plate for controlled class attributes.
 
 # Local project imports.
-from .. import modelUtils
+from isadream.models import utils
 
 
 class DrupalNode(param.Parameterized):
@@ -207,7 +207,7 @@ class SampleNode(param.Parameterized):
         See the ` modelUtils.get_all_elementals` documentation for details.
 
         """
-        return modelUtils.get_all_elementals(self, 'factors')
+        return utils.get_all_elementals(self, 'factors')
 
     @property
     def all_species(self):
@@ -218,7 +218,7 @@ class SampleNode(param.Parameterized):
 
         """
         nodes_out = list()
-        for species in set(modelUtils.get_all_elementals(self, 'species')):
+        for species in set(utils.get_all_elementals(self, 'species')):
             if species.species_reference is not None and species.stoichiometry is not None:
                 nodes_out.append(species)
 
@@ -241,7 +241,7 @@ class SampleNode(param.Parameterized):
 
         :return: A list of Source model objects.
         """
-        return modelUtils.get_all_elementals(self, 'sources')
+        return utils.get_all_elementals(self, 'sources')
 
     def query(self, query_terms):
         """Perform a simple query on the values of this assay instance,
@@ -249,7 +249,7 @@ class SampleNode(param.Parameterized):
 
         :return: `True` if a query term is found, `False` otherwise.
         """
-        query_terms = modelUtils.ensure_list(query_terms)
+        query_terms = utils.ensure_list(query_terms)
         if any(species.query(term)
                for term in query_terms
                for species in self.all_species):
@@ -300,7 +300,7 @@ class SourceNode(param.Parameterized):
         minor modifications.
 
         """
-        return collections.ChainMap(modelUtils.get_all_elementals(self, 'factors'))
+        return collections.ChainMap(utils.get_all_elementals(self, 'factors'))
 
     @property
     def all_species(self):
@@ -310,4 +310,4 @@ class SourceNode(param.Parameterized):
 
         :return:
         """
-        return modelUtils.get_all_elementals(self, 'species')
+        return utils.get_all_elementals(self, 'species')
