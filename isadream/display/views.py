@@ -38,7 +38,7 @@ import bokeh.transform
 
 # These are the columns (as generated from `isadream.io`) where the
 # foreign key for the metadata dictionary resides.
-METADATA_COLUMNS = ["parent_node", "assay_node", "sample_node"]
+METADATA_COLUMNS = ("parent_node", "assay_node", "sample_node")
 
 
 # ----------------------------------------------------------------------------

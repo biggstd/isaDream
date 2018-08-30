@@ -133,7 +133,7 @@ class Factor(param.Parameterized):
 class SpeciesFactor(param.Parameterized):
     """A species factor is a pair of values. A species and a stoichiometry coefficient.
 
-    Such stoichiometry coefficients are only relatable within a single Sample or Source
+    Such stoichiometry coefficients are only comparable within a single Sample or Source
     object.
 
     """

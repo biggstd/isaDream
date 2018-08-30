@@ -6,8 +6,6 @@
 # Imports for Testing
 # ----------------------------------------------------------------------------
 
-import pytest
-
 from isadream import io
 from isadream.models.nodal import DrupalNode
 
