@@ -1,10 +1,24 @@
+"""
+
+"""
+
+# ----------------------------------------------------------------------------
+# Imports
+# ----------------------------------------------------------------------------
+
 # Generic Python imports.
 import itertools
 import collections
+from typing import Any, List, ChainMap
+
+# Local project imports.
+from isadream.models.nodal import NodeTypes
 
 
-def ensure_list(val_or_values):
-    """Examine a value and ensure that it is returned as a list."""
+def ensure_list(val_or_values: Any) -> List:
+    """Examine a value and ensure that it is returned as a list.
+
+    """
     if hasattr(val_or_values, '__iter__') and not isinstance(val_or_values, str):
         return val_or_values
     elif val_or_values is None:
@@ -13,7 +27,9 @@ def ensure_list(val_or_values):
         return [val_or_values]
 
 
-def get_all_elements(node, elemental_cls, children=('assays', 'samples', 'sources')):
+def get_all_elements(node: NodeTypes,
+                     elemental_cls: str,
+                     children=('assays', 'samples', 'sources')) -> List:
     """
 
     :param node:
@@ -57,19 +73,19 @@ def get_all_elements(node, elemental_cls, children=('assays', 'samples', 'source
     return element_list
 
 
-def get_all_factors(node):
+def get_all_factors(node) -> ChainMap:
     return collections.ChainMap(get_all_elements(node, 'factors'))
 
 
-def get_all_species(node):
+def get_all_species(node) -> ChainMap:
     return collections.ChainMap(get_all_elements(node, "species"))
 
 
-def query_factor(factor, factor_query):
+def query_factor(factor, factor_query) -> bool:
     if factor.query(factor_query):
         return True
 
 
-def query_species(species, species_query):
+def query_species(species, species_query) -> bool:
     if species.query(species_query):
         return True

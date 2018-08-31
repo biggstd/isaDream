@@ -2,18 +2,28 @@
 
 """
 
+# ----------------------------------------------------------------------------
+# Imports
+# ----------------------------------------------------------------------------
+
 import os
 import csv
 import json
 import uuid
 import collections
+from typing import Tuple
 
 from .models import utils
+from .models.groups import QueryGroupType
 from isadream import DATA_MOUNT
 
 from .models.elemental import Factor, SpeciesFactor, Comment
 from .models.nodal import DrupalNode, AssayNode, SampleNode, SourceNode
 
+
+# ----------------------------------------------------------------------------
+# JSON Input Functions.
+# ----------------------------------------------------------------------------
 
 def read_idream_json(json_path):
     """Read a json from a path and return as a python dictionary.
@@ -38,39 +48,6 @@ def build_nodal_model(json_dict, model, key):
         model_list = json_dict.get(key)
         return [model(item) for item in model_list]
     return []
-
-
-def load_csv_as_dict(path, base_path=DATA_MOUNT):
-    """Load a CSV file as a Python dictionary.
-
-    The header in each file will be skipped.
-
-    :param path:
-    :param base_path:
-    :return: A dictionary object with integer keys representing the csv
-        column index the data was found in.
-
-    """
-
-    csv_path = os.path.join(str(base_path), str(path))
-
-    data = collections.defaultdict(list)
-
-    # Open the file and create a reader (an object that when iterated
-    # on gives the values of each row.
-    with open(csv_path) as csv_file:
-        reader = csv.DictReader(csv_file)
-
-        # Pop the header and get its length.
-        field_int_index = range(len(next(reader)))
-        field_int_index = [str(x) for x in field_int_index]
-
-        # Iterate over the remaining rows and append the data.
-        for row in reader:
-            for idx, header in zip(field_int_index, reader.fieldnames):
-                data[idx].append(float(row[header]))
-
-    return dict(data)
 
 
 def parse_sources(json_dict):
@@ -122,7 +99,52 @@ def parse_node_json(json_dict):
                       samples=samples, comments=comments)
 
 
-def build_node_data(node: AssayNode, groups):
+# ----------------------------------------------------------------------------
+# CSV Data Input.
+# ----------------------------------------------------------------------------
+
+
+def load_csv_as_dict(path, base_path=DATA_MOUNT):
+    """Load a CSV file as a Python dictionary.
+
+    The header in each file will be skipped.
+
+    :param path:
+    :param base_path:
+    :return: A dictionary object with integer keys representing the csv
+        column index the data was found in.
+
+    """
+    # TODO: Handle paths properly. This does not seem right.
+    csv_path = os.path.join(str(base_path), str(path))
+
+    data = collections.defaultdict(list)
+
+    # Open the file and create a reader (an object that when iterated
+    # on gives the values of each row.
+    with open(csv_path) as csv_file:
+        reader = csv.DictReader(csv_file)
+
+        # Pop the header and get its length.
+        field_int_index = range(len(next(reader)))
+        field_int_index = [str(x) for x in field_int_index]
+
+        # Iterate over the remaining rows and append the data.
+        for row in reader:
+            for idx, header in zip(field_int_index, reader.fieldnames):
+                data[idx].append(float(row[header]))
+
+    return dict(data)
+
+
+# ----------------------------------------------------------------------------
+# Models to Data Frame.
+# ----------------------------------------------------------------------------
+
+
+def build_node_data(node: AssayNode,
+                    groups: Tuple[QueryGroupType, ...]
+                    ) -> Tuple[dict, dict]:
     """Constructs a dictionary for data display based on given groups.
 
     :param node:
@@ -154,7 +176,8 @@ def build_node_data(node: AssayNode, groups):
         matching_species = [species for species in parent_species
                             if species.species_reference in species_query]
         # Add the species to the column data source.
-        col_data_source[label] = [matching_species[0] for _ in range(factor_size)]
+        col_data_source[label] = [matching_species[0]
+                                  for _ in range(factor_size)]
 
         # Add the sample of this factor to the metadata dictionary.
         metadata_dictionary[key] = parent_sample
@@ -165,7 +188,8 @@ def build_node_data(node: AssayNode, groups):
     def add_csv_factor(csv_factor, parent_sample, key, label):
         # Get the data using the factors csv index value, and add the
         # data to the column data source.
-        col_data_source[label] = datafile_dict.get(str(csv_factor.csv_column_index))
+        col_data_source[label] = datafile_dict.get(
+            str(csv_factor.csv_column_index))
 
         # Add the sample of this factor to the metadata dictionary.
         metadata_dictionary[key] = parent_sample
@@ -181,7 +205,8 @@ def build_node_data(node: AssayNode, groups):
         metadata_dictionary[sample_key] = parent_sample
 
         # Add the key to the metadata dictionary entry to the data source.
-        col_data_source["sample_node"] = [sample_key for _ in range(factor_size)]
+        col_data_source["sample_node"] = [sample_key
+                                          for _ in range(factor_size)]
 
     # Create the output dictionaries.
     col_data_source = dict()
@@ -224,7 +249,8 @@ def build_node_data(node: AssayNode, groups):
             else:
                 # Get the factors that are private to this sample.
                 sample_factors = matching_factors(parental_sample.factors,
-                                                  group_sample_label, group_sample_unit,
+                                                  group_sample_label,
+                                                  group_sample_unit,
                                                   group_sample_species)
 
                 # Check each of the factors which apply to this sample for a group match.

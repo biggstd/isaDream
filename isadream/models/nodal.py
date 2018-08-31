@@ -5,13 +5,19 @@ of the two.
 
 """
 
-# Standard library imports.
-from textwrap import dedent  # Prevent indents from percolating to the user.
-import collections  # For sub-classing Python built-ins.
+# ----------------------------------------------------------------------------
+# Imports
+# ----------------------------------------------------------------------------
 
 import param  # Boiler-plate for controlled class attributes.
+import collections  # For sub-classing Python built-ins.
+from textwrap import dedent  # Prevent indents from percolating to the user.
+from typing import ChainMap, Union, List
 
+# ----------------------------------------------------------------------------
 # Local project imports.
+# ----------------------------------------------------------------------------
+
 from isadream.models import utils
 
 
@@ -25,17 +31,17 @@ class DrupalNode(param.Parameterized):
 
     title = param.String(
         allow_None=False,
-        doc=dedent("""\
-        User supplied title of the Drupal Node or experiment.
+        doc=dedent("""User supplied title of the Drupal Node or experiment.
         
-        This model contains all the information concerning a given Drupal Node.
+        This model contains all the information concerning a given 
+        Drupal Node.
         """)
     )
 
     info = param.Dict(
         allow_None=True,
-        doc=dedent("""\
-        A set of key-value pairs of information concerning this experiment. 
+        doc=dedent("""A set of key-value pairs of information concerning 
+        this experiment. 
         
         This can be any arbitrary set of key-value paris.
         """)
@@ -43,32 +49,29 @@ class DrupalNode(param.Parameterized):
 
     assays = param.List(
         allow_None=True,
-        doc=dedent("""\
-        A list of Assay models that contain all core data components.
+        doc=dedent("""A list of Assay models that contain all core 
+        data components.
         """)
     )
 
     factors = param.List(
         allow_None=True,
-        doc=dedent("""\
-        A list of Factor models that pertain to all assays contained by this
-        DrupalNode instance.
+        doc=dedent("""A list of Factor models that pertain to all 
+        assays contained by this DrupalNode instance.
         """)
     )
 
     samples = param.List(
         allow_None=True,
-        doc=dedent("""\
-        A list of Sample models that are used by all assays contained by this
-        DrupalNode instance.
+        doc=dedent("""A list of Sample models that are used by all assays 
+        contained by this DrupalNode instance.
         """)
     )
 
     comments = param.List(
         allow_None=True,
-        doc=dedent("""\
-        A list of Comment models that apply to all of the assays contained by
-        this DrupalNode instance.
+        doc=dedent(""" A list of Comment models that apply to all of the 
+        assays contained by this DrupalNode instance.
         """)
     )
 
@@ -84,46 +87,44 @@ class AssayNode(param.Parameterized):
     """
 
     assay_datafile = param.String(
-        allow_None=True,  # There could technically be a single point uploaded.
-        doc=dedent("""\
-        The filename of the data file which this assay instance models.
+        allow_None=True,  # There could be a single point uploaded.
+        doc=dedent("""The filename of the data file which this assay 
+        instance models.
         
-        The base-path of where this file is actually stored is not considered here.
+        The base-path of where this file is actually stored is not 
+        considered here.
         """)
     )
 
     assay_title = param.String(
         allow_None=False,
-        doc=dedent("""\
-        The user-supplied title of this assay.
+        doc=dedent("""The user-supplied title of this assay.
         """)
     )
 
     factors = param.List(
         allow_None=True,
-        doc=dedent("""\
-        A list of Factor objects that apply to this assay.
+        doc=dedent("""A list of Factor objects that apply to this assay.
         """)
     )
 
     samples = param.List(
         allow_None=True,
-        doc=dedent("""\
-        A list of Sample objects that are used within this assay.
+        doc=dedent("""A list of Sample objects that are used within 
+        this assay.
         """)
     )
 
     comments = param.List(
         allow_None=True,
-        doc=dedent("""\
-        A list of Comment objects that describe this assay.
+        doc=dedent("""A list of Comment objects that describe this assay.
         """)
     )
 
     parental_factors = param.List(
         allow_None=True,
-        doc=dedent("""\
-        A list of Factor objects from the parent DrupalNode of this assay.
+        doc=dedent("""A list of Factor objects from the parent DrupalNode
+        of this assay.
         
         All of these factors apply to this assay.
         """)
@@ -131,8 +132,8 @@ class AssayNode(param.Parameterized):
 
     parental_samples = param.List(
         allow_None=True,
-        doc=dedent("""\
-        A list of Sample objects from the parent DrupalNode of this assay.
+        doc=dedent("""A list of Sample objects from the parent DrupalNode 
+        of this assay.
         
         All of these Samples are used by this assay.
         """)
@@ -140,15 +141,15 @@ class AssayNode(param.Parameterized):
 
     parental_info = param.Dict(
         allow_None=True,
-        doc=dedent("""\
-        The metadata information of the parent DrupalNode of this assay.
+        doc=dedent("""The metadata information of the parent DrupalNode
+        of this assay.
         """)
     )
 
     parental_comments = param.List(
         allow_None=True,
-        doc=dedent("""\
-        A list of comments from the parent DrupalNode of this assay.
+        doc=dedent("""A list of comments from the parent DrupalNode 
+        of this assay.
         """)
     )
 
@@ -162,45 +163,42 @@ class SampleNode(param.Parameterized):
 
     sample_name = param.String(
         allow_None=False,
-        doc=dedent("""\
-        The user supplied name of this sample.
+        doc=dedent("""The user supplied name of this sample.
         """)
     )
 
     factors = param.List(
         allow_None=True,
-        doc=dedent("""\
-        Factors that apply to only to this sample.
+        doc=dedent("""Factors that apply to only to this sample.
         """)
     )
 
     species = param.List(
-        allow_None=False,  # There must at least be a reference for a sample to be of use.
-        doc=dedent("""\
-        A list of species that are contained within this source.
+        allow_None=False,  # There must at least be a reference.
+        doc=dedent("""A list of species that are contained within this 
+        source.
         """)
     )
 
     sources = param.List(
         allow_None=True,
-        doc=dedent("""\
-        A list of sources that are contained within this sample.
+        doc=dedent("""A list of sources that are contained within
+        this sample.
         
-        If supplied, factors and species from sources will apply to this assay instance
-        as well. If matching factors are found, the highest ranking source or sample
-        factor will take precedence.
+        If supplied, factors and species from sources will apply to
+        this assay instance as well. If matching factors are found,
+        the highest ranking source or sample factor will take precedence.
         """)
     )
 
     comments = param.List(
         allow_None=True,
-        doc=dedent("""\
-        A list of comment objects that pertain to this sample.
+        doc=dedent("""A list of comment objects that pertain to this sample.
         """)
     )
 
     @property
-    def all_factors(self):
+    def all_factors(self) -> List:
         """Recursively find all factors of this assay.
 
         This includes all those factors and species within sources as well.
@@ -210,7 +208,7 @@ class SampleNode(param.Parameterized):
         return utils.get_all_elements(self, 'factors')
 
     @property
-    def all_species(self):
+    def all_species(self) -> List:
         """Recursively find all species of this assay.
 
         This includes all those factors and species within sources as well.
@@ -219,13 +217,14 @@ class SampleNode(param.Parameterized):
         """
         nodes_out = list()
         for species in set(utils.get_all_elements(self, 'species')):
-            if species.species_reference is not None and species.stoichiometry is not None:
+            if species.species_reference is not None \
+                    and species.stoichiometry is not None:
                 nodes_out.append(species)
 
         return nodes_out
 
     @property
-    def unique_species(self):
+    def unique_species(self) -> set:
         """Get all unique species contained within this assay.
 
         This prevents sources from adding duplicate species.
@@ -234,7 +233,7 @@ class SampleNode(param.Parameterized):
         return set((s.species_reference for s in self.all_species))
 
     @property
-    def all_sources(self):
+    def all_sources(self) -> List:
         """Get all sources contained within this assay.
 
         This includes nested sources.
@@ -243,7 +242,7 @@ class SampleNode(param.Parameterized):
         """
         return utils.get_all_elements(self, 'sources')
 
-    def query(self, query_terms):
+    def query(self, query_terms) -> bool:
         """Perform a simple query on the values of this assay instance,
         returns a boolean.
 
@@ -266,48 +265,52 @@ class SourceNode(param.Parameterized):
 
     source_name = param.String(
         allow_None=False,
-        doc=dedent("""\
-        User given name of this source.
+        doc=dedent("""User given name of this source.
         """)
     )
 
     species = param.List(
         allow_None=False,
-        doc=dedent("""\
-        A list of species objects that this source models.
+        doc=dedent("""A list of species objects that this source models.
         """)
     )
 
     factors = param.List(
         allow_None=True,
-        doc=dedent("""\
-        A list of factor objects that describe this source.
+        doc=dedent("""A list of factor objects that describe this source.
         """)
     )
 
     comments = param.List(
         allow_None=True,
-        doc=dedent("""\
-        A list of comment objects that describe this source.
+        doc=dedent("""A list of comment objects that describe this source.
         """)
     )
 
     @property
-    def all_factors(self):
+    def all_factors(self) -> List:
         """Get all factors associated with this source.
 
         This function should handle nested sources in the future with only
         minor modifications.
 
         """
-        return collections.ChainMap(utils.get_all_elements(self, 'factors'))
+        return utils.get_all_elements(self, 'factors')
 
     @property
-    def all_species(self):
+    def all_species(self) -> List:
         """Get all species associated with this source.
 
-        This function should handle nested sources with only minor modifications.
+        This function should handle nested sources with only
+        minor modifications.
 
         :return:
         """
         return utils.get_all_elements(self, 'species')
+
+
+# ----------------------------------------------------------------------------
+# Define Type Hints.
+# ----------------------------------------------------------------------------
+
+NodeTypes = Union[DrupalNode, SampleNode, AssayNode, SourceNode]

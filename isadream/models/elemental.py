@@ -6,15 +6,19 @@ combine (mixin) with any other classes.
 """
 
 # ----------------------------------------------------------------------------
-# Boilerplate
+# Imports
 # ----------------------------------------------------------------------------
 
 # Standard Python modules.
 import re  # Regular expression functions.
 import param  # Boiler-plate for controlled class attributes.
 from textwrap import dedent  # Prevent indents from percolating to the user.
+from typing import Tuple, Union
 
+# ----------------------------------------------------------------------------
 # Local project imports.
+# ----------------------------------------------------------------------------
+
 from isadream.models import utils
 
 
@@ -35,49 +39,47 @@ class Factor(param.Parameterized):
 
     factor_type = param.String(
         allow_None=False,
-        doc=dedent("""\
-        A factor type is the outermost ontology group.
+        doc=dedent("""A factor type is the outermost ontology group.
         """)
     )
 
     decimal_value = param.Number(
         allow_None=True,
-        doc=dedent("""\
-        The decimal value of this factor.
+        doc=dedent("""The decimal value of this factor.
         """)
     )
 
     string_value = param.String(
         allow_None=True,
-        doc=dedent("""\
-        The string value of this factor. This should be used only if no other
-        value field will work for the data.
+        doc=dedent("""The string value of this factor. This should be 
+        used only if no other value field will work for the data.
         """)
     )
 
     reference_value = param.String(
         allow_None=True,
-        doc=dedent("""\
-        A reference value of this factor. This should be used when The value of
-        this factor has a discreet set of possible values.
+        doc=dedent("""A reference value of this factor. This should 
+        be used when The value of this factor has a discreet set of 
+        possible values.
         """)
     )
 
     unit_reference = param.String(
         allow_None=True,  # Some string or factor values may not have units.
-        doc=dedent("""The unit that describes this factor.""")
+        doc=dedent("""The unit that describes this factor.
+        """)
     )
 
     csv_column_index = param.Integer(
         allow_None=True,
         doc=dedent("""\
-        An integer reference that points to the column index of the data that this
-        factor describes.
+        An integer reference that points to the column index of the data 
+        that this factor describes.
         """)
     )
 
     @property
-    def label(self):
+    def label(self) -> Tuple[str, str, str]:
         """A label property. These three parameters are the categorical units or
         ontology term of this factor.
 
@@ -85,7 +87,7 @@ class Factor(param.Parameterized):
         return self.factor_type, self.reference_value, self.unit_reference
 
     @property
-    def is_csv_index(self):
+    def is_csv_index(self) -> bool:
         """A boolean property. True if this factor describes a datafile column,
         and False otherwise.
 
@@ -95,7 +97,7 @@ class Factor(param.Parameterized):
         return False
 
     @property
-    def value(self):
+    def value(self) -> Union[float, str]:
         """Build the values for this factor.
 
         The priority of return order is:
@@ -106,11 +108,12 @@ class Factor(param.Parameterized):
         The first one of these that is present is returned.
         """
 
-        for item in (self.decimal_value, self.string_value, self.reference_value):
+        for item in (self.decimal_value, self.string_value,
+                     self.reference_value):
             if item is not None:
                 return item
 
-    def query(self, query_terms):
+    def query(self, query_terms) -> bool:
         """Query this factors properties with a list of terms.
 
         :param query_terms:
@@ -131,29 +134,28 @@ class Factor(param.Parameterized):
 
 
 class SpeciesFactor(param.Parameterized):
-    """A species factor is a pair of values. A species and a stoichiometry coefficient.
+    """A species factor is a pair of values. A species and a stoichiometry
+    coefficient.
 
-    Such stoichiometry coefficients are only comparable within a single Sample or Source
-    object.
+    Such stoichiometry coefficients are only comparable within a single
+    Sample or Source object.
 
     """
 
     species_reference = param.String(
         allow_None=False,
-        doc=dedent("""\
-        The species being referenced.
+        doc=dedent("""The species being referenced.
         """)
     )
 
     stoichiometry = param.Number(
         allow_None=False,
         default=1.0,
-        doc=dedent("""\
-        The coefficient corresponding to this species factor.
+        doc=dedent("""The coefficient corresponding to this species factor.
         """)
     )
 
-    def query(self, query_term):
+    def query(self, query_term) -> bool:
         """A boolean search function. Returns True if the query term
         is found, and False otherwise.
 
@@ -166,17 +168,16 @@ class Comment(param.Parameterized):
     """A node comment model.
 
     """
+
     comment_title = param.String(
         allow_None=False,  # There must at least be a comment name.
-        doc=dedent("""\
-        The title of a comment.
+        doc=dedent("""The title of a comment.
         """)
     )
 
     body = param.String(
         allow_None=Factor,
-        doc=dedent("""\
-        The body text of a comment.
+        doc=dedent("""The body text of a comment.
         """)
     )
 
@@ -188,3 +189,10 @@ class DataFile(param.Parameterized):
 
     """
     pass
+
+
+# ----------------------------------------------------------------------------
+# Define Type Hints.
+# ----------------------------------------------------------------------------
+
+ElementalTypes = Union[Factor, SpeciesFactor, Comment, DataFile]
