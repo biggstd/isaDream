@@ -63,10 +63,6 @@ The infered groups are:
 
 """
 
-# Path hack to allow imports from the parent directory.
-import sys, os
-sys.path.insert(0, os.path.abspath('../isadream/'))
-
 # Visualization imports.
 import bokeh as bk
 import bokeh.models
@@ -79,8 +75,7 @@ import bokeh.transform
 from isadream.display import helpers
 from isadream.models import utils
 
-# Define the X and Y axis groups. These are the ontologies that the
-# data will be grouped by.
+# Define the X and Y axis groups.
 
 # NMR Spectra.
 x_groups = (('Total Aluminate Concentration', 'Molar', ("Al",)),

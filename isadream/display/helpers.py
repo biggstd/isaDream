@@ -30,6 +30,7 @@ import bokeh.document
 
 # Local project imports.
 from isadream import io
+from isadream.models.groups import GroupTypes, DerivedGroupType
 from isadream import DATA_MOUNT
 from isadream.models.nodal import DrupalNode
 
@@ -92,8 +93,8 @@ def create_drupal_nodes(json_files: List[str]) -> List[DrupalNode]:
             for json_file in json_files]
 
 
-def prepare_bokeh_dicts(x_groups: Tuple[str, str, Tuple[str]],
-                        y_groups: Tuple[str, str, Tuple[str]],
+def prepare_bokeh_dicts(x_groups: GroupTypes,
+                        y_groups: GroupTypes,
                         drupal_nodes: List[DrupalNode]
                         ) -> Tuple[pd.DataFrame, collections.ChainMap]:
     """Prepare a main pd.DataFrame and a metadata ChainMap from a
@@ -131,10 +132,9 @@ def prepare_bokeh_dicts(x_groups: Tuple[str, str, Tuple[str]],
 
 
 def categorize_columns(data_frame: pd.DataFrame,
-                       x_groups: Tuple[str, str, Tuple[str]],
-                       y_groups: Tuple[str, str, Tuple[str]]
-                       ) -> Tuple[List[str], List[str],
-                                  List[str], List[str]]:
+                       x_groups: GroupTypes,
+                       y_groups: GroupTypes
+                       ) -> dict:
     """Helper function for categorizing user-group defined columns.
 
     The categories are then used to choose which visualization
@@ -171,10 +171,13 @@ def categorize_columns(data_frame: pd.DataFrame,
     # Some of the continuous values may make more sense to bin
     # if there are few enough unique values.
     quantileable = [x for x in continuous
-                    if len(data_frame[x].unique()) < 6
+                    if len(data_frame[x].unique()) < 10
                     and x in x_keys]
 
-    return columns, discrete, continuous, quantileable
+    return dict(columns=columns,
+                discrete=discrete,
+                continuous=continuous,
+                quantileable=quantileable)
 
 
 def get_group_keys(group):
@@ -182,7 +185,7 @@ def get_group_keys(group):
 
 
 def create_derived_columns(data_frame: pd.DataFrame,
-                           derived_group: Tuple[str, Tuple[str, ...], Callable]
+                           derived_group: DerivedGroupType
                            ) -> pd.DataFrame:
     """Calculate a column based on those already present in the data frame.
 

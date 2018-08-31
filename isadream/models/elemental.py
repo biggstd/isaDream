@@ -4,6 +4,7 @@ These are classes which do not inherit from any other class, and do not
 combine (mixin) with any other classes.
 
 """
+# TODO: Refactor query methods of elemental classes.
 
 # ----------------------------------------------------------------------------
 # Imports

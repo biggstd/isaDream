@@ -7,10 +7,12 @@
 # ----------------------------------------------------------------------------
 
 import param  # Boiler-plate for controlled class attributes.
-from typing import Tuple, Callable
+from typing import Tuple, Callable, Union
+
 
 QueryGroupType = Tuple[str, Tuple[str, ...], Tuple[str, ...]]
 DerivedGroupType = Tuple[str, Tuple[str, ...], Callable]
+GroupTypes = Union[QueryGroupType, DerivedGroupType]
 
 
 class QueryGroup(param.Parameterized):
@@ -27,8 +29,8 @@ class QueryGroup(param.Parameterized):
     """
 
     column_name = param.String(allow_None=False)
-    factor_filter = param.Tuple(allow_None=False, class_=str)
-    species_filter = param.Tuple(allow_None=False, class_=str)
+    factor_filter = param.Tuple(allow_None=False)
+    species_filter = param.Tuple(allow_None=False)
 
     @property
     def group(self) -> QueryGroupType:
@@ -41,7 +43,7 @@ class DerivedGroup(param.Parameterized):
     """
 
     column_name = param.String(allow_None=False)
-    source_names = param.Tuple(allow_None=False, class_=str)
+    source_names = param.Tuple(allow_None=False)
     callable_ = param.Callable(allow_None=False)
 
     @property

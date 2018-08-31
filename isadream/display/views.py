@@ -26,6 +26,8 @@ import bokeh.layouts
 # import bokeh.plotting
 # import bokeh.transform
 
+from isadream.display import helpers
+
 # ----------------------------------------------------------------------------
 # Globals and constants
 # ----------------------------------------------------------------------------
@@ -110,3 +112,29 @@ def build_metadata_column(name, paragraphs):
     :return:
     """
     return bk.layouts.column(name=name, children=paragraphs)
+
+
+def build_selection_controls(data, x_groups, y_groups):
+    column_groups = helpers.categorize_columns(data, x_groups, y_groups)
+    y_names = helpers.get_group_keys(y_groups)
+
+    controls = dict(
+        x=bk.models.Select(title="X-Axis",
+                           options=column_groups["continuous"],
+                           value=column_groups["continuous"][0]),
+        y=bk.models.Select(title="Y Axis",
+                           options=y_names,
+                           value=y_names[0])
+    )
+
+    if len(column_groups["discrete"]) >= 1:
+        color = bk.models.Select(title='Color', value=None,
+                                 options=[None] + column_groups["discrete"])
+        controls["color"] = color
+
+    if len(column_groups["continuous"]) >= 1:
+        size = bk.models.Select(title='Size', value=None,
+                                options=[None] + column_groups["continuous"])
+        controls["size"] = size
+
+    return controls

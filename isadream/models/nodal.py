@@ -10,9 +10,8 @@ of the two.
 # ----------------------------------------------------------------------------
 
 import param  # Boiler-plate for controlled class attributes.
-import collections  # For sub-classing Python built-ins.
 from textwrap import dedent  # Prevent indents from percolating to the user.
-from typing import ChainMap, Union, List
+from typing import Union, List
 
 # ----------------------------------------------------------------------------
 # Local project imports.
