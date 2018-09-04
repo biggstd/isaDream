@@ -12,6 +12,8 @@ import pytest
 # Imports for Testing
 # ----------------------------------------------------------------------------
 
+from isadream import config, demos
+
 from isadream import io
 from isadream.models.elemental import Factor, SpeciesFactor, Comment
 from isadream.models.nodal import SourceNode, SampleNode, AssayNode, DrupalNode
@@ -21,13 +23,17 @@ from isadream.models.nodal import SourceNode, SampleNode, AssayNode, DrupalNode
 # ----------------------------------------------------------------------------
 
 # Demo data paths.
-BASE_PATH = os.path.dirname(__file__)
-DATA_PATH = os.path.join(BASE_PATH, "demo_data")
-JSON_PATH = os.path.join(BASE_PATH, "demo_json")
+# BASE_PATH = config["BASE_PATH"]
+# DATA_PATH = config["BASE_PATH"]
+# JSON_PATH = os.path.join(BASE_PATH, "demo_json")
+
+# BASE_PATH = os.path.dirname(__file__)
+# DATA_PATH = os.path.join(BASE_PATH, "demo_data")
+# JSON_PATH = os.path.join(BASE_PATH, "demo_json")
 
 # Json demo files.
-SIPOS = os.path.join(JSON_PATH, "sipos_2006_talanta_nmr_figs.json")
-RAMAN = os.path.join(JSON_PATH, "sipos_2006_science_direct_raman.json")
+SIPOS = demos["SIPOS_NMR"]
+RAMAN = demos["SIPOS_RAMAN"]
 
 
 # ----------------------------------------------------------------------------

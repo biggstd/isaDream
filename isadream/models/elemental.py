@@ -73,9 +73,9 @@ class Factor(param.Parameterized):
 
     csv_column_index = param.Integer(
         allow_None=True,
-        doc=dedent("""\
-        An integer reference that points to the column index of the data 
-        that this factor describes.
+        default=None,
+        doc=dedent("""An integer reference that points to the column index
+        of the data that this factor describes.
         """)
     )
 
@@ -94,6 +94,8 @@ class Factor(param.Parameterized):
 
         """
         if self.csv_column_index is not None:
+            # Ensure a valid integer index is present.
+            # if int(self.csv_column_index):
             return True
         return False
 
@@ -133,6 +135,12 @@ class Factor(param.Parameterized):
                for prop in properties):
             return True
 
+    @property
+    def as_markup(self):
+        return dedent(f"""\
+        **{self.label}** stoichiometry: {self.value}
+        """)
+
 
 class SpeciesFactor(param.Parameterized):
     """A species factor is a pair of values. A species and a stoichiometry
@@ -164,6 +172,12 @@ class SpeciesFactor(param.Parameterized):
         if re.match(query_term, self.species_reference):
             return True
 
+    @property
+    def as_markup(self):
+        return dedent(f"""\
+        **{self.species_reference}** stoichiometry: {self.stoichiometry}
+        """)
+
 
 class Comment(param.Parameterized):
     """A node comment model.
@@ -181,6 +195,14 @@ class Comment(param.Parameterized):
         doc=dedent("""The body text of a comment.
         """)
     )
+
+    @property
+    def as_markup(self):
+        return dedent(f"""\
+        **{self.comment_title}**
+        
+        {self.body}
+        """)
 
 
 class DataFile(param.Parameterized):

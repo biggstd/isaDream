@@ -10,15 +10,18 @@ import os
 import csv
 import json
 import uuid
+import logging
 import collections
 from typing import Tuple
 
 from .models import utils
 from .models.groups import QueryGroupType
-from isadream import DATA_MOUNT
+from isadream import config
 
 from .models.elemental import Factor, SpeciesFactor, Comment
 from .models.nodal import DrupalNode, AssayNode, SampleNode, SourceNode
+
+logger = logging.getLogger(__name__)
 
 
 # ----------------------------------------------------------------------------
@@ -104,7 +107,7 @@ def parse_node_json(json_dict):
 # ----------------------------------------------------------------------------
 
 
-def load_csv_as_dict(path, base_path=DATA_MOUNT):
+def load_csv_as_dict(path, base_path=config["BASE_PATH"]):
     """Load a CSV file as a Python dictionary.
 
     The header in each file will be skipped.
@@ -115,8 +118,7 @@ def load_csv_as_dict(path, base_path=DATA_MOUNT):
         column index the data was found in.
 
     """
-    # TODO: Handle paths properly. This does not seem right.
-    csv_path = os.path.join(str(base_path), str(path))
+    csv_path = os.path.join(base_path, path)
 
     data = collections.defaultdict(list)
 
@@ -141,7 +143,7 @@ def load_csv_as_dict(path, base_path=DATA_MOUNT):
 # Models to Data Frame.
 # ----------------------------------------------------------------------------
 
-
+# TODO: Repair -- some inputs are swapped in the helper functions.
 def build_node_data(node: AssayNode,
                     groups: Tuple[QueryGroupType, ...]
                     ) -> Tuple[dict, dict]:
@@ -176,7 +178,7 @@ def build_node_data(node: AssayNode,
         matching_species = [species for species in parent_species
                             if species.species_reference in species_query]
         # Add the species to the column data source.
-        col_data_source[label] = [matching_species[0]
+        col_data_source[label] = [matching_species[0].species_reference
                                   for _ in range(factor_size)]
 
         # Add the sample of this factor to the metadata dictionary.
@@ -186,6 +188,7 @@ def build_node_data(node: AssayNode,
         col_data_source["sample_node"] = [key for _ in range(factor_size)]
 
     def add_csv_factor(csv_factor, parent_sample, key, label):
+        # logger.debug(f"Adding CSV Factor: {csv_factor, parent_sample, key, label}")
         # Get the data using the factors csv index value, and add the
         # data to the column data source.
         col_data_source[label] = datafile_dict.get(
@@ -193,9 +196,11 @@ def build_node_data(node: AssayNode,
 
         # Add the sample of this factor to the metadata dictionary.
         metadata_dictionary[key] = parent_sample
-
         # Add the key to the metadata dictionary entry to the data source.
         col_data_source["sample_node"] = [key for _ in range(factor_size)]
+
+        # Debugging information.
+        logging.debug(f"Created new data column with key: {label}, data : {col_data_source[label]}")
 
     def add_factor_array(factor, parent_sample, label):
         # Add the factor value to the column data source.
@@ -242,7 +247,7 @@ def build_node_data(node: AssayNode,
             sample_key = str(uuid.uuid4())
 
             # Check if a species reference column is requested.
-            if group_sample_unit == "Species":
+            if group_sample_unit == ("Species",):
                 add_species(parental_sample, group_sample_species, sample_key,
                             group_sample_label)
 
@@ -278,7 +283,7 @@ def build_node_data(node: AssayNode,
             sample_key = str(uuid.uuid4())
 
             # Check if a species reference column is requested.
-            if assay_sample_unit == "Species":
+            if assay_sample_unit == ("Species",):
                 add_species(assay_sample, assay_sample_species, sample_key,
                             assay_sample_label)
 

@@ -31,7 +31,7 @@ import bokeh.document
 # Local project imports.
 from isadream import io
 from isadream.models.groups import GroupTypes, DerivedGroupType
-from isadream import DATA_MOUNT
+from isadream import config
 from isadream.models.nodal import DrupalNode
 
 # ----------------------------------------------------------------------------
@@ -51,7 +51,7 @@ HTTP_QUERY_STRING = "JD"
 # ----------------------------------------------------------------------------
 
 def get_session_json_paths(current_document: bk.document.Document,
-                           base_path: str = DATA_MOUNT) -> List[str]:
+                           base_path: str = config["BASE_PATH"]) -> List[str]:
     """Get the HTTP request of an active bokeh document.
 
     The HTTP request points to the path where this document should load

@@ -1,0 +1,13 @@
+{
+  "DEFAULT": {
+    "BASE_PATH": "/data"
+  },
+  "TESTING": {
+    "BASE_PATH": "tests/demo_data",
+    "LOG_LEVEL": "DEBUG"
+  },
+  "JSON_DEMOS": {
+    "SIPOS_NMR": "tests/demo_json/sipos_2006_talanta_nmr_figs.json",
+    "SIPOS_RAMAN": "tests/demo_json/sipos_2006_science_direct_raman.json"
+  }
+}

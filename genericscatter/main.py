@@ -233,7 +233,7 @@ def build_figure(axis_type):
             size_scale = bk.models.LinearInterpolator(
                 x=[min(source.data[size.value]),
                    max(source.data[size.value])],
-                y=[2, 15])
+                y=[3, 15])
             sizes = dict(field=size.value, transform=size_scale)
         else:
             sizes = 7
