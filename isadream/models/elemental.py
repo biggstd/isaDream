@@ -20,10 +20,11 @@ from typing import Tuple, Union
 # Local project imports.
 # ----------------------------------------------------------------------------
 
+from ..model import ElementalNode
 from isadream.models import utils
 
 
-class Factor(param.Parameterized):
+class Factor(ElementalNode):
     """The factor is the fundamental storage model for an observation.
 
     It is designed in such a way that it should be able to store:
@@ -94,8 +95,6 @@ class Factor(param.Parameterized):
 
         """
         if self.csv_column_index is not None:
-            # Ensure a valid integer index is present.
-            # if int(self.csv_column_index):
             return True
         return False
 
@@ -136,13 +135,13 @@ class Factor(param.Parameterized):
             return True
 
     @property
-    def as_markup(self):
+    def as_markdown(self):
         return dedent(f"""\
-        **{self.label}** stoichiometry: {self.value}
+            **{self.label}**: {self.value}\n
         """)
 
 
-class SpeciesFactor(param.Parameterized):
+class SpeciesFactor(ElementalNode):
     """A species factor is a pair of values. A species and a stoichiometry
     coefficient.
 
@@ -173,18 +172,18 @@ class SpeciesFactor(param.Parameterized):
             return True
 
     @property
-    def as_markup(self):
+    def as_markdown(self):
         return dedent(f"""\
-        **{self.species_reference}** stoichiometry: {self.stoichiometry}
+            **{self.species_reference}** stoichiometry: {self.stoichiometry}\n
         """)
 
 
-class Comment(param.Parameterized):
+class Comment(ElementalNode):
     """A node comment model.
 
     """
 
-    comment_title = param.String(
+    name = param.String(
         allow_None=False,  # There must at least be a comment name.
         doc=dedent("""The title of a comment.
         """)
@@ -197,15 +196,13 @@ class Comment(param.Parameterized):
     )
 
     @property
-    def as_markup(self):
+    def as_markdown(self):
         return dedent(f"""\
-        **{self.comment_title}**
-        
-        {self.body}
+            **{self.name}**: {self.body}\n
         """)
 
 
-class DataFile(param.Parameterized):
+class DataFile(ElementalNode):
     """FUTURE: This class is not used or implemented.
 
     In the future it will may handle data file paths / objects.

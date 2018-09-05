@@ -1,18 +1,19 @@
-"""
+"""Provide utility functions for ChemMD models.
 
 """
 
 # ----------------------------------------------------------------------------
 # Imports
 # ----------------------------------------------------------------------------
-
 # Generic Python imports.
 import itertools
 import collections
 from typing import Any, List, ChainMap
 
+
 # Local project imports.
-from isadream.models.nodal import NodeTypes
+# TODO: Fix self-referencing imports. Restructure these functions.
+# from .nodal import NodeTypes
 
 
 def ensure_list(val_or_values: Any) -> List:
@@ -27,7 +28,7 @@ def ensure_list(val_or_values: Any) -> List:
         return [val_or_values]
 
 
-def get_all_elements(node: NodeTypes,
+def get_all_elements(node,
                      elemental_cls: str,
                      children=('assays', 'samples', 'sources')) -> List:
     """

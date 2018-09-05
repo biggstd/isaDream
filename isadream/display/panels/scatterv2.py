@@ -102,7 +102,7 @@ def create_colors(bokeh_source: bk.models.ColumnDataSource,
                   color_column: str,
                   palette=PALETTE
                   ) -> Union[str, Dict[str, bk.models.ColorMapper]]:
-    """
+    """Create a color map based on a given column.
 
     :param bokeh_source:
     :param color_column:

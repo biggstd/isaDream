@@ -21,16 +21,6 @@ from isadream.models.nodal import SourceNode, SampleNode, AssayNode, DrupalNode
 # ----------------------------------------------------------------------------
 # Globals and constants
 # ----------------------------------------------------------------------------
-
-# Demo data paths.
-# BASE_PATH = config["BASE_PATH"]
-# DATA_PATH = config["BASE_PATH"]
-# JSON_PATH = os.path.join(BASE_PATH, "demo_json")
-
-# BASE_PATH = os.path.dirname(__file__)
-# DATA_PATH = os.path.join(BASE_PATH, "demo_data")
-# JSON_PATH = os.path.join(BASE_PATH, "demo_json")
-
 # Json demo files.
 SIPOS = demos["SIPOS_NMR"]
 RAMAN = demos["SIPOS_RAMAN"]
@@ -177,7 +167,7 @@ def sipos_nmr_json():
 def nmr_groups():
     x_groups = (('Total Aluminate Concentration', 'Molar', ("Al",)),
                 ('Counter Ion Concentration', 'Molar', ("Na+", "Li+", "Cs+", "K+")),
-                ('Counter Ion', 'Species', ("Na+", "Li+", "Cs+", "K+",)),
+                ('Counter Ion', ('Species',), ("Na+", "Li+", "Cs+", "K+",)),
                 ('Base Concentration', 'Molar', ("OH-",)))
     y_groups = (('27 Al ppm', 'ppm', ("Al",)),)
     return x_groups, y_groups
@@ -187,7 +177,7 @@ def nmr_groups():
 def raman_groups():
     x_groups = (('Total Aluminate Concentration', 'Molar', ("Al",)),
                 ('Counter Ion Concentration', 'Molar', ("Na+", "Li+", "Cs+", "K+")),
-                ('Counter Ion', 'Species', ("Na+", "Li+", "Cs+", "K+",)),
+                ('Counter Ion', ('Species',), ("Na+", "Li+", "Cs+", "K+",)),
                 ('Base Concentration', 'Molar', ("OH-",)))
     y_groups = (('Integrated Raman Intensity', 'Integrated Intensity', ("Al",)),)
     return x_groups, y_groups

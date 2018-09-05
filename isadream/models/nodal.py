@@ -17,10 +17,11 @@ from typing import Union, List
 # Local project imports.
 # ----------------------------------------------------------------------------
 
-from isadream.models import utils
+from ..model import CompoundNode
+from . import utils
 
 
-class DrupalNode(param.Parameterized):
+class DrupalNode(CompoundNode):
     """Model for a single Drupal content node.
 
     Much of this class is declarative, with the Param package doing all of the
@@ -28,17 +29,18 @@ class DrupalNode(param.Parameterized):
 
     """
 
-    title = param.String(
-        allow_None=False,
-        doc=dedent("""User supplied title of the Drupal Node or experiment.
-        
-        This model contains all the information concerning a given 
-        Drupal Node.
-        """)
-    )
+    # name = param.String(
+    #     allow_None=False,
+    #     doc=dedent("""User supplied title of the Drupal Node or experiment.
+    #
+    #     This model contains all the information concerning a given
+    #     Drupal Node.
+    #     """)
+    # )
 
-    info = param.Dict(
+    node_information = param.Dict(
         allow_None=True,
+        default=None,
         doc=dedent("""A set of key-value pairs of information concerning 
         this experiment. 
         
@@ -74,8 +76,47 @@ class DrupalNode(param.Parameterized):
         """)
     )
 
+    @property
+    def as_markdown(self):
+        text = ""
 
-class AssayNode(param.Parameterized):
+        if self.node_information:
+            # Create an alias for the information dictionary.
+            i = self.node_information
+            text = dedent(f"""\
+            # {i.get("node_title")}
+            
+            **Description**: {i.get("node_description")}\n
+            **Submission Date**: *{i.get("submission_date")}*\n
+            **Public Release Date**: *{i.get("public_release_date")}*\n
+            
+            ---
+            """)
+
+        if self.assays:
+            text += dedent("""## Assays\n""")
+            for assay in self.assays:
+                text += assay.as_markdown
+
+        if self.samples:
+            text += dedent("""## Samples\n""")
+            for sample in self.samples:
+                text += sample.as_markdown
+
+        if self.factors:
+            text += dedent("""### Factors\n""")
+            for factor in self.factors:
+                text += factor.as_markdown
+
+        if self.comments:
+            text += dedent("""### Comments\n""")
+            for comment in self.comments:
+                text += comment.as_markdown
+
+        return text
+
+
+class AssayNode(CompoundNode):
     """Model for single assay / experiment - contains a datafile and all
     metadata pertaining to that file.
 
@@ -152,8 +193,22 @@ class AssayNode(param.Parameterized):
         """)
     )
 
+    @property
+    def as_markdown(self):
+        text = f"### {self.assay_title}\n"
+        for sample in self.samples:
+            text += sample.as_markdown
 
-class SampleNode(param.Parameterized):
+        for factor in self.factors:
+            text += factor.as_markdown
+
+        for comment in self.comments:
+            text += comment.as_markdown
+
+        return text
+
+
+class SampleNode(CompoundNode):
     """Model for a physical of simulated sample.
 
     A Sample object is a collection of species and factors.
@@ -253,8 +308,22 @@ class SampleNode(param.Parameterized):
                for species in self.all_species):
             return True
 
+    @property
+    def as_markdown(self):
+        text = f"#### {self.sample_name}\n"
+        for source in self.all_sources:
+            text += source.as_markdown
 
-class SourceNode(param.Parameterized):
+        for factor in self.all_factors:
+            text += factor.as_markdown
+
+        for species in self.all_species:
+            text += species.as_markdown
+
+        return text
+
+
+class SourceNode(CompoundNode):
     """Model for a single Source.
 
     A source is similar to a sample.
@@ -306,6 +375,16 @@ class SourceNode(param.Parameterized):
         :return:
         """
         return utils.get_all_elements(self, 'species')
+
+    @property
+    def as_markdown(self):
+        text = ""
+        for factor in self.all_factors:
+            text += factor.as_markdown
+
+        for species in self.all_species:
+            text += species.as_markdown
+        return text
 
 
 # ----------------------------------------------------------------------------

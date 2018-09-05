@@ -53,7 +53,7 @@ def build_nodal_model(json_dict, model, key):
     return []
 
 
-def parse_sources(json_dict):
+def parse_sources(json_dict: dict) -> SourceNode:
     source_name = json_dict.get("source_name")
     factors = build_elemental_model(json_dict, Factor, "source_factors")
     species = build_elemental_model(json_dict, SpeciesFactor, "source_species")
@@ -85,7 +85,7 @@ def parse_assays(json_dict):
 def parse_node_json(json_dict):
     """Convert a dictionary to a DrupalNode object. """
     # Info, factors and comments can be directly created from the json.
-    info = json_dict.get("node_information")
+    node_information = json_dict.get("node_information")
     factors = build_elemental_model(json_dict, Factor, "node_factors")
     comments = build_elemental_model(json_dict, Comment, "node_comments")
     # Samples and assays have nested items, and require more processing.
@@ -95,11 +95,11 @@ def parse_node_json(json_dict):
     for assay in assays:
         assay.parental_factors = factors
         assay.parental_samples = samples
-        assay.parental_info = info
+        assay.parental_info = node_information
         assay.parental_comments = comments
 
-    return DrupalNode(info=info, assays=assays, factors=factors,
-                      samples=samples, comments=comments)
+    return DrupalNode(node_information=node_information, assays=assays,
+                      factors=factors, samples=samples, comments=comments)
 
 
 # ----------------------------------------------------------------------------
@@ -231,7 +231,8 @@ def build_node_data(node: AssayNode,
     metadata_dictionary[assay_key] = (node.assay_title, node.comments)
 
     # Iterate through and extract the values within the groups provided.
-    for group_label, group_unit, group_species in groups:
+    # for group_label, group_unit, group_species in groups:
+    for group in groups:
 
         # Iterate through the top level samples and their factors.
         parental_factor_matches = matching_factors(
