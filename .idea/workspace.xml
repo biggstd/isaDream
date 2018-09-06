@@ -9,18 +9,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="704a07ee-c813-4815-943d-45cd8b614d46" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/isadream/model.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dev_notebooks/Model_Design.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/dev_notebooks/Model_Design.ipynb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dev_notebooks/vis_01.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/dev_notebooks/vis_01.ipynb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/isadream/display/panels/scatterv2.py" beforeDir="false" afterPath="$PROJECT_DIR$/isadream/display/panels/scatterv2.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/isadream/io.py" beforeDir="false" afterPath="$PROJECT_DIR$/isadream/io.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/isadream/models/elemental.py" beforeDir="false" afterPath="$PROJECT_DIR$/isadream/models/elemental.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/isadream/models/nodal.py" beforeDir="false" afterPath="$PROJECT_DIR$/isadream/models/nodal.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/isadream/models/utils.py" beforeDir="false" afterPath="$PROJECT_DIR$/isadream/models/utils.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/conftest.py" beforeDir="false" afterPath="$PROJECT_DIR$/tests/conftest.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/demo_json/sipos_2006_talanta_nmr_figs.json" beforeDir="false" afterPath="$PROJECT_DIR$/tests/demo_json/sipos_2006_talanta_nmr_figs.json" afterDir="false" />
     </list>
+    <ignored path="$PROJECT_DIR$/.idea/shelf/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -52,9 +44,9 @@
           <entry key="csv" value="4" />
           <entry key="gitignore" value="1" />
           <entry key="ini" value="3" />
-          <entry key="json" value="31" />
-          <entry key="log" value="5" />
-          <entry key="py" value="141" />
+          <entry key="json" value="33" />
+          <entry key="log" value="6" />
+          <entry key="py" value="143" />
           <entry key="sh" value="1" />
           <entry key="txt" value="4" />
           <entry key="yaml" value="1" />
@@ -64,10 +56,10 @@
         <counts>
           <entry key="Dockerfile" value="2" />
           <entry key="Ini" value="3" />
-          <entry key="JSON" value="31" />
-          <entry key="Log" value="2" />
+          <entry key="JSON" value="33" />
+          <entry key="Log" value="3" />
           <entry key="PLAIN_TEXT" value="17" />
-          <entry key="Python" value="141" />
+          <entry key="Python" value="143" />
           <entry key="YAML" value="1" />
         </counts>
       </usages-collector>
@@ -78,67 +70,28 @@
           <entry key="dummy" value="15" />
           <entry key="ini" value="151" />
           <entry key="json" value="770" />
-          <entry key="py" value="60723" />
-          <entry key="txt" value="539" />
+          <entry key="py" value="63542" />
+          <entry key="txt" value="594" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.edit">
         <counts>
           <entry key="Ini" value="87" />
           <entry key="JSON" value="770" />
-          <entry key="PLAIN_TEXT" value="698" />
-          <entry key="Python" value="60723" />
+          <entry key="PLAIN_TEXT" value="753" />
+          <entry key="Python" value="63542" />
         </counts>
       </usages-collector>
     </session>
   </component>
   <component name="FileEditorManager">
-    <splitter split-orientation="horizontal" split-proportion="0.31735602">
+    <splitter split-orientation="horizontal" split-proportion="0.30382684">
       <split-first>
         <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-          <file pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/isadream/model.py">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="460">
-                  <caret line="20" column="27" lean-forward="true" selection-start-line="20" selection-start-column="27" selection-end-line="20" selection-end-column="27" />
-                  <folding>
-                    <element signature="e#311#372#0" expanded="true" />
-                    <marker date="1536185236137" expanded="true" signature="714:1096" ph="..." />
-                    <marker date="1536185236137" expanded="true" signature="1136:1141" ph="..." />
-                    <marker date="1536185236137" expanded="true" signature="1272:1345" ph="..." />
-                    <marker date="1536185236137" expanded="true" signature="1272:1432" ph="..." />
-                    <marker date="1536185236137" expanded="true" signature="1438:1442" ph="..." />
-                  </folding>
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/isadream.log">
-              <provider selected="true" editor-type-id="LogFileEditorProvider">
-                <state relative-caret-position="1340">
-                  <caret line="644" lean-forward="true" selection-start-line="644" selection-end-line="644" />
-                </state>
-              </provider>
-            </entry>
-          </file>
           <file pinned="false" current-in-tab="true">
-            <entry file="file://$PROJECT_DIR$/isadream/models/groups.py">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="345">
-                  <caret line="15" selection-start-line="15" selection-end-line="15" />
-                  <folding>
-                    <element signature="e#244#305#0" expanded="true" />
-                    <marker date="1535694813497" expanded="true" signature="562:567" ph="..." />
-                  </folding>
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/isadream/display/panels/table.py">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="690">
+                <state relative-caret-position="1081">
                   <caret line="47" column="7" selection-start-line="47" selection-start-column="7" selection-end-line="47" selection-end-column="7" />
                   <folding>
                     <element signature="e#204#223#0" expanded="true" />
@@ -167,8 +120,8 @@
           <file pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/isadream/models/utils.py">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="664">
-                  <caret line="62" column="38" lean-forward="true" selection-start-line="62" selection-start-column="38" selection-end-line="62" selection-end-column="38" />
+                <state relative-caret-position="1156">
+                  <caret line="86" column="1" lean-forward="true" selection-start-line="86" selection-start-column="1" selection-end-line="86" selection-end-column="1" />
                 </state>
               </provider>
             </entry>
@@ -176,14 +129,14 @@
         </leaf>
       </split-first>
       <split-second>
-        <splitter split-orientation="horizontal" split-proportion="0.5">
+        <splitter split-orientation="horizontal" split-proportion="0.63672924">
           <split-first>
             <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
               <file pinned="false" current-in-tab="true">
                 <entry file="file://$PROJECT_DIR$/isadream/io.py">
                   <provider selected="true" editor-type-id="text-editor">
-                    <state relative-caret-position="759">
-                      <caret line="234" column="13" selection-start-line="234" selection-start-column="13" selection-end-line="234" selection-end-column="13" />
+                    <state relative-caret-position="1610">
+                      <caret line="284" column="42" lean-forward="true" selection-start-line="284" selection-start-column="42" selection-end-line="284" selection-end-column="42" />
                       <folding>
                         <element signature="e#206#215#0" expanded="true" />
                       </folding>
@@ -192,10 +145,22 @@
                 </entry>
               </file>
               <file pinned="false" current-in-tab="false">
+                <entry file="file://$PROJECT_DIR$/isadream/__init__.py">
+                  <provider selected="true" editor-type-id="text-editor">
+                    <state relative-caret-position="414">
+                      <caret line="18" column="70" selection-start-line="18" selection-start-column="70" selection-end-line="18" selection-end-column="70" />
+                      <folding>
+                        <element signature="e#0#9#0" expanded="true" />
+                      </folding>
+                    </state>
+                  </provider>
+                </entry>
+              </file>
+              <file pinned="false" current-in-tab="false">
                 <entry file="file://$PROJECT_DIR$/tests/conftest.py">
                   <provider selected="true" editor-type-id="text-editor">
-                    <state relative-caret-position="3427">
-                      <caret line="173" lean-forward="true" selection-start-line="173" selection-end-line="173" />
+                    <state relative-caret-position="3726">
+                      <caret line="162" column="64" selection-start-line="162" selection-start-column="64" selection-end-line="162" selection-end-column="64" />
                       <folding>
                         <element signature="e#207#216#0" expanded="true" />
                       </folding>
@@ -204,21 +169,9 @@
                 </entry>
               </file>
               <file pinned="false" current-in-tab="false">
-                <entry file="file://$PROJECT_DIR$/isadream/models/elemental.py">
-                  <provider selected="true" editor-type-id="text-editor">
-                    <state relative-caret-position="3036">
-                      <caret line="132" column="26" lean-forward="true" selection-start-line="132" selection-start-column="26" selection-end-line="132" selection-end-column="26" />
-                      <folding>
-                        <element signature="e#405#447#0" expanded="true" />
-                      </folding>
-                    </state>
-                  </provider>
-                </entry>
-              </file>
-              <file pinned="false" current-in-tab="false">
                 <entry file="file://$PROJECT_DIR$/isadream/json_schemas/node_schema.json">
                   <provider selected="true" editor-type-id="text-editor">
-                    <state relative-caret-position="690">
+                    <state relative-caret-position="-2602">
                       <caret line="30" column="15" lean-forward="true" selection-start-line="30" selection-start-column="15" selection-end-line="30" selection-end-column="15" />
                     </state>
                   </provider>
@@ -228,14 +181,35 @@
           </split-first>
           <split-second>
             <leaf>
-              <file pinned="false" current-in-tab="true">
+              <file pinned="false" current-in-tab="false">
                 <entry file="file://$PROJECT_DIR$/isadream/models/nodal.py">
                   <provider selected="true" editor-type-id="text-editor">
-                    <state relative-caret-position="802">
-                      <caret line="200" lean-forward="true" selection-start-line="200" selection-end-line="200" />
+                    <state relative-caret-position="788">
+                      <caret line="305" column="22" selection-start-line="305" selection-start-column="22" selection-end-line="305" selection-end-column="22" />
                       <folding>
                         <element signature="e#302#363#0" expanded="true" />
                       </folding>
+                    </state>
+                  </provider>
+                </entry>
+              </file>
+              <file pinned="false" current-in-tab="true">
+                <entry file="file://$PROJECT_DIR$/isadream/models/elemental.py">
+                  <provider selected="true" editor-type-id="text-editor">
+                    <state relative-caret-position="1058">
+                      <caret line="97" column="23" selection-start-line="97" selection-start-column="23" selection-end-line="97" selection-end-column="23" />
+                      <folding>
+                        <element signature="e#405#447#0" expanded="true" />
+                      </folding>
+                    </state>
+                  </provider>
+                </entry>
+              </file>
+              <file pinned="false" current-in-tab="false">
+                <entry file="file://$PROJECT_DIR$/tests/demo_json/sipos_2006_talanta_nmr_figs.json">
+                  <provider selected="true" editor-type-id="text-editor">
+                    <state relative-caret-position="517">
+                      <caret line="110" column="19" selection-start-line="110" selection-start-column="15" selection-end-line="110" selection-end-column="19" />
                     </state>
                   </provider>
                 </entry>
@@ -268,9 +242,10 @@
       <find>name</find>
       <find>data_m</find>
       <find>DATA_M</find>
-      <find>print</find>
       <find>select</find>
       <find>tools</find>
+      <find>fact</find>
+      <find>print</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -300,7 +275,6 @@
         <option value="$PROJECT_DIR$/tests/test_elemental_models.py" />
         <option value="$PROJECT_DIR$/genericscatter/helpers.py" />
         <option value="$PROJECT_DIR$/setup.cfg" />
-        <option value="$PROJECT_DIR$/isadream/models/groups.py" />
         <option value="$PROJECT_DIR$/config.ini" />
         <option value="$PROJECT_DIR$/isadream/display/views.py" />
         <option value="$PROJECT_DIR$/isadream/display/scatter.py" />
@@ -308,18 +282,19 @@
         <option value="$PROJECT_DIR$/isadream/display/panels/table.py" />
         <option value="$PROJECT_DIR$/isadream/display/helpers.py" />
         <option value="$PROJECT_DIR$/config.json" />
-        <option value="$PROJECT_DIR$/isadream/__init__.py" />
         <option value="$PROJECT_DIR$/genericscatter/main.py" />
         <option value="$PROJECT_DIR$/isadream/display/panels/scatter.py" />
         <option value="$PROJECT_DIR$/groupExplorer/main.py" />
         <option value="$PROJECT_DIR$/requirements.txt" />
         <option value="$PROJECT_DIR$/isadream/display/panels/scatterv2.py" />
-        <option value="$PROJECT_DIR$/isadream/models/utils.py" />
-        <option value="$PROJECT_DIR$/isadream/models/elemental.py" />
-        <option value="$PROJECT_DIR$/isadream/model.py" />
         <option value="$PROJECT_DIR$/tests/demo_json/sipos_2006_talanta_nmr_figs.json" />
-        <option value="$PROJECT_DIR$/isadream/models/nodal.py" />
+        <option value="$PROJECT_DIR$/isadream/models/groups.py" />
         <option value="$PROJECT_DIR$/tests/conftest.py" />
+        <option value="$PROJECT_DIR$/isadream/models/utils.py" />
+        <option value="$PROJECT_DIR$/isadream/model.py" />
+        <option value="$PROJECT_DIR$/isadream/models/nodal.py" />
+        <option value="$PROJECT_DIR$/isadream/__init__.py" />
+        <option value="$PROJECT_DIR$/isadream/models/elemental.py" />
         <option value="$PROJECT_DIR$/isadream/io.py" />
       </list>
     </option>
@@ -555,7 +530,21 @@
       <option name="project" value="LOCAL" />
       <updated>1536040310370</updated>
     </task>
-    <option name="localTasksCounter" value="15" />
+    <task id="LOCAL-00015" summary="Added markdown output.">
+      <created>1536186431887</created>
+      <option name="number" value="00015" />
+      <option name="presentableId" value="LOCAL-00015" />
+      <option name="project" value="LOCAL" />
+      <updated>1536186431887</updated>
+    </task>
+    <task id="LOCAL-00016" summary="Broken io.">
+      <created>1536213119993</created>
+      <option name="number" value="00016" />
+      <option name="presentableId" value="LOCAL-00016" />
+      <option name="project" value="LOCAL" />
+      <updated>1536213119994</updated>
+    </task>
+    <option name="localTasksCounter" value="17" />
     <servers />
   </component>
   <component name="TestHistory">
@@ -567,7 +556,7 @@
     <frame x="0" y="27" width="2611" height="2133" extended-state="4" />
     <editor active="true" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.1550058" />
+      <window_info content_ui="combo" id="Project" order="0" weight="0.1550058" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
@@ -577,8 +566,8 @@
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="6" />
-      <window_info anchor="bottom" id="Version Control" order="7" weight="0.32958436" />
-      <window_info anchor="bottom" x="7" y="768" width="3826" height="667" id="Terminal" order="8" visible="true" weight="0.23972264" />
+      <window_info active="true" anchor="bottom" id="Version Control" order="7" visible="true" weight="0.32937098" />
+      <window_info anchor="bottom" x="7" y="768" width="3826" height="667" id="Terminal" order="8" weight="0.28083208" />
       <window_info anchor="bottom" id="Event Log" order="9" side_tool="true" weight="0.33007336" />
       <window_info anchor="bottom" id="Python Console" order="10" weight="0.32958436" />
       <window_info anchor="bottom" id="Messages" order="11" weight="0.32998493" />
@@ -626,7 +615,9 @@
     <MESSAGE value="Spelling and minor changes." />
     <MESSAGE value="Updates to bokeh end. No errors or output." />
     <MESSAGE value="Repaired tab application. Found bug." />
-    <option name="LAST_COMMIT_MESSAGE" value="Repaired tab application. Found bug." />
+    <MESSAGE value="Added markdown output." />
+    <MESSAGE value="Broken io." />
+    <option name="LAST_COMMIT_MESSAGE" value="Broken io." />
     <option name="REFORMAT_BEFORE_PROJECT_COMMIT" value="true" />
   </component>
   <component name="editorHistoryManager">
@@ -770,13 +761,6 @@
     <entry file="file://$PROJECT_DIR$/tests/demo_data/sipos_2006_talanta_fig_3_KOH.csv">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
-    <entry file="file://$PROJECT_DIR$/isadream/__init__.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="437">
-          <caret line="19" lean-forward="true" selection-start-line="19" selection-end-line="19" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/isadream/display/panels/scatter.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="350">
@@ -816,16 +800,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/isadream/display/panels/table.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="690">
-          <caret line="47" column="7" selection-start-line="47" selection-start-column="7" selection-end-line="47" selection-end-column="7" />
-          <folding>
-            <element signature="e#204#223#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/isadream/display/panels/scatterv2.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1817">
@@ -841,17 +815,93 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/tests/demo_json/sipos_2006_science_direct_raman.json">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1173">
+          <caret line="51" column="35" lean-forward="true" selection-start-line="51" selection-start-column="35" selection-end-line="51" selection-end-column="35" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/tests/conftest.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="3726">
+          <caret line="162" column="64" selection-start-line="162" selection-start-column="64" selection-end-line="162" selection-end-column="64" />
+          <folding>
+            <element signature="e#207#216#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/tests/demo_json/sipos_2006_talanta_nmr_figs.json">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="517">
+          <caret line="110" column="19" selection-start-line="110" selection-start-column="15" selection-end-line="110" selection-end-column="19" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/isadream/json_schemas/node_schema.json">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-2602">
+          <caret line="30" column="15" lean-forward="true" selection-start-line="30" selection-start-column="15" selection-end-line="30" selection-end-column="15" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/isadream/model.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="782">
+          <caret line="34" column="22" lean-forward="true" selection-start-line="34" selection-start-column="22" selection-end-line="34" selection-end-column="22" />
+          <folding>
+            <element signature="e#311#372#0" expanded="true" />
+            <marker date="1536213119687" expanded="true" signature="700:1002" ph="..." />
+            <marker date="1536213119687" expanded="true" signature="1044:1045" ph="..." />
+            <marker date="1536213119687" expanded="true" signature="1160:1225" ph="..." />
+            <marker date="1536213119687" expanded="true" signature="1160:1308" ph="..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/isadream/models/utils.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="664">
-          <caret line="62" column="38" lean-forward="true" selection-start-line="62" selection-start-column="38" selection-end-line="62" selection-end-column="38" />
+        <state relative-caret-position="1156">
+          <caret line="86" column="1" lean-forward="true" selection-start-line="86" selection-start-column="1" selection-end-line="86" selection-end-column="1" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/isadream/models/nodal.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="788">
+          <caret line="305" column="22" selection-start-line="305" selection-start-column="22" selection-end-line="305" selection-end-column="22" />
+          <folding>
+            <element signature="e#302#363#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/isadream/models/groups.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="690">
+          <caret line="30" column="62" selection-start-line="30" selection-start-column="62" selection-end-line="30" selection-end-column="62" />
+          <folding>
+            <element signature="e#244#305#0" expanded="true" />
+            <marker date="1536213119687" expanded="true" signature="562:567" ph="..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/isadream/display/panels/table.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1081">
+          <caret line="47" column="7" selection-start-line="47" selection-start-column="7" selection-end-line="47" selection-end-column="7" />
+          <folding>
+            <element signature="e#204#223#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/isadream.log">
       <provider selected="true" editor-type-id="LogFileEditorProvider">
-        <state relative-caret-position="1340">
-          <caret line="644" lean-forward="true" selection-start-line="644" selection-end-line="644" />
+        <state relative-caret-position="-3098">
+          <caret line="766" column="78" selection-start-line="766" selection-start-column="78" selection-end-line="766" selection-end-column="78" />
         </state>
       </provider>
       <provider editor-type-id="text-editor">
@@ -860,87 +910,30 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/isadream/json_schemas/node_schema.json">
+    <entry file="file://$PROJECT_DIR$/isadream/__init__.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="690">
-          <caret line="30" column="15" lean-forward="true" selection-start-line="30" selection-start-column="15" selection-end-line="30" selection-end-column="15" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/tests/demo_json/sipos_2006_science_direct_raman.json">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1173">
-          <caret line="51" column="35" lean-forward="true" selection-start-line="51" selection-start-column="35" selection-end-line="51" selection-end-column="35" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/tests/demo_json/sipos_2006_talanta_nmr_figs.json">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="391">
-          <caret line="17" column="33" lean-forward="true" selection-start-line="17" selection-start-column="33" selection-end-line="17" selection-end-column="33" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/tests/conftest.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="3427">
-          <caret line="173" lean-forward="true" selection-start-line="173" selection-end-line="173" />
+        <state relative-caret-position="414">
+          <caret line="18" column="70" selection-start-line="18" selection-start-column="70" selection-end-line="18" selection-end-column="70" />
           <folding>
-            <element signature="e#207#216#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/isadream/models/nodal.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="802">
-          <caret line="200" lean-forward="true" selection-start-line="200" selection-end-line="200" />
-          <folding>
-            <element signature="e#302#363#0" expanded="true" />
+            <element signature="e#0#9#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/isadream/models/elemental.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="3036">
-          <caret line="132" column="26" lean-forward="true" selection-start-line="132" selection-start-column="26" selection-end-line="132" selection-end-column="26" />
+        <state relative-caret-position="1058">
+          <caret line="97" column="23" selection-start-line="97" selection-start-column="23" selection-end-line="97" selection-end-column="23" />
           <folding>
             <element signature="e#405#447#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/isadream/model.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="460">
-          <caret line="20" column="27" lean-forward="true" selection-start-line="20" selection-start-column="27" selection-end-line="20" selection-end-column="27" />
-          <folding>
-            <element signature="e#311#372#0" expanded="true" />
-            <marker date="1536185236137" expanded="true" signature="714:1096" ph="..." />
-            <marker date="1536185236137" expanded="true" signature="1136:1141" ph="..." />
-            <marker date="1536185236137" expanded="true" signature="1272:1345" ph="..." />
-            <marker date="1536185236137" expanded="true" signature="1272:1432" ph="..." />
-            <marker date="1536185236137" expanded="true" signature="1438:1442" ph="..." />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/isadream/models/groups.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="345">
-          <caret line="15" selection-start-line="15" selection-end-line="15" />
-          <folding>
-            <element signature="e#244#305#0" expanded="true" />
-            <marker date="1535694813497" expanded="true" signature="562:567" ph="..." />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/isadream/io.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="759">
-          <caret line="234" column="13" selection-start-line="234" selection-start-column="13" selection-end-line="234" selection-end-column="13" />
+        <state relative-caret-position="1610">
+          <caret line="284" column="42" lean-forward="true" selection-start-line="284" selection-start-column="42" selection-end-line="284" selection-end-column="42" />
           <folding>
             <element signature="e#206#215#0" expanded="true" />
           </folding>

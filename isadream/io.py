@@ -233,6 +233,7 @@ def build_node_data(node: AssayNode,
     # Iterate through and extract the values within the groups provided.
     # for group_label, group_unit, group_species in groups:
     for group in groups:
+        group_label, group_unit, group_species = group
 
         # Iterate through the top level samples and their factors.
         parental_factor_matches = matching_factors(
