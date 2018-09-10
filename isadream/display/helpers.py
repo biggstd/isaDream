@@ -74,7 +74,7 @@ def get_session_json_paths(current_document: bk.document.Document,
 
     # Get the HTTP request and find the arguments being passed.
     arguments = current_document.session_context.request.arguments
-    log.info(f"Document HTTP context arguments: {arguments}")
+    logger.info(f"Document HTTP context arguments: {arguments}")
 
     # Get the list of arguments (there should be only one).
     file_path = arguments.get(HTTP_QUERY_STRING)[0].decode("utf-8")
@@ -82,7 +82,7 @@ def get_session_json_paths(current_document: bk.document.Document,
     # The data should always be found in the "data" sub-directory.
     # It is placed there by the Drupal server.
     file_path = os.path.join(base_path, file_path)
-    log.info(f"Json file path found to be: {file_path}")
+    logger.info(f"Json file path found to be: {file_path}")
 
     return [json_file for json_file in
             glob.glob(f"{file_path}/*.json")]
@@ -208,7 +208,7 @@ def create_derived_columns(data_frame: pd.DataFrame,
 def get_metadata_keys(metadata_df: pd.DataFrame,
                       index_selections: List[int]
                       ):
-    """
+    """Returns a metadata row based on a list of index selections.
 
     :param bokeh_source:
     :param index_selections:

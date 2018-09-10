@@ -37,13 +37,16 @@ NMR_GROUPS = dict(
 
 os.environ["BOKEH_RESOURCES"] = "inline"
 
-json_paths = [demos["SIPOS_NMR_V2"], ]
+json_paths = [demos["SIPOS_NMR"], demos["SIPOS_NMR_V2"]]
 nodes = io.create_drupal_nodes(json_paths)
 
 main_df, metadata_df, metadata_dict = io.prepare_nodes_for_bokeh(
     NMR_GROUPS["x_groups"],
     NMR_GROUPS["y_groups"],
     nodes)
+
+# Create any requested derived columns.
+# TODO: Input demo here.
 
 scatter_tab = scatterv2.scatter_panel(NMR_GROUPS["x_groups"],
                                       NMR_GROUPS["y_groups"],
