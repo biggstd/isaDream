@@ -19,6 +19,7 @@ import bokeh.layouts
 # ISADream imports
 # ----------------------------------------------------------------------------
 from isadream import config, demos
+from isadream import io
 from isadream.display import helpers
 from isadream.display.panels import scatterv2, table
 
@@ -36,27 +37,23 @@ NMR_GROUPS = dict(
 
 os.environ["BOKEH_RESOURCES"] = "inline"
 
-json_paths = [demos["SIPOS_NMR"], ]
-nodes = helpers.create_drupal_nodes(json_paths)
+json_paths = [demos["SIPOS_NMR_V2"], ]
+nodes = io.create_drupal_nodes(json_paths)
 
-main_df, metadata = helpers.prepare_bokeh_dicts(
+main_df, metadata_df, metadata_dict = io.prepare_nodes_for_bokeh(
     NMR_GROUPS["x_groups"],
     NMR_GROUPS["y_groups"],
     nodes)
 
-# source = bk.models.ColumnDataSource(main_df)
-
 scatter_tab = scatterv2.scatter_panel(NMR_GROUPS["x_groups"],
                                       NMR_GROUPS["y_groups"],
-                                      main_df, metadata)
+                                      main_df, metadata_df, metadata_dict)
 
 table_tab = table.table_panel(NMR_GROUPS["x_groups"],
                               NMR_GROUPS["y_groups"],
-                              main_df, metadata)
+                              main_df, metadata_df, metadata_dict)
 
-# tabs = bk.models.widgets.Tabs(tabs=[table_tab, ])
 tabs = bk.models.widgets.Tabs(tabs=[scatter_tab, table_tab])
-# print(main_df["Counter Ion"])
 
 
 layout = bk.layouts.layout(

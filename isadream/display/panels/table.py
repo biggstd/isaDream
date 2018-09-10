@@ -35,8 +35,9 @@ TITLE = "Data Table"
 # ----------------------------------------------------------------------------
 def table_panel(x_groups: GroupTypes,
                 y_groups: GroupTypes,
-                data: pd.DataFrame,
-                metadata: ChainMap) -> bk.models.Panel:
+                main_df: pd.DataFrame,
+                metadata_df: pd.DataFrame,
+                metadata: dict) -> bk.models.Panel:
     """
 
     :param x_groups:
@@ -46,7 +47,7 @@ def table_panel(x_groups: GroupTypes,
     :return:
 
     """
-    source = bk.models.ColumnDataSource(data)
+    source = bk.models.ColumnDataSource(main_df)
 
     x_keys = helpers.get_group_keys(x_groups)
     y_keys = helpers.get_group_keys(y_groups)
@@ -54,7 +55,8 @@ def table_panel(x_groups: GroupTypes,
     table_columns = [bk.models.TableColumn(field=key, title=key)
                      for key in x_keys + y_keys]
 
-    table = bk.models.DataTable(source=source, columns=table_columns, width=1000)
+    table = bk.models.DataTable(
+        source=source, columns=table_columns, width=1000)
     panel = bk.models.Panel(child=table, title=TITLE)
 
     return panel

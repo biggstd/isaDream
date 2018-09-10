@@ -277,14 +277,14 @@ class SampleNode(CompoundNode):
 
         return nodes_out
 
-    @property
-    def unique_species(self) -> set:
-        """Get all unique species contained within this assay.
+    # @property
+    # def unique_species(self) -> set:
+    #     """Get all unique species contained within this assay.
 
-        This prevents sources from adding duplicate species.
+    #     This prevents sources from adding duplicate species.
 
-        """
-        return set((s.species_reference for s in self.all_species))
+    #     """
+    #     return set self.all_species))
 
     @property
     def all_sources(self) -> List:

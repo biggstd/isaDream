@@ -1,18 +1,13 @@
-"""Test the bokeh helpers module.
-
-"""
+# ----------------------------------------------------------------------------
+# Transform Functions
+# ----------------------------------------------------------------------------
+def apply_stoichiometry_coefficient(data, species):
+    stoichiometry = species.stoichiometry
+    return data * stoichiometry
 
 # ----------------------------------------------------------------------------
-# Imports for Testing
+# Global Definitions
 # ----------------------------------------------------------------------------
-
-from isadream.display import helpers
-
-
-# ----------------------------------------------------------------------------
-# Tests
-# ----------------------------------------------------------------------------
-
-# def test_prepare_bokeh_dicts(nmr_groups, sipos_drupal_node):
-#     x_groups, y_groups = nmr_groups
-#     helpers.prepare_bokeh_dicts(x_groups, y_groups, [sipos_drupal_node])
+TRANSFORMS = {
+    ("Molar"): apply_stoichiometry_coefficient,
+}
