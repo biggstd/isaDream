@@ -11,6 +11,7 @@
   "JSON_DEMOS": {
     "SIPOS_NMR": "tests/demo_json/sipos_2006_talanta_nmr_figs.json",
     "SIPOS_NMR_V2": "tests/demo_json/sipos_nmr_2.json",
-    "SIPOS_RAMAN": "tests/demo_json/sipos_2006_science_direct_raman.json"
+    "SIPOS_RAMAN": "tests/demo_json/sipos_2006_science_direct_raman.json",
+    "ERNESTO_NMR_1": "tests/demo_json/ernesto_nmr_1.json"
   }
 }

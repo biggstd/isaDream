@@ -11,9 +11,7 @@ import collections
 from typing import Any, List, ChainMap
 
 
-# Local project imports.
-# TODO: Fix self-referencing imports. Restructure these functions.
-# from .nodal import NodeTypes
+# TODO: Add proper error handling for group queries.
 
 
 def ensure_list(val_or_values: Any) -> List:

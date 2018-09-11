@@ -28,7 +28,7 @@ from typing import List, Tuple
 import pandas as pd
 import numpy as np
 
-from isadream import config
+from . import config
 
 from .models import utils
 from .models.elemental import Comment, Factor, SpeciesFactor, ElementalTypes
@@ -78,7 +78,12 @@ def prepare_nodes_for_bokeh(x_groups: QueryGroupType,
     metadata_dict = {}
 
     for drupal_node in nodes:
+
+        # try:
         data, metadata = collate_node(drupal_node, x_groups + y_groups)
+        # except ValueError as error:
+            # print(error)
+            
         cds_frames.append(pd.DataFrame(data))
         metadata_dict = {**metadata_dict, **metadata}
 
