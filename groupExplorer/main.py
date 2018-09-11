@@ -7,6 +7,8 @@
 # ----------------------------------------------------------------------------
 import os
 
+import numpy as np
+
 # ----------------------------------------------------------------------------
 # Bokeh imports
 # ----------------------------------------------------------------------------
@@ -35,26 +37,88 @@ NMR_GROUPS = dict(
     y_groups=(('27 Al ppm', ('ppm',), ("Al",)),)
 )
 
-os.environ["BOKEH_RESOURCES"] = "inline"
+NMR_SIM_GROUPS = dict(
+    x_groups=(
+        ('Al-Na Distance', ('Al-M Distance',), ("Al",)),
+        ('Periodic Box Size', ('Periodic Box Size',), ("Al")),
+        ('Solvent Molecule Count', ('Solvent Molecule Count',), ("Al")),
+    ),
+    y_groups=(
+        ('Isotropic Shielding Factor', ('Isotropic Shielding Factor',), ("Al")),
+    ),
+    dx_groups=(
+        # ---
+        # Molality calculation.
+        #   = number of moles of solute per kilogram of solvent.
+        # 
+        # Calculate the kg of the solvent.
+        #  1 atomic mass unit / (angstrom^3) = 1 660.53904 kg / m3
+        #
+        # ---
+        (
+            "Estimated Molality",
+            ("Solvent Molecule Count", "Periodic Box Size"),
+            (
+                lambda x, y: 1 / ( ( (np.array(x) * 18.02  / 6.022e23) / np.array(y)**3 ) / 1660.53904 )
+            )
+        ),
+    ),
+    dy_groups=(
+        (
+            "ppm delta",
+            # Isotropic Calculation
+            # intercept - sigma / - slope
+            ("Isotropic Shielding Factor", ), 
+            (lambda x: np.array(x) - 532.36)
+        ),
+    )
+)
 
-json_paths = [demos["SIPOS_NMR"], demos["SIPOS_NMR_V2"]]
-nodes = io.create_drupal_nodes(json_paths)
+# os.environ["BOKEH_RESOURCES"] = "inline"
 
-main_df, metadata_df, metadata_dict = io.prepare_nodes_for_bokeh(
+nmr_json_paths = [demos["SIPOS_NMR"], demos["SIPOS_NMR_V2"]]
+nmr_nodes = io.create_drupal_nodes(nmr_json_paths)
+
+nmr_data = io.prepare_nodes_for_bokeh(
     NMR_GROUPS["x_groups"],
     NMR_GROUPS["y_groups"],
-    nodes)
+    nmr_nodes)
+
+
+sim_json_paths = [demos["ERNESTO_NMR_1"]]
+sim_nodes = io.create_drupal_nodes(sim_json_paths)
+
+sim_df, sim_md_df, sim_md = io.prepare_nodes_for_bokeh(
+    NMR_SIM_GROUPS["x_groups"],
+    NMR_SIM_GROUPS["y_groups"],
+    nmr_nodes)
 
 # Create any requested derived columns.
+if NMR_SIM_GROUPS.get("dx_groups"):
+    for group in NMR_SIM_GROUPS.get("dx_groups"):
+        sim_df = helpers.create_derived_column(sim_df, group)
+
+
 # TODO: Input demo here.
+
+
 
 scatter_tab = scatterv2.scatter_panel(NMR_GROUPS["x_groups"],
                                       NMR_GROUPS["y_groups"],
-                                      main_df, metadata_df, metadata_dict)
+                                      *nmr_nodes)
 
 table_tab = table.table_panel(NMR_GROUPS["x_groups"],
                               NMR_GROUPS["y_groups"],
-                              main_df, metadata_df, metadata_dict)
+                              *nmr_nodes)
+
+sim_tab = table.table_panel(NMR_SIM_GROUPS["x_groups"],
+                            NMR_SIM_GROUPS["y_groups"],
+                            sim_df, sim_md_df, sim_md)
+
+
+nmr_calc_tab = scatterv2.scatter_panel(NMR_GROUPS["x_groups"],
+                                      NMR_GROUPS["y_groups"],
+                                      *nmr_nodes)
 
 tabs = bk.models.widgets.Tabs(tabs=[scatter_tab, table_tab])
 

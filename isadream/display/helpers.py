@@ -179,7 +179,7 @@ def get_group_keys(group):
 # ----------------------------------------------------------------------------
 
 
-def create_derived_columns(data_frame: pd.DataFrame,
+def create_derived_column(data_frame: pd.DataFrame,
                            derived_group: DerivedGroupType
                            ) -> pd.DataFrame:
     """Calculate a column based on those already present in the data frame.
@@ -193,6 +193,7 @@ def create_derived_columns(data_frame: pd.DataFrame,
     # Extract the column names and the callable from the derived group.
     new_column, precursor_columns, group_function = derived_group
 
+    precursor_columns = data_frame[list(precursor_columns)].T.values
     # Apply the calculation with the precursor columns, and save the
     # result to the given data frame.
     data_frame[new_column] = group_function(*precursor_columns)
