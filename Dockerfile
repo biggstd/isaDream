@@ -1,11 +1,11 @@
 FROM python:3.6-stretch
 
 # Install nodejs (see: https://askubuntu.com/a/720814)
-RUN curl -sL https://deb.nodesource.com/setup_8.x | bash \
-    && apt-get install nodejs \
-    && apt-get -yq autoremove \
-    && apt-get clean \
-    && rm -rf /var/lib/apt/lists/*
+RUN curl -sL https://deb.nodesource.com/setup_8.x | bash 
+RUN apt-get install -y nodejs vim 
+RUN apt-get -yq autoremove
+RUN apt-get clean
+RUN rm -rf /var/lib/apt/lists/*
 
 RUN pip install --upgrade pip \
     && pip install --pre -i https://pypi.anaconda.org/bokeh/channel/dev/simple\
@@ -31,5 +31,7 @@ COPY ./testvis /testvis
 # Add entrypoint (this allows variable expansion)
 COPY entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
+
+SHELL ["/bin/bash"]
 
 ENTRYPOINT ["/entrypoint.sh"]
