@@ -11,5 +11,5 @@ services:
 
 script:
     - docker build -t gitlab.pnnl.gov:4567/idream/visualization:$TRAVIS_BUILD_NUMBER .
-    - docker login -u "$DOCKER_USERNAME" -p "$DOCKER_PASSWORD"
+    - docker login -u "$DOCKER_USERNAME" -p "$DOCKER_PASSWORD" gitlab.pnnl.gov:4567
     - docker push gitlab.pnnl.gov:4567/idream/visualization:$TRAVIS_BUILD_NUMBER
