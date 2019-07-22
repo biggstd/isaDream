@@ -1,8 +1,8 @@
 # ISADREAM
 
-[![Build Status](https://travis-ci.org/biggstd/isadream.svg?branch=master)](https://travis-ci.org/biggstd/isadream)
 
-_This package is under active development._
+
+_This package is under development under the name `ChemMD`._
 
 ISADream is a python package that handles:
 * Ontology sources for the IDREAM project.
